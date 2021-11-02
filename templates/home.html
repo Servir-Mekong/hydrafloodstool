@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- CSS files -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/footer.css' %}">
+<link rel="stylesheet" href="{% static 'css/partners.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'app/controllers/home.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+
+{% include 'navigation.html' %}
+
+<div class="bg-light ms-0 me-0 ps-0 pe-0 mt-0 pt-0 p-0">
+    <div class="jumbotron">
+        <h1>Near Real-time Flood Mapping and Monitoring System</h1>
+        <a href="#" class="btn btn-jumbotron btn-rounded btn-lg" role="button">Launch Tool</a>
+    </div>
+</div>
+<!-- Main Container -->
+<div class="container intro">
+    <div class="card mb-3 border-0">
+        <div class="row g-0">
+            <div class="col-lg-6 pt-2">
+                <img src="{% static 'images/floods-myanmar.jpg' %}" class="img-fluid rounded-start pb-5" alt="...">
+            </div>
+            <div class="col-lg-6">
+                <div class="card-body ps-5 pe-5 pt-5">
+                    <h5 class="card-title fs-4 fw-bold pb-2">Hydrologic Remote Sensing Analysis for Floods</h5>
+                    <p class="card-text fs-5">The publicly available, web-based service delivering near real-time information for improved flood monitoring. Designed to provide information on flood location and extent to assist with flood preparedness, emergency response and relief efforts.</p>
+                    <a href="#" class="btn btn-intro btn-lg" role="button">Explore the Tool   <span><i class="fa fa-arrow-right"></i></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+<div class="container">
+    {% include 'partners.html' %}
+</div>
+{% include 'footer.html' %}
+
+{% endblock container %}
+
+
+

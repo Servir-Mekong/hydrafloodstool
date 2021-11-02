@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- CSS files -->
+{% block extra_css %}
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
+<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /> -->
+<link rel="stylesheet" href="{% static 'css/usecases.css' %}">
+{% endblock %}
+
+{% block container %}
+
+{% include 'navigation.html' %}
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <nav>
+      <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
+        <button class="nav-link active p-3" id="open-sidebar" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="nav-content" aria-selected="false"><i class="fas fa-chevron-right fa-lg"></i></button>
+        <button class="nav-link p-3" id="close-sidebar" data-bs-toggle="tab" type="button" role="tab"><i class="fas fa-chevron-left fa-lg"></i></button>
+      </div>
+    </nav>
+</div>
+<!-- Sidebar Content -->
+<div class="sidebar-content" id="sidebar-content">
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-content" role="tabpanel" aria-labelledby="content">
+        <!-- Usecase 1 Card -->
+        <div class="card mt-4 mb-5 ms-3 me-3 border-0">
+          <img class="img-fluid"  src="https://floodlist.com/wp-content/uploads/2020/10/floods-samrong-city-Odor-Meanchey-Province-cambodia-oct-2020-1024x768.jpg">
+          <div class="card-body border-0">
+            <p class="usecase">Usecase</p>
+            <h6 class="usecase-title">Floods in Samrong City, Odor Meanchey Province, Cambodia</h6>
+            <p class="usecase-date">2020-10-17</p> 
+            <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal1">View Details</button>
+            <button type="button" class="btn btn-outline-primary" id="usecase1">View on Map</button>  
+          </div>
+        </div>
+        <!-- Usecase 2 Card -->
+        <div class="card mt-4 mb-5 ms-3 me-3 border-0">
+          <img class="img-fluid"  src="https://apicms.thestar.com.my/uploads/images/2020/10/11/894414.jpg">
+          <div class="card-body border-0">
+            <p class="usecase">Usecase</p>
+            <h6 class="usecase-title">Seponh, Savannakhet Province, Laos</h6>
+            <p class="usecase-date">2020-10-11</p>           
+            <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal2">View Details</button>
+            <button type="button" class="btn btn-outline-primary" id="usecase2">View on Map</button>
+          </div>
+        </div>
+        <!-- Usecase 3 Card -->
+        <div class="card mt-4 mb-5 ms-3 me-3 border-0">
+          <img class="img-fluid"  src="https://www.myanmarwaterportal.com/storage/eb/articles/1929/b2ap3_large_109077184_1396059403913156_6961886217946502497_n.jpg">
+          <div class="card-body border-0">
+            <p class="usecase">Usecase</p>
+            <h6 class="usecase-title">Myitkyina , Kachin, Mynamar</h6>
+            <p class="usecase-date">2020-07-23</p>            
+            <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal3">View Details</button>
+            <button type="button" class="btn btn-outline-primary" id="usecase3">View on Map</button>
+          </div>
+        </div>
+        <!-- Usecase 4 Card -->
+        <div class="card mt-4 mb-5 ms-3 me-3 border-0">
+          <img class="img-fluid"  src="https://i2.wp.com/floodlist.com/wp-content/uploads/2018/06/mon-State-floods-3-myanmar-red-cross-june-2018.jpg?resize=350%2C200&ssl=1">
+          <div class="card-body border-0">
+            <p class="usecase">Usecase</p>
+            <h6 class="usecase-title">Hpakant, Kachin, Myna</h6>
+            <p class="usecase-date">2020-09-22</p>            
+            <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal4">View Details</button>
+            <button type="button" class="btn btn-outline-primary" id="usecase4">View on Map</button>
+          </div>
+        </div>
+        <!-- Usecase 5 Card -->
+        <div class="card mt-4 mb-5 ms-3 me-3 border-0">
+          <img class="img-fluid"  src="https://www.khaosodenglish.com/wp-content/uploads/2020/12/FLOOD_Header.jpg">
+          <div class="card-body border-0">
+            <p class="usecase">Usecase</p>
+            <h6 class="usecase-title">Flash Floods in Nakhon Si Thammarat, Thailand</h6>
+            <p class="usecase-date">2020-12-07</p>    
+            <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal5">View Details</button>
+            <button type="button" class="btn btn-outline-primary" id="usecase5">View on Map</button>
+          </div>
+        </div>
+        <!-- Usecase 6 Card -->
+        <div class="card mt-4 mb-5 ms-3 me-3 border-0">
+          <img class="img-fluid"  src="https://global.unitednations.entermediadb.net/assets/mediadb/services/module/asset/downloads/preset/assets/2015/08/22323/image1170x530cropped.jpg">
+          <div class="card-body border-0">
+            <p class="usecase">Usecase</p>
+            <h6 class="usecase-title">Cyclone Komen, Pauktaw township, Rakhine State, Myanmar</h6>
+            <p class="usecase-date">2015-08-04</p>            
+            <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal6">View Details</button>
+            <button type="button" class="btn btn-outline-primary" id="usecase6">View on Map</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="map" id="map"></div>
+
+<!-- Modal Usecase 1 -->
+<div class="modal fade" id="usecaseModal1" tabindex="-1" aria-labelledby="usecaseModal1Label" aria-hidden="true">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usecaseModal1Label">Floods in Samrong City, Odor Meanchey Province, Cambodia | <small>2020-10-17</small></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mb-2">
+        <div class="modal-body-content">
+          <img class="modal-img img-fluid"  src="https://floodlist.com/wp-content/uploads/2020/10/floods-samrong-city-Odor-Meanchey-Province-cambodia-oct-2020-1024x768.jpg">
+          <p class="mt-4 mb-4">By october 17, the flood had affected over 240,000 people in 71 districts of 19 of the country’s 25 provinces and autonomous regions. At least 20 people have lost their lives. Almost 60,000 houses have been damaged, and over 26,000 people from nearly 8,000 families evacuated. Thousands of hectares of rice and other crops have also been damaged.</p>
+          <p><a class="btn btn-primary" role="button" href="https://floodlist.com/asia/cambodia-floods-update-october-2020" target="_blank">View Sources</a></p> 
+        </div>  
+      </div>
+    </div>   
+  </div>
+</div> 
+<!-- Modal Usecase 2 -->
+<div class="modal fade" id="usecaseModal2" tabindex="-1" aria-labelledby="usecaseModal2Label" aria-hidden="true">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usecaseModal2Label">Seponh, Savannakhet Province, Laos | <small>2020-10-11</small></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mb-2">
+        <div class="modal-body-content">
+          <img class="modal-img img-fluid"  src="https://apicms.thestar.com.my/uploads/images/2020/10/11/894414.jpg">      
+          <p class="mt-4 mb-4">Villages near the Xepon and Xebanghieng rivers in Savannakhet Province were hit by flash flooding. over 869 families in 21 villages in the district have been affected by floods, with some 1,973 hectares of farmland underwater.</p>
+          <p><a class="btn btn-primary" role="button" href="https://www.thestar.com.my/aseanplus/aseanplus-news/2020/10/11/laos-savannakhet-region-suffers-heavy--flash-flooding-more-storms-inbound" target="_blank">View Sources</a></p>
+        </div>                  
+      </div>
+    </div>   
+  </div>
+</div> 
+<!-- Modal Usecase 3 -->
+<div class="modal fade" id="usecaseModal3" tabindex="-1" aria-labelledby="usecaseModal3Label" aria-hidden="true">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usecaseModal3Label">Myitkyina , Kachin, Mynamar | <small>2020-07-23</small></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mb-2">
+        <div class="modal-body-content">
+          <img class="modal-img img-fluid"  src="https://www.myanmarwaterportal.com/storage/eb/articles/1929/b2ap3_large_109077184_1396059403913156_6961886217946502497_n.jpg">           
+          <p class="mt-4 mb-4">Floods affected locals, between 11 and 12 July, forcing 579 local people from 136 households to take temporary shelters.</p>
+          <p><a class="btn btn-primary" role="button" href="https://www.mizzima.com/article/aid-provided-flood-victims-kachin-state" target="_blank">View Sources</a></p>
+        </div>                  
+      </div>
+    </div>   
+  </div>
+</div> 
+<!-- Modal Usecase 4 -->
+<div class="modal fade" id="usecaseModal4" tabindex="-1" aria-labelledby="usecaseModal4Label" aria-hidden="true">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usecaseModal4Label">Hpakant, Kachin, Myna | <small>2020-09-22</small></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mb-2">
+        <div class="modal-body-content">
+          <img class="modal-img img-fluid"  src="https://i2.wp.com/floodlist.com/wp-content/uploads/2018/06/mon-State-floods-3-myanmar-red-cross-june-2018.jpg?resize=350%2C200&ssl=1">         
+          <p class="mt-4 mb-4">Flooding was over 3 metres deep in some places, and damaged around 400 homes in the area. A total of 2,875 people from 410 households were temporarily displaced by the floods.</p>
+          <p><a class="btn btn-primary" role="button" href="https://floodlist.com/asia/myanmar-floods-kachin-september-2020" target="_blank">View Sources</a></p>
+        </div>                  
+      </div>
+    </div>   
+  </div>
+</div> 
+<!-- Modal Usecase 5 -->
+<div class="modal fade" id="usecaseModal5" tabindex="-1" aria-labelledby="usecaseModal5Label" aria-hidden="true">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usecaseModal5Label">Nakhon Si Thammarat, Thailand | <small>2020-12-07</small></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mb-2">
+        <div class="modal-body-content">
+          <img class="modal-img img-fluid"  src="https://www.khaosodenglish.com/wp-content/uploads/2020/12/FLOOD_Header.jpg">          
+          <p class="mt-4 mb-4">18 out of 23 districts in Nakhon Si Thammarat province, submerged by floodwaters. Twenty houses were completely destroyed by flood, while 4,028 were partially damaged.</p>
+          <p><a class="btn btn-primary" role="button" href="https://www.khaosodenglish.com/news/crimecourtscalamity/2020/12/08/24-died-in-record-flood-ravaging-southern-provinces/" target="_blank">View Sources</a></p>
+        </div>                   
+      </div>
+    </div>   
+  </div>
+</div> 
+<!-- Modal Usecase 6 -->
+<div class="modal fade" id="usecaseModal6" tabindex="-1" aria-labelledby="usecaseModal6Label" aria-hidden="true">
+  <div class="modal-dialog"> 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="usecaseModal6Label">Cyclone KomenPauktaw township, Rakhine State, Myanmar | <small>2015-08-04</small></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mb-2">
+        <div class="modal-body-content">
+          <img class="modal-img img-fluid"  src="https://global.unitednations.entermediadb.net/assets/mediadb/services/module/asset/downloads/preset/assets/2015/08/22323/image1170x530cropped.jpg"> 
+          <p class="mt-4 mb-4">More than 21,000 displaced people affected in Rakhine. Rakhine state had been declared one of four 'natural disaster zones' by the Myanmar Government. During the 2015 monsoon season, Cyclone Komen has occured in late July, bringing additional unusual torrential rains into Myanmar, Bangladesh and India. These rains has lead to a significant increase in monsoonal flood water, leading to severe flooding and landslides in Myanmar.</p>
+          <p><a class="btn btn-primary" role="button" href="https://news.un.org/en/story/2015/08/505682-cyclone-komen-further-burdens-thousands-displaced-people-western-myanmar-un" target="_blank">View Sources</a></p>
+        </div>
+      </div>
+    </div>   
+  </div>
+</div>  
+
+{% endblock container %}
+
+<!-- Extra JS files -->
+{% block extra_script %}
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+<!--<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>-->
+<script src="{% static 'js/usecase.js' %}"></script>
+{% endblock %}

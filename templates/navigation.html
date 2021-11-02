@@ -1,0 +1,87 @@
+{% load static %}
+<div class="container mb-0 pb-0">
+    <!-- Navigation Partners Logo -->
+    <div class="row">
+        <!-- Mobile view -->
+        <div class="d-block d-sm-none">
+            <div class="row">
+                <ul class="d-flex justify-content-between list-group list-group-horizontal">
+                    <li class="list-group-item">
+                        <img class="img-fluid" src="{% static 'images/usaid.png' %}" alt="USAID">
+                    </li>
+                    <li class="list-group-item">
+                        <img class="img-fluid nasa" src="{% static 'images/nasa-logo.svg' %}" alt="NASA">
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul class="d-flex justify-content-between list-group list-group-horizontal">
+                    <li class="list-group-item">
+                        <img class="adpc" src="{% static 'images/adpc.png' %}" alt="ADPC">
+                    </li>
+                    <li class="list-group-item">
+                        <img class="img-fluid" src="{% static 'images/servir-mekong.png' %}" alt="SERVIR-MEKONG">
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Desktop/Laptop view -->
+        <div class="d-none d-sm-block">
+            <div class="row">
+                <div class="col-8 d-flex justify-content-start">
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <img class="img-fluid text-center usaid" src="{% static 'images/usaid.png' %}" alt="USAID">
+                        </li>
+                        <li class="list-group-item">
+                            <img class="img-fluid nasa" src="{% static 'images/nasa-logo.svg' %}" alt="NASA">
+                        </li>
+                        <li class="list-group-item">
+                            <img class="img-fluid adpc pt-1" src="{% static 'images/adpc.png' %}" alt="ADPC">
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <ul class="d-flex justify-content-end list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <img class="img-fluid servir-mekong pt-1" src="{% static 'images/servir-mekong.png' %}" alt="SERVIR-MEKONG">
+                        </li>
+                    </ul> 
+                </div>   
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Navigation -->
+<div class="navigation mb-0 pb-0">
+    <div class="container mb-0 pb-0">
+        <nav class="navbar navbar-expand-lg mb-0 pb-0">
+            <a class="navbar-brand" href="/">
+                <img class="logo" src="{% static 'images/hydrafloodsicon_lrgnotxt.png' %}" >
+                HYDRAFloods Viewer
+            </a>
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerMenu" aria-controls="navbarTogglerMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span><i class="fa fa-bars text-white"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% url 'home' as homePage %} 
+                    <li class="nav-item {% if request.path == homePage %}active{% endif %}">
+                        <a class="nav-link" href="{{ homePage }}">Home</a>
+                    </li>
+                    {% url 'mapviewer' as mapviewerPage %} 
+                    <li class="nav-item {% if request.path == mapviewerPage %}active{% endif %}">
+                        <a class="nav-link" href="{{ mapviewerPage }}">Map Viewer</a>
+                    </li>
+                    {% url 'usecase' as usecasePage %} 
+                    <li class="nav-item {% if request.path == usecasePage %}active{% endif %}">
+                        <a class="nav-link" href="{{ usecasePage }}">Use Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSc4famo2tBCrItC3H3azD5HsOo-hQuFQqLXxrawwDGMd5WnYQ/viewform?usp=pp_url" target="_blank">Feedback</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>

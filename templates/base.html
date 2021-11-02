@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="The HYDRAFloods Viewer is a web application used to view flood map results from the HYDRAFloods processing package along with additional hydrologic variables">
+	<meta name="author" content="SERVIR MEKONG">
+	<meta name="keywords" content="Hydraflood, Hydrafloods viewer, SERVIR MEKONG, Mekong region, Myanmar, Thailand">
+	<title>HydraFloods Viewer</title>
+    <!-- favicon -->
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" sizes="16x16">
+    <!-- load CSS files -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}">
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/components-font-awesome/css/all.min.css' %}">
+    <!-- Normalize CSS -->
+	<link rel="stylesheet" href="{% static 'vendor/normalize-css/normalize.css' %}" >
+	<!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css" integrity="sha512-3q8fi8M0VS+X/3n64Ndpp6Bit7oXSiyCnzmlx6IDBLGlY5euFySyJ46RUlqIVs0DPCGOypqP8IRk/EyPvU28mQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- ng-Dialog -->
+	<!-- <link rel="stylesheet" href="{% static 'vendor/ng-dialog/css/ngDialog.min.css' %}" >
+	<link rel="stylesheet" href="{% static 'vendor/ng-dialog/css/ngDialog-theme-default.min.css' %}" >
+     -->
+    <!-- <style type="text/css">
+        /** Hide when Angular is not yet loaded and initialized */
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style> -->
+
+    <!-- Custom CSS files -->
+    <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <!-- Extra CSS files -->
+    {% block extra_css %}{% endblock %}
+    <!-- {% static '' %} -->
+</head>
+<body>
+    {% block container %}{% endblock %}
+
+
+    <!-- Load JS files -->
+	<!-- jQuery -->
+	<script src="{% static 'vendor/jquery/dist/jquery.min.js' %}"></script>
+	<!-- Bootstrap JS -->
+	<script src="{% static 'vendor/bootstrap/dist/js/bootstrap.min.js'  %}"></script>
+	<!-- Bootstrap Plugins -->
+	<script src="{% static 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+    <!--  Load Angular  -->
+	<script src="{% static 'vendor/angular/angular.min.js' %}"></script>
+    <!-- Angular Dialogue -->
+	<!-- <script src="{% static 'vendor/ng-dialog/js/ngDialog.min.js' %}"></script>
+    -->
+    <!-- ion-rangeslider javaScript plugin file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" integrity="sha512-f0VlzJbcEB6KiW8ZVtL+5HWPDyW1+nJEjguZ5IVnSQkvZbwBt2RfCBY0CBO1PsMAqxxrG4Di6TfsCPP3ZRwKpA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Extra JS files -->
+    {% block extra_script %}{% endblock %}
+</body>
+</html>

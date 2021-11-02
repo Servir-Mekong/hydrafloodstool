@@ -1,0 +1,73 @@
+/* jumbotron section*/
+.jumbotron {
+    margin-bottom: 0px;
+    margin-top: -28px; 
+    padding: 0;
+    background-image: url("/static/images/floods-myanmar.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    text-align: center;
+} 
+.jumbotron h1{
+    text-align: center;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    padding-top: 80px;
+    padding-bottom: 50px;
+    font-size: 40px;
+    font-weight: bold;
+}
+.jumbotron .btn-jumbotron{
+    background-color: white;
+    border-radius: 25px 25px 25px 25px;
+    outline:none !important;
+    box-shadow: none !important;
+    padding-left: 35px;
+    padding-right: 35px;
+    color: #173F5F;
+    margin-bottom: 60px;
+    font-family: oxyzen;
+    font-size: 20px;
+    font-weight: bold;
+}
+.jumbotron .btn-jumbotron:hover {
+    background-color:#3789cc;
+    border-radius: 25px 25px 25px 25px;
+    outline:none !important;
+    box-shadow: none !important;
+    padding-left: 35px;
+    padding-right: 35px;
+    color: #e3e3e3;
+}
+/* end jumbotron section*/
+
+.intro {
+    margin-top: 100px;
+}
+.intro .card{
+    width: 100%;
+}
+.btn-intro,
+.btn-intro:active,
+.btn-intro:focus{
+    background-color: white;
+    border: 1px solid#173F5F;
+    border-radius: none;
+    outline:none !important;
+    box-shadow: none !important;
+    padding-left: 35px;
+    padding-right: 35px;
+    color: #173F5F;
+    margin-bottom: 50px;
+}
+.btn-intro:hover {
+    background-color:#3789cc;
+    border: 1px solid #eee;
+    border-radius: none;
+    outline:none !important;
+    box-shadow: none !important;
+    padding-left: 35px;
+    padding-right: 35px;
+    color: #e3e3e3;
+}

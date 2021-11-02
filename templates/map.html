@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- CSS files -->
+{% block extra_css %}
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
+<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /> -->
+<link rel="stylesheet" href="{% static 'css/map.css' %}">
+{% endblock %}
+
+{% block container %}
+
+{% include 'navigation.html' %}
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <nav>
+    <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
+      <button class="nav-link active pt-3 pb-3" id="home" onclick="showNavHomeContent()" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Menu"><i class="fas fa-bars fa-lg"></i></button>
+      <button class="nav-link pt-3 pb-3" id="layer" onclick="showNavLayerContent()" data-bs-toggle="tab" data-bs-target="#nav-layer" type="button" role="tab" aria-controls="nav-layer" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Layer Panel"><i class="fas fa-layer-group fa-lg"></i></button>
+      <button class="nav-link pt-3 pb-3" id="basemap" onclick="showNavBasemapContent()" data-bs-toggle="tab" data-bs-target="#nav-basemap" type="button" role="tab" aria-controls="nav-basemap" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Basemap Style"><i class="fa fa-globe fa-lg"></i></button>
+    </div>
+  </nav>
+</div>
+
+<!-- Sidebar Content -->
+<div class="sidebar-content" id="sidebar-content">
+  <div class="tab-content mt-0 pt-0" id="nav-tabContent">    
+      <!-- Default tab content area -->
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="home">  
+          <button type="button" class="btn btn-home-close shadow-none" id="close-home-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Menu"><i class="fas fa-arrow-left fa-lg"></i></button>
+          <div class="accordion m-3" id="accordionExample">
+              <!-- Date selection card -->
+              <div class="accordion-item mb-2">
+                  <h2 class="accordion-header text-white" id="headingOne">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          <i class="fas fa-calendar pe-2"></i>Date Selection
+                      </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                          <p> Select Date (YYYY-MM-DD) </p>
+                          <div class="form-group ">
+                              <input class = "form-control" id="date_selection"
+                              name="date_selection"
+                              type="text"
+                              data-provide="datepicker"
+                              value="2021-01-05"
+                              data-date-autoclose="true"
+                              data-date-format="yyyy-mm-dd"
+                              data-date-min-view-mode="days"
+                              data-date-multidate="1"
+                              data-date-start-view="decade"
+                              data-date-today-btn="false">
+                          </div> 
+                      </div>
+                  </div>
+              </div>
+              <!-- Precipitation data card -->
+              <div class="accordion-item mb-2">
+                  <h2 class="accordion-header" id="headingTwo">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          <i class="fas fa-cloud-rain pe-2"></i>Precipitation Data
+                      </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                          <div class="form-check pb-2">
+                              <input class="form-check-input" id="precip-check" type="checkbox" value="" id="flexCheckDefault">
+                              <label class="form-check-label" for="flexCheckDefault"><b>Precipitation Map</b><br><small>Checked to overlay precipitation map</small></label>
+                          </div>
+                          <label for="precip-opacity" class="form-label">Opacity:</label><br>
+                          <input id="precip-opacity" data-slider-id='precip-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <p class="pt-3">Select Accumulation Map:</p>
+                          <select class="form-select" id="product_selection">
+                              <option value="1|0">1 Day Accumulation</option>
+                              <option value="2|0">2 Day Accumulation</option>
+                              <option value="3|0">3 Day Accumulation</option>
+                          </select>
+                          <p class="pt-3">Select Colormap: </p>
+                          <select class="form-select" id="cmap_selection">
+                              <option value="nipy_spectral">nipy_spectral</option>
+                              <option value="gist_ncar">gist_ncar</option>
+                              <option value="cubehelix">cubehelix</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>                   
+              <!-- Daily surface water card -->
+              <div class="accordion-item mb-2">
+                  <h2 class="accordion-header" id="headingThree">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          <i class="fas fa-water pe-2"></i> Daily Surface Water
+                      </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                          <div class="form-check">
+                              <input class="form-check-input" id="flood-check" type="checkbox" value="" id="flexCheckDefault">
+                              <label class="form-check-label" for="flexCheckDefault"><b>Surface Water Map</b><br><small>Checked to overlay surface water area estimated from Sentinel 1 satellite imagery analysis</small></label>
+                          </div>
+                          <label for="flood1-opacity" class="form-label">Opacity:</label><br>
+                          <input id="flood1-opacity" data-slider-id='flood1-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                      </div>
+                  </div>
+              </div>
+              <!-- Permanent water card -->
+              <div class="accordion-item mb-2">
+                  <h2 class="accordion-header" id="headingFour">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                          <i class="fas fa-water pe-2"></i> Parmanent Water
+                      </button>
+                  </h2>
+                  <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                          <div class="form-check">
+                              <input id="historical-check" class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
+                              <label class="form-check-label" for="flexCheckDefault"><b>Permanent Water Layer</b><br><small>Checked to overlay permamnet water area map estimated from Landsat satellite imagery analysis</small></label>
+                          </div>
+                          <label for="historical-opacity" class="form-label">Opacity:</label><br>
+                          <input id="historical-opacity" data-slider-id='historical-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <p>Select reference period:</p>
+                          <table style="width:100%">
+                              <tr>
+                                  <td style="width:45%">
+                                  <div class="form-group ">
+                                      <input class = "form-control" id="start_year_selection_historical"
+                                      name="end_year_selection_historical"
+                                      type="text"
+                                      data-provide="datepicker"
+                                      value="2010"
+                                      data-date-autoclose="true"
+                                      data-date-clear-btn="true"
+                                      data-date-format="yyyy"
+                                      data-date-min-view-mode="years"
+                                      data-date-multidate="1"
+                                      data-date-start-view="years">
+                                  </div>
+                                  </td>
+                                  <td style="width:10%; text-align: center;"><p>to</p></td>
+                                  <td style="width:45%">
+                                      <div class="form-group ">
+                                          <input class = "form-control" id="end_year_selection_historical"
+                                          name="end_year_selection_historical"
+                                          type="text"
+                                          data-provide="datepicker"
+                                          value="2020"
+                                          data-date-autoclose="true"
+                                          data-date-clear-btn="true"
+                                          data-date-format="yyyy"
+                                          data-date-min-view-mode="years"
+                                          data-date-multidate="1"
+                                          data-date-start-view="years">
+                                      </div>
+                                  </td>
+                              </tr>
+                          </table>
+                          <p>Select seasonal period: </p>
+                          <div style="width:95%; margin:3px;">
+                              <input type="text" class="js-range-slider" id="month_range" name="month_range" />
+                          </div>
+                          <br>
+                          <div class="center_obj" >
+                              <button type="submit" id="update-button" name="update-button" class="btn btn-primary text-white"><i class="fa fa-refresh"></i> Update Water Layer</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- Satellite imagery card -->
+              <div class="accordion-item mb-2">
+                  <h2 class="accordion-header" id="headingFive">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                          <i class="fas fa-satellite pe-2"></i> Raw Satellite Imagery
+                      </button>
+                  </h2>
+                  <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                          <div class="form-check">
+                              <input class="form-check-input" id="browse-check" type="checkbox" value="" id="flexCheckDefault">
+                              <label class="form-check-label" for="flexCheckDefault"><b>NRT Browse Imagery</b><br><small>Checked to overlay various types of raw satellite image</small></label>
+                          </div>
+                          <label for="browse-opacity" class="form-label">Opacity:</label><br>
+                          <input id="browse-opacity" data-slider-id='browse-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <p>Select Browse Imagery:</p>
+                          <select class="form-select" id="browse_selection">
+                              <option value="1|VIIRS_SNPP_CorrectedReflectance_TrueColor">VIIRS NRT TRUE COLOR</option>
+                              <option value="2|VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1">VIIRS NRT NATURAL COLOR</option>
+                              <option value="3|MODIS_Aqua_CorrectedReflectance_TrueColor">MODIS AQUA TRUE COLOR</option>
+                              <option value="4|MODIS_Aqua_CorrectedReflectance_Bands721">MODIS AQUA NATURAL COLOR</option>
+                              <option value="5|MODIS_Terra_CorrectedReflectance_TrueColor">MODIS TERRA TRUE COLOR</option>
+                              <option value="5|MODIS_Terra_CorrectedReflectance_Bands721">MODIS TERRA NATURAL COLOR</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!--Layer tab content area -->
+      <div class="tab-pane fade" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">          
+          <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-layer-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Layer Panel"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Layer Panel</span></div>
+          <div class="card card-body layer-card m-2 border-0">
+              <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Mekong Region</label>
+              </div>
+              <div class="form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Country Boundary</label>
+              </div>
+          </div>
+      </div>
+
+      <!-- Basemap tab content area -->
+      <div class="tab-pane fade nav-basemap" id="nav-basemap" role="tabpanel" aria-labelledby="nav-basemap-tab">
+          <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-basemap-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Basemap"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Basemap Style</span></div>
+          <!-- Basemap from MapBox -->
+          <div class="card basemap-card active m-4" data-layer="streets-v11">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="{% static 'images/mapbox-streets.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Streets Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Streets Map<br><small>MapBox World Streets Map</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="satellite-v9">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="{% static 'images/mapbox-satellite.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Satellite Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Satellite Map<br><small>MapBox World Satellite Map</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="light-v10">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="{% static 'images/mapbox-light.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Light Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Light Map<br><small>MapBox World Light Map</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="dark-v10">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="{% static 'images/mapbox-dark.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Dark Streets Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>MapBox Dark Map<br><small>MapBox World Dark Streets Map</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="outdoors-v11">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="{% static 'images/mapbox-outdoor.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Outdoors Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Outdoors Map<br><small>MapBox World Outdoors Map</small></h6>    
+                  </div>
+              </div>
+          </div> 
+
+          <!-- OSM Basemap -->
+          <!-- <div class="card basemap-card active m-4" data-layer="osm">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/osm.png" class="basemap-img" height="60px" width="60px" alt="OSM World Streets Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>OpenStreetMap<br><small>OSM World Streets Map</small></h6>    
+                  </div>
+              </div>
+          </div> -->
+          <!-- Basemap from Esri -->
+          <!-- <div class="card basemap-card m-4" data-layer="street">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/esri-street.png" class="basemap-img" height="60px" width="60px" alt="Esri World Streets Basemap"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Esri Streets<br><small>Esri World Streets Basemap</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="satellite">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/esri-satellite.png" class="basemap-img" height="60px" width="60px" alt="Esri World Satellite Imagery"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Satellite Map<br><small>Esri World Satellite Imagery</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="topo">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/esri-topo.png" class="basemap-img" height="60px" width="60px" alt="Esri World Topographic Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Topographic Map<br><small>Esri World Topographic Map</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="terrain">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/esri-terrain.png" class="basemap-img" height="60px" width="60px" alt="Esri World Terrain Basemap"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Terrain Map<br><small>Esri World Terrain Basemap</small></h6>    
+                  </div>
+              </div>
+          </div>
+          <div class="card basemap-card m-4" data-layer="gray">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/esri-gray.png" class="basemap-img" height="60px" width="60px" alt="Esri World Gray Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Gray Map<br><small>Esri World Gray Map</small></h6>    
+                  </div>
+              </div>
+          </div> -->
+          <!-- Basemap from Carto Map -->
+          <!-- <div class="card basemap-card m-4" data-layer="dark">
+              <div class="d-flex flex-row bd-highlight">
+                  <div class="bd-highlight"><img src="images/carto-dark.png" class="basemap-img" height="60px" width="60px" alt="Carto World Dark Map"></div>
+                  <div class="bd-highlight pt-3 ps-4">
+                      <h6>Dark Map<br><small>Carto World Dark Map</small></h6>    
+                  </div>
+              </div>
+          </div> -->
+      </div>
+  </div>
+</div>
+<div class="map" id="map"></div>
+
+{% endblock container %}
+
+<!-- Extra JS files -->
+{% block extra_script %}
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+<!--<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>-->
+<script src="{% static 'js/map.js' %}"></script>
+
+{% endblock %}

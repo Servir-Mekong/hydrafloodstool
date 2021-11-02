@@ -1,0 +1,110 @@
+.list-group{
+    height: 55px;
+}
+@media only screen and (max-width: 600px) {
+    .list-group-item{
+        border: none;
+    }
+    .nasa {
+        width: 62px;
+    }
+    .adpc {
+        width: 72px;
+    }
+    .servir-mekong {
+        max-height: 25px
+    }
+}
+@media only screen and (min-width: 601px) {
+    .list-group-item{
+        border: none;
+        margin-left: 8px;
+        padding-left: 0; 
+    }
+    .usaid{
+        max-height: 42px;
+    }
+    .nasa {
+        width: 52px;
+    }
+    .adpc {
+        max-height: 37px;
+    }
+    .servir-mekong {
+        max-height: 32px
+    }
+}
+.navigation {
+    width: 100%; 
+    background-color: #173F5F;
+}
+.navbar .navbar-brand .logo {
+    width: 40px;
+}
+.navbar .navbar-nav .nav-link {
+    color: #fff;
+    font-size: 1.1em;
+    position: relative;
+}
+.navbar .navbar-nav .nav-link:hover {
+    color:#3ba2f7;
+}
+@media only screen and (min-width: 960px) {
+    .navbar .navbar-nav .nav-link {
+      padding: 1em 0.7em;
+    }
+    .navbar {
+      padding: 0;
+    }
+    .navbar .navbar-brand {
+      padding: 0 0.7em;
+    }
+}
+.navbar .navbar-nav .nav-link::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: 500ms;
+    background-color:#3ba2f7;
+    color: transparent;
+    width: 0%;
+    content: '.';
+    height: 3px;
+}
+.navbar .navbar-nav .nav-item.active a{
+    color: #3ba2f7;
+}
+.navbar .navbar-nav .nav-item.active a::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color:#3ba2f7;
+    color: transparent;
+    width: 100%;
+    content: '.';
+    height: 3px;
+}
+@media only screen and (min-width: 960px){
+    .navbar .navbar-nav .nav-link:hover::after {
+        width: 100%;
+    }
+}
+@media only screen and (max-width: 960px){
+    .navbar .navbar-nav .nav-link:hover::after {
+        width: 5%;
+    }
+} 
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler-icon:focus {
+    outline: none;
+    box-shadow: none;
+}
+.navbar-brand{
+    color: #fff;
+}
+.navbar-brand:hover{
+    color: #fff;
+}

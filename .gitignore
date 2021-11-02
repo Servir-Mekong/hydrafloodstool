@@ -1,0 +1,23 @@
+#ignore python compile files
+*.pyc
+credentials/*
+# ignore settings
+hydrafloodviewer/settings.py
+
+# vendore files
+hydrafloodviewer/static/vendor/*
+static/vendor/*
+static/app/*
+
+#node and related environment files
+.npmignore
+node_modules/
+__pycache__/
+
+# Additional
+gulpfile.js
+assets.js
+.csslintrc
+.jshintrc
+package.json
+package-lock.json

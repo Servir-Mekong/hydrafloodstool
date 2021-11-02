@@ -1,0 +1,36 @@
+{
+  "name": "hydrafloodviewer",
+  "authors": [
+    "SERVIR MEKONG"
+  ],
+  "description": "Hydrafloods Viewer",
+  "main": "index.js",
+  "keywords": [
+    "Hydrafloods",
+    "Hydralogical Floods",
+    "Floods monitoring",
+    "Near real time flood monitoring"
+  ],
+  "license": "MIT",
+  "homepage": "http://127.0.0.1:8000",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^5.1.1",
+    "jquery": "^3.6.0",
+    "components-font-awesome": "^5.15.4",
+    "bootstrap-datepicker": "^1.9.0",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "angular": "^1.8.2",
+    "ng-dialog": "ngDialog#^1.4.0",
+    "normalize-css": "^8.0.1",
+    "angular-spinner": "^1.0.1"
+  }
+}
