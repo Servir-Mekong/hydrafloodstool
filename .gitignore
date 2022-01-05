@@ -3,7 +3,7 @@
 credentials/*
 # ignore settings
 hydrafloodviewer/settings.py
-
+mts/*
 # vendore files
 hydrafloodviewer/static/vendor/*
 static/vendor/*
