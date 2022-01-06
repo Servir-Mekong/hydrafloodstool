@@ -513,7 +513,9 @@ class MainGEEApi():
     def getFloodMap(self, date):
         image = ee.ImageCollection("projects/servir-mekong/hydrafloodsS1Daily")
         fc = image.filterDate(date)  
-        image = ee.Image(fc.first()).select(0)
+        # mekong_region = ee.FeatureCollection('users/kamalhosen/mekong_region')
+        # shape = mekong_region.geometry()
+        image = ee.Image(fc.first()).select(0)#.clip(shape)
         image = image.updateMask(image)
         floodMap = self.getTileLayerUrl(image.visualize(palette="#2389da",min=0,max=1))
         return floodMap
@@ -724,13 +726,20 @@ class MainGEEApi():
         #     return ee.Feature(test)
 
         #countries = landShp.filterBounds(geom).map(spatialSelect,True)
+        #self.geom = geom
+        #WEST, SOUTH, EAST, NORTH = 92.0, 5, 109.5, 29
+        #BOUNDING_BOX = (WEST,SOUTH,EAST,NORTH)
+        #self.REGION = ee.Geometry.Rectangle(BOUNDING_BOX)
         # if shape:
         #     shape = shape.replace('["', '[');
         #     shape = shape.replace('"]', ']');
         #     shape = shape.replace('","', ',');
         #     shape = ee.FeatureCollection(eval(shape));
         # else:
-        #     shape = self.REGION
+        #shape = self.REGION
+
+        mekong_region = ee.FeatureCollection('users/kamalhosen/mekong_region');
+        shape = mekong_region.geometry();
 
         if climatology:
             if month == None:
@@ -753,7 +762,7 @@ class MainGEEApi():
             waterMap = self.getTileLayerUrl(water.updateMask(water.eq(2)).visualize(min=0,max=2,palette='#ffffff,#9999ff,'+ wcolor))
 
         elif algorithm == 'JRC':
-            water = self.JRCAlgorithm(startYear, endYear, startMonth, endMonth, method)#.clip(shape)#shape,
+            water = self.JRCAlgorithm(startYear, endYear, startMonth, endMonth, method).clip(shape)
             #water = JRCAlgorithm(geom,iniTime,endTime).clip(countries)
             waterMap = self.getTileLayerUrl(water.visualize(min=0,max=1,bands='water',palette='#ffffff,'+ wcolor))
 

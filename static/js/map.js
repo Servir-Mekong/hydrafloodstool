@@ -115,12 +115,15 @@ $('#nav-basemap div').on('click', function(e) {
 });
 
 // get datelist
+var dateList;
 $.ajax({
     url: '/ajax/date/',
     type: "GET",
     dataType: "json",
+    async: false,
     success: (data) => {
         //console.log(data);
+        dateList = data;
         var enableDates = data;
         var enableDatesArray=[];
         $("#date_selection").datepicker("destroy");
@@ -163,12 +166,18 @@ $.ajax({
         console.log(error);
     }
 });
-
+var latest_date = dateList.slice(-1).pop();
+//console.log(latest_date);
 //Get precipitation and date values
 var prod = $('#product_selection').val();
 var cmap = $('#cmap_selection').val();
 var accum = prod.split('|')[0];
 var selected_date = $('#date_selection').val();
+
+selected_date.value = latest_date;
+
+var msg_date = document.getElementById('mesg-date');
+    msg_date.innerHTML = latest_date;  
 
 //Get slider value to add opacity to layer
 $("#precip-opacity").slider();
@@ -200,14 +209,14 @@ var method = 'discrete';
 //var geom = JSON.stringify(drawing_polygon);
 if (startMonth === endMonth) { endMonth += 1; }
 
-map.on('load', () => {
+map.on('style.load', () => {
     //Get Precipitation Layer 
     var getPrecip;
     $.ajax({
         url: '/ajax/precipmap/',
         type: "GET",
         data: {
-            "selected_date": selected_date,
+            "selected_date": latest_date,
             "cmap": cmap,
             "accum": accum
         },
@@ -253,7 +262,7 @@ map.on('load', () => {
         url: '/ajax/surfacewatermap/',
         type: "GET",
         data: {
-            "selected_date": selected_date,
+            "selected_date": latest_date,
         },
         dataType: 'json',
         async: false,
@@ -348,6 +357,12 @@ map.on('load', () => {
 $('#date_selection').change(function(){
     updatePrecipitationData()
 });
+$('#cmap_selection').change(function(){
+    updatePrecipitationData();
+});
+$('#product_selection').change(function(){
+    updatePrecipitationData();
+});
 
 //Defining function to update layer 
 $('#date_selection').change(function(){
@@ -371,7 +386,7 @@ switchlayer = function (lname) {
 var selected_date = $('#date_selection').val();
 var viirs_product = "VIIRS_SNPP_CorrectedReflectance_TrueColor";
 
-map.on('load', () => {   
+map.on('style.load', () => {   
     var layer = viirs_product;
     var tilePath = 'wmts/epsg3857/best/' +
         layer+'/default/' +
@@ -583,7 +598,7 @@ function updatePermanentWater(){
     });
 }
 
-map.on('load', () => {
+map.on('style.load', () => {
     map.addSource('adm2-src', {
         type: 'vector',
         url: 'mapbox://kamalh27.adm2',

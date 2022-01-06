@@ -75,7 +75,7 @@
                           <p class="pt-3">Select Accumulation Map:</p>
                           <select class="form-select" id="product_selection">
                               <option value="1|0">1 Day Accumulation</option>
-                              <option value="2|0">2 Day Accumulation</option>
+                              <!-- <option value="2|0">2 Day Accumulation</option> -->
                               <option value="3|0">3 Day Accumulation</option>
                           </select>
                           <p class="pt-3">Select Colormap: </p>
@@ -217,7 +217,15 @@
       <div class="tab-pane fade nav-basemap" id="nav-basemap" role="tabpanel" aria-labelledby="nav-basemap-tab">
           <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-basemap-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Basemap"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Basemap Style</span></div>
           <!-- Basemap from MapBox -->
-          <div class="card basemap-card active m-4" data-layer="streets-v11">
+          <div class="card basemap-card active m-4" data-layer="dark-v10">
+            <div class="d-flex flex-row bd-highlight">
+                <div class="bd-highlight"><img src="{% static 'images/mapbox-dark.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Dark Streets Map"></div>
+                <div class="bd-highlight pt-3 ps-4">
+                    <h6>MapBox Dark Map<br><small>MapBox World Dark Streets Map</small></h6>    
+                </div>
+            </div>
+        </div>
+          <div class="card basemap-card m-4" data-layer="streets-v11">
               <div class="d-flex flex-row bd-highlight">
                   <div class="bd-highlight"><img src="{% static 'images/mapbox-streets.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Streets Map"></div>
                   <div class="bd-highlight pt-3 ps-4">
@@ -238,14 +246,6 @@
                   <div class="bd-highlight"><img src="{% static 'images/mapbox-light.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Light Map"></div>
                   <div class="bd-highlight pt-3 ps-4">
                       <h6>Light Map<br><small>MapBox World Light Map</small></h6>    
-                  </div>
-              </div>
-          </div>
-          <div class="card basemap-card m-4" data-layer="dark-v10">
-              <div class="d-flex flex-row bd-highlight">
-                  <div class="bd-highlight"><img src="{% static 'images/mapbox-dark.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Dark Streets Map"></div>
-                  <div class="bd-highlight pt-3 ps-4">
-                      <h6>MapBox Dark Map<br><small>MapBox World Dark Streets Map</small></h6>    
                   </div>
               </div>
           </div>
@@ -321,6 +321,11 @@
   </div>
 </div>
 <div class="map" id="map"></div>
+
+<div class="map-overlay top">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+        <h5 class="pt-2">The map data showing on <span id="mesg-date" class="fw-bold"></span></h5>
+</div>
 
 {% endblock container %}
 

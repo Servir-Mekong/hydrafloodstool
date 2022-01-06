@@ -230,4 +230,28 @@ body .mapboxgl-map {line-height: 1.4;}
 .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
     border-left-color:rgba(0, 0, 0, 0.7);
 }
-   
+
+.map-overlay {
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    position: absolute;
+    width: 400px;
+    top: 0;
+    left: 450px;
+    padding: 10px;
+    top: 130px;
+    background: palegreen;
+}
+.closebtn {
+    margin-left: 15px;
+    color: #000;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+  
+.closebtn:hover {
+    color: rgb(226, 77, 77);
+}
