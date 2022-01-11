@@ -98,22 +98,6 @@ $(document).ready(function() {
     });
 });
 
-$('#nav-basemap div').on('click', function(e) {
-    var selected_basemap = this.getAttribute('data-layer');
-    //MapBox Basemap
-    if((selected_basemap === "streets-v11")){
-        map.setStyle('mapbox://styles/mapbox/streets-v11');
-    }else if(selected_basemap === "satellite-v9"){
-        map.setStyle('mapbox://styles/mapbox/satellite-v9');
-    }else if(selected_basemap === "light-v10"){
-        map.setStyle('mapbox://styles/mapbox/light-v10');
-    }else if(selected_basemap === "dark-v10"){
-        map.setStyle('mapbox://styles/mapbox/dark-v10');
-    }else if(selected_basemap === "outdoors-v11"){
-        map.setStyle('mapbox://styles/mapbox/outdoors-v11');
-    }
-});
-
 // get datelist
 var dateList;
 $.ajax({
@@ -174,7 +158,7 @@ var cmap = $('#cmap_selection').val();
 var accum = prod.split('|')[0];
 var selected_date = $('#date_selection').val();
 
-selected_date.value = latest_date;
+document.getElementById('date_selection').value = latest_date;
 
 var msg_date = document.getElementById('mesg-date');
     msg_date.innerHTML = latest_date;  
@@ -231,7 +215,7 @@ map.on('style.load', () => {
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 10
             });
             map.addLayer({
                 'id': 'precip', // Layer ID
@@ -276,7 +260,7 @@ map.on('style.load', () => {
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 10
             });
             map.addLayer({
                 'id': 'surfacewater', // Layer ID
@@ -327,7 +311,7 @@ map.on('style.load', () => {
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 10
             });
             map.addLayer({
                 'id': 'permanentwater', // Layer ID
@@ -374,14 +358,6 @@ $("#update-button").on("click",function(){
     updatePermanentWater();
 }); 
 
-switchlayer = function (lname) {
-    if (document.getElementById(lname + "CB").checked) {
-        map.setLayoutProperty(lname, 'visibility', 'visible');
-    } else {
-        map.setLayoutProperty(lname, 'visibility', 'none');
-    }
-}
-
 //Get values related to raw satellite imagery
 var selected_date = $('#date_selection').val();
 var viirs_product = "VIIRS_SNPP_CorrectedReflectance_TrueColor";
@@ -400,7 +376,7 @@ map.on('style.load', () => {
         ],
         'tileSize': 256,
         'minzoom': 0,
-        'maxzoom': 14,
+        'maxzoom': 10,
         'attribution': '<a href="https://wiki.earthdata.nasa.gov/display/GIBS" target="_">' + 'NASA EOSDIS GIBS</a>;'
     });
     map.addLayer({
@@ -441,7 +417,7 @@ $('#browse_selection').change(function(){
         ],
         'tileSize': 256,
         'minzoom': 0,
-        'maxzoom': 14,
+        'maxzoom': 10,
         'attribution': '<a href="https://wiki.earthdata.nasa.gov/display/GIBS" target="_">' + 'NASA EOSDIS GIBS</a>;'
     });
     map.addLayer({
@@ -483,7 +459,7 @@ function updatePrecipitationData(){
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 10
             });
             map.addLayer({
                 'id': 'precip', // Layer ID
@@ -527,7 +503,7 @@ function updateFloodMapLayer(){
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 10
             });
             map.addLayer({
                 'id': 'surfacewater', // Layer ID
@@ -580,7 +556,7 @@ function updatePermanentWater(){
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 10
             });
             map.addLayer({
                 'id': 'permanentwater', // Layer ID
@@ -599,18 +575,18 @@ function updatePermanentWater(){
 }
 
 map.on('style.load', () => {
-    map.addSource('adm2-src', {
+    map.addSource('adm2_new-src', {
         type: 'vector',
-        url: 'mapbox://kamalh27.adm2',
+        url: 'mapbox://kamalh27.adm2_new',
         'minzoom': 0,
-        'maxzoom': 14
+        'maxzoom': 10
     });
     map.addLayer(
         {
-        'id': 'adm2',
+        'id': 'adm2_new',
         'type': 'fill',
-        'source': 'adm2-src',
-        'source-layer': 'adm2',
+        'source': 'adm2_new-src',
+        'source-layer': 'adm2_new',
         'layout': {
             'visibility': 'none',
         },
@@ -619,22 +595,21 @@ map.on('style.load', () => {
             'fill-opacity': 0.5
         }
     });
-    // map.addLayer(
-    //     {
-    //     'id': 'adm22',
-    //     'type': 'line',
-    //     'source': 'adm2-src',
-    //     'source-layer': 'adm2',
-    //     'layout': {
-    //         'visibility': 'none',
-    //     },
-    //     'paint': {
-    //         'line-color': '#000',
-    //         'line-width': 1
-    //     }
-    // });
-    map.on('click', 'adm2', (e) => {
-        
+    map.addLayer(
+        {
+        'id': 'adm22',
+        'type': 'line',
+        'source': 'adm2_new-src',
+        'source-layer': 'adm2_new',
+        'layout': {
+            'visibility': 'none',
+        },
+        'paint': {
+            'line-color': '#eee',
+            'line-width': 1
+        }
+    });
+    map.on('click', 'adm2_new', (e) => {
         var district = e.features[0].properties.NAME_2;
         var province = e.features[0].properties.NAME_1;
         var country = e.features[0].properties.NAME_0;
@@ -728,15 +703,24 @@ map.on('style.load', () => {
         .addTo(map);
     });
     // Change the cursor to a pointer when the mouse is over the places layer.
-    map.on('mouseenter', 'adm2', () => {
+    map.on('mouseenter', 'adm2_new', () => {
         map.getCanvas().style.cursor = 'pointer';
     });
      
     // Change it back to a pointer when it leaves.
-    map.on('mouseleave', 'adm2', () => {
+    map.on('mouseleave', 'adm2_new', () => {
         map.getCanvas().style.cursor = '';
     });
 });
+
+switchlayer = function (lname) {
+    if (document.getElementById(lname + "CB").checked) {
+        map.setLayoutProperty(lname, 'visibility', 'visible');
+    } else {
+        map.setLayoutProperty(lname, 'visibility', 'none');
+    }
+}
+
 /**
 * Toggle layer visualizing
 */
@@ -748,6 +732,22 @@ toggleLayer = function (lname) {
         map.setLayoutProperty(lname, 'visibility', 'none');
     }
 }
+
+$('#nav-basemap div').on('click', function(e) {
+    var selected_basemap = this.getAttribute('data-layer');
+    //MapBox Basemap
+    if((selected_basemap === "streets-v11")){
+        map.setStyle('mapbox://styles/mapbox/streets-v11'); 
+    }else if(selected_basemap === "satellite-v9"){
+        map.setStyle('mapbox://styles/mapbox/satellite-v9');    
+    }else if(selected_basemap === "light-v10"){
+        map.setStyle('mapbox://styles/mapbox/light-v10');
+    }else if(selected_basemap === "dark-v10"){
+        map.setStyle('mapbox://styles/mapbox/dark-v10');
+    }else if(selected_basemap === "outdoors-v11"){
+        map.setStyle('mapbox://styles/mapbox/outdoors-v11');
+    }
+});
 
 // //Defining function to update layer 
 // $('#date_selection').change(function(){
@@ -774,7 +774,7 @@ toggleLayer = function (lname) {
 //                 ],
 //                 'tileSize': 256,
 //                 'minzoom': 0,
-//                 'maxzoom': 14
+//                 'maxzoom': 10
 //             });
 //             map.addLayer({
 //                 'id': 'precip', // Layer ID
@@ -815,7 +815,7 @@ toggleLayer = function (lname) {
 //                 ],
 //                 'tileSize': 256,
 //                 'minzoom': 0,
-//                 'maxzoom': 14
+//                 'maxzoom': 10
 //             });
 //             map.addLayer({
 //                 'id': 'surfacewater', // Layer ID
@@ -859,7 +859,7 @@ toggleLayer = function (lname) {
 //                 ],
 //                 'tileSize': 256,
 //                 'minzoom': 0,
-//                 'maxzoom': 14
+//                 'maxzoom': 10
 //             });
 //             map.addLayer({
 //                 'id': 'permanentwater', // Layer ID

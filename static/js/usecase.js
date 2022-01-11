@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1Ijoia2FtYWxoMjciLCJhIjoiY2t0bG1qMnJ5MDh0YzJ3czRiOHB1dXVwZiJ9.RHfxuNLtYaycA39uKjhARw';
+mapboxgl.accessToken = 'pk.eyJ1Ijoia2FtYWxoMjciLCJhIjoiY2t3b2Roc2M3MDF2bDJ2cDY0ZmppdXl0MCJ9.Gn5rUJgaap_KDcnhyROMzQ';
     
 var sidebar = document.getElementById("sidebar"); 
 var sidenavOpen = document.getElementById("open-sidebar"); 
@@ -44,12 +44,156 @@ map.addControl(new mapboxgl.NavigationControl());
 // Add geolocate control to the map.
 map.addControl(
     new mapboxgl.GeolocateControl({
-    positionOptions: {
-    enableHighAccuracy: true
-    },
-    // When active the map will receive updates to the device's location as it changes.
-    trackUserLocation: true,
-    // Draw an arrow next to the location dot to indicate which direction the device is heading.
-    showUserHeading: true
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        // When active the map will receive updates to the device's location as it changes.
+        trackUserLocation: true,
+        // Draw an arrow next to the location dot to indicate which direction the device is heading.
+        showUserHeading: true
     })
 );
+document.getElementById('usecase1').addEventListener('click', () => {
+    // Fly to a random location by offsetting the point -74.50, 40
+    // by up to 5 degrees.
+    map.flyTo({
+        center: [104.9249267578125, 11.549998444541838],
+        essential: true,
+        zoom: 8
+    });
+});
+
+map.on('load', () => {
+    //Get Daily Surface Water Area Layer
+    var selected_date = '2021-10-25';
+    $.ajax({
+        url: '/ajax/surfacewatermap/',
+        type: "GET",
+        data: {
+            "selected_date": selected_date,
+        },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            getDailySurWater = data;
+            var dailySurfaceWater = getDailySurWater;        
+            map.addSource('surfacewater', {
+                'type': 'raster',
+                'tiles': [
+                    dailySurfaceWater
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'surfacewater', // Layer ID
+                'type': 'raster',
+                'source': 'surfacewater', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'visible'
+                },
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+});
+
+document.getElementById('usecase2').addEventListener('click', () => {
+    // Fly to a random location by offsetting the point -74.50, 40
+    // by up to 5 degrees.
+    map.flyTo({
+        center: [101.68533325195312, 15.489746308990687],
+        essential: true,
+        zoom: 8
+    });
+    map.removeLayer('surfacewater');
+    map.removeSource('surfacewater');
+    //Get Daily Surface Water Area Layer
+    var selected_date = '2021-09-27';
+    $.ajax({
+        url: '/ajax/surfacewatermap/',
+        type: "GET",
+        data: {
+            "selected_date": selected_date,
+        },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            getDailySurWater = data;
+            var dailySurfaceWater = getDailySurWater;        
+            map.addSource('surfacewater', {
+                'type': 'raster',
+                'tiles': [
+                    dailySurfaceWater
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'surfacewater', // Layer ID
+                'type': 'raster',
+                'source': 'surfacewater', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'visible'
+                },
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });  
+});
+
+document.getElementById('usecase3').addEventListener('click', () => {
+    // Fly to a random location by offsetting the point -74.50, 40
+    // by up to 5 degrees.
+    map.flyTo({
+        center: [109.13749694824219, 13.874746422868933],
+        essential: true,
+        zoom: 10
+    });
+    map.removeLayer('surfacewater');
+    map.removeSource('surfacewater');
+    //Get Daily Surface Water Area Layer
+    var selected_date = '2021-11-30';
+    $.ajax({
+        url: '/ajax/surfacewatermap/',
+        type: "GET",
+        data: {
+            "selected_date": selected_date,
+        },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            getDailySurWater = data;
+            var dailySurfaceWater = getDailySurWater;        
+            map.addSource('surfacewater', {
+                'type': 'raster',
+                'tiles': [
+                    dailySurfaceWater
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'surfacewater', // Layer ID
+                'type': 'raster',
+                'source': 'surfacewater', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'visible'
+                },
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });  
+});
