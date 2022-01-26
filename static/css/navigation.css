@@ -1,5 +1,6 @@
 .list-group{
     height: 55px;
+    margin-left: -4px;
 }
 @media only screen and (max-width: 600px) {
     .list-group-item{
@@ -18,7 +19,7 @@
 @media only screen and (min-width: 601px) {
     .list-group-item{
         border: none;
-        margin-left: 8px;
+        /* margin-left: 8px; */
         padding-left: 0; 
     }
     .usaid{
@@ -38,44 +39,43 @@
     width: 100%; 
     background-color: #173F5F;
 }
-.navbar .navbar-brand .logo {
-    width: 40px;
-}
 .navbar .navbar-nav .nav-link {
     color: #fff;
     font-size: 1.1em;
     position: relative;
+    padding: 1em 0.7em;
 }
 .navbar .navbar-nav .nav-link:hover {
-    color:#3ba2f7;
+    color:#ffb74d;
 }
-@media only screen and (min-width: 960px) {
-    .navbar .navbar-nav .nav-link {
-      padding: 1em 0.7em;
-    }
-    .navbar {
-      padding: 0;
-    }
-    .navbar .navbar-brand {
-      padding: 0 0.7em;
-    }
-}
-.navbar .navbar-nav .nav-link::after {
+/* .navbar .navbar-nav .nav-link::after {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     transition: 500ms;
-    background-color:#3ba2f7;
+    background-color:#ffb74d;
     color: transparent;
-    width: 0%;
+    width: 5%;
     content: '.';
     height: 3px;
-}
+} */
 .navbar .navbar-nav .nav-item.active a{
-    color: #3ba2f7;
+    /* color: #3ba2f7; */
+    color: #ffb74d;
 }
-.navbar .navbar-nav .nav-item.active a::after {
+.dropdown .dropdown-menu{
+    background-color: #fff;
+    margin: -2px;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+.dropdown-item:hover{
+    background-color: #ffb74d;
+    color: #000;
+}
+/* .navbar .navbar-nav .nav-item.active a::after {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -85,17 +85,17 @@
     width: 100%;
     content: '.';
     height: 3px;
-}
-@media only screen and (min-width: 960px){
+} */
+/* @media only screen and (min-width: 960px){
     .navbar .navbar-nav .nav-link:hover::after {
         width: 100%;
     }
 }
 @media only screen and (max-width: 960px){
     .navbar .navbar-nav .nav-link:hover::after {
-        width: 5%;
+        width: 0%;
     }
-} 
+}  */
 .navbar-toggler:focus,
 .navbar-toggler:active,
 .navbar-toggler-icon:focus {

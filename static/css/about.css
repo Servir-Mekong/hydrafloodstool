@@ -1,0 +1,13 @@
+/* .about-bg{
+    background-image: url("/static/images/flooded-img.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 300px;
+} */
+.about h1{
+    color: royalblue;
+}
+.about-hf{
+    color: green;
+}

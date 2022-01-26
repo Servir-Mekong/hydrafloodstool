@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- CSS files -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block container %}
+
+{% include 'navigation.html' %}
+
+<div class="container-fluid about">
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <h1 class="h2 fw-bold pt-5">About HYDRAFloods</h1>
+            <p class="fs-5 pt-3"><span class="fw-bold about-hf">HYDRAFloods</span> is a publicly available web-based near real-time flood monitoring tool. It is designed to improve flood monitoring system using freely available satellite remote sensing data. This tool is benefitted by applying Artificial intelligence (AI) technique to detect floods more accurately. This tool helps emergency response and relief sectors by providing more accurate flood information and it's extent.</p>
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'images/flooded-img.jpg' %}" class="img-fluid">
+        </div>
+    </div>
+    <!-- <img src="{% static 'images/vill-flood.jpg' %}" class="img-fluid" height=50%> -->
+    
+    
+</div>
+
+<div class="container-fluid mt-5">
+    {% include 'partners.html' %}
+</div>
+{% include 'footer.html' %}
+
+{% endblock container %}
+
+
+

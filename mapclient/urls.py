@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('map/', views.MapView.as_view(), name='mapviewer'),
     path('usecase/', views.UsecaseView.as_view(), name='usecase'),
+    path('about/', views.AboutView.as_view(), name='about'),
     #path('api/', api.api, name='api-data'),
     url(r'^ajax/date/$', api.dateList),
     url(r'^ajax/precipmap/$', api.get_precipitation_map),

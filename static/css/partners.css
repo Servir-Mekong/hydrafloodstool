@@ -1,12 +1,12 @@
 .partner .partner-sig {
-    width: 320px !important;
+    padding-left: 3px;
+    width: 220px !important;
 }
 .partner .partner-sei {
-    width: 250px !important;
+    width: 150px !important;
 }
 .partner .partner-deltares {
-    margin-top: -2%;
-    width: 230px !important;
+    width: 130px !important;
 }
 
 /*

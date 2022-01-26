@@ -1,73 +1,146 @@
 /* jumbotron section*/
 .jumbotron {
     margin-bottom: 0px;
-    margin-top: -28px; 
+    margin-top: 0px; 
     padding: 0;
-    background-image: url("/static/images/floods-myanmar.jpg");
+    background-image: url("/static/images/home-banner.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    color: white;
-    text-align: center;
+    height: 650px;
 } 
-.jumbotron h1{
-    text-align: center;
+.jumbotron-card{
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 50%;
+    height: 100%;
+}
+.jumbotron-card h1{
+    text-align: left;
     font-family: 'Ubuntu';
+    padding-left: 0px;
     font-weight: 400;
     padding-top: 80px;
-    padding-bottom: 50px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
     font-size: 40px;
+    font-weight: bold;
+    color: rgb(108, 228, 228);
+}
+.jumbotron h3{
+    text-align: left;
+    padding-left: 0px;
+    font-family: 'Ubuntu';
+    margin-top: 0px;
+    padding-top: 5px;
+    padding-bottom: 20px;
+    color: #fff;
+    font-size: 20px;
+}
+.jmb-highlight{
+    color: rgb(108, 228, 228); 
     font-weight: bold;
 }
 .jumbotron .btn-jumbotron{
-    background-color: white;
-    border-radius: 25px 25px 25px 25px;
+    background-color: #ffb74d;
+    /* border-radius: 25px 25px 25px 25px; */
     outline:none !important;
     box-shadow: none !important;
     padding-left: 35px;
     padding-right: 35px;
-    color: #173F5F;
+    color: #fff;
     margin-bottom: 60px;
-    font-family: oxyzen;
-    font-size: 20px;
+    margin-left: 0px;
+    font-family: 'Poppins';
+    font-size: 14px;
     font-weight: bold;
 }
 .jumbotron .btn-jumbotron:hover {
-    background-color:#3789cc;
-    border-radius: 25px 25px 25px 25px;
+    /* background-color:#ef6c00 ; */
+    /* border-radius: 25px 25px 25px 25px; */
     outline:none !important;
     box-shadow: none !important;
     padding-left: 35px;
     padding-right: 35px;
-    color: #e3e3e3;
+    color: #fff; 
+}
+.fld-dashboard .btn-jumbotron{
+    background-color: #ffb74d;
+    border-radius: 0; 
+    outline:none !important;
+    box-shadow: none !important;
+    padding-left: 35px;
+    padding-right: 35px;
+    color: #000;
+    margin-bottom: 60px;
+    margin-left: 0px;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-weight: bold;
+}
+/* Bounce To Top */
+.hvr-bounce-to-right:before {
+    background: #ef6c00;
+}
+.jumbotron p{
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 0px;
+}
+@media only screen and (max-width: 576px) {
+    .jumbotron {
+        height: 350px;
+        text-align: center;
+    } 
+    .jumbotron-card{
+        background-color: rgba(0,0,0,.3);
+        width: 100%;
+    }
+    .jumbotron h1{
+        text-align: center;
+        padding-left: 0px;
+    }
+    .jumbotron h3{
+        text-align: center;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .jumbotron .btn-jumbotron{
+        margin-left: 0px;
+    }
+    .jumbotron p{
+        display: none;
+    }
+}
+@media (min-width: 577px) and (max-width: 800px){
+    .jumbotron-card{
+        background-color: rgba(0,0,0,.3);
+        width: 100%;
+    }
 }
 /* end jumbotron section*/
-
-.intro {
+.fld-dashboard{
     margin-top: 100px;
+    margin-bottom: 100px;
 }
-.intro .card{
-    width: 100%;
+.fld-dashboard ul {
+    list-style: none; /* Remove HTML bullets */
+    padding: 0;
+    margin: 0;
+} 
+.fld-dashboard li { 
+    padding: 10px;
+    background: #eee;
 }
-.btn-intro,
-.btn-intro:active,
-.btn-intro:focus{
-    background-color: white;
-    border: 1px solid#173F5F;
-    border-radius: none;
-    outline:none !important;
-    box-shadow: none !important;
-    padding-left: 35px;
-    padding-right: 35px;
-    color: #173F5F;
-    margin-bottom: 50px;
+.fld-dashboard h4{
+    text-align: end;
 }
-.btn-intro:hover {
-    background-color:#3789cc;
-    border: 1px solid #eee;
-    border-radius: none;
-    outline:none !important;
-    box-shadow: none !important;
-    padding-left: 35px;
-    padding-right: 35px;
-    color: #e3e3e3;
+  
+@media only screen and (max-width: 576px) {
+    .fld-dashboard h2{
+        text-align: center;
+    }
+    .fld-dashboard h4{
+        padding-top: 20px;
+        text-align: center;
+    }
 }

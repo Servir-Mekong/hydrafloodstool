@@ -12,6 +12,9 @@ class MapView(TemplateView):
 class UsecaseView(TemplateView):
     template_name = "usecase.html"
 
+class AboutView(TemplateView):
+    template_name = "about.html"
+
 
 # @oauth_required
 # def index(request):

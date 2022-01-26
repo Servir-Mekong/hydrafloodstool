@@ -18,7 +18,6 @@
     display: none;
     z-index: 1;
 }
-
 #map {
     position: fixed;
     height: calc(100% - 107px); 
@@ -230,7 +229,6 @@ body .mapboxgl-map {line-height: 1.4;}
 .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
     border-left-color:rgba(0, 0, 0, 0.7);
 }
-
 .map-overlay {
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     position: absolute;
@@ -251,7 +249,20 @@ body .mapboxgl-map {line-height: 1.4;}
     cursor: pointer;
     transition: 0.3s;
 }
-  
 .closebtn:hover {
     color: rgb(226, 77, 77);
+}
+@media (min-width: 576px) and (max-width: 800px) {
+    .map-overlay{
+        left: 400px;
+        margin-top: 50px;
+        width: 300px;
+    }
+}
+@media only screen and (max-width: 576px) {
+    .map-overlay{
+        left: 100px;
+        margin-top: 90px;
+        width: 250px;
+    }
 }

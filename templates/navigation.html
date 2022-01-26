@@ -1,5 +1,5 @@
 {% load static %}
-<div class="container mb-0 pb-0">
+<div class="container-fluid mb-0 pb-0">
     <!-- Navigation Partners Logo -->
     <div class="row">
         <!-- Mobile view -->
@@ -54,10 +54,9 @@
 </div>
 <!-- Navigation -->
 <div class="navigation mb-0 pb-0">
-    <div class="container mb-0 pb-0">
+    <div class="container-fluid mb-0 pb-0">
         <nav class="navbar navbar-expand-lg mb-0 pb-0">
             <a class="navbar-brand" href="/">
-                <img class="logo" src="{% static 'images/hydrafloodsicon_lrgnotxt.png' %}" >
                 HYDRAFloods Viewer
             </a>
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerMenu" aria-controls="navbarTogglerMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,9 +76,23 @@
                     <li class="nav-item {% if request.path == usecasePage %}active{% endif %}">
                         <a class="nav-link" href="{{ usecasePage }}">Use Cases</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSc4famo2tBCrItC3H3azD5HsOo-hQuFQqLXxrawwDGMd5WnYQ/viewform?usp=pp_url" target="_blank">Feedback</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          User Materials
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="https://servir-mekong.github.io/hydra-floods/" target="_blank">Methods and Documentation</a></li>
+                            <li><a class="dropdown-item" href="https://github.com/Servir-Mekong/hydra-floods" target="_blank">GitHub Repository</a></li>
+                            <!-- <li><a class="dropdown-item" href="#">User Guide</a></li> -->
+                        </ul>
                     </li>
+                    {% url 'about' as aboutPage %} 
+                    <li class="nav-item {% if request.path == aboutPage %}active{% endif %}">
+                        <a class="nav-link" href="{{ aboutPage }}">About</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSc4famo2tBCrItC3H3azD5HsOo-hQuFQqLXxrawwDGMd5WnYQ/viewform?usp=pp_url" target="_blank">Feedback</a>
+                    </li> -->
                 </ul>
             </div>
         </nav>

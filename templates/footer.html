@@ -1,7 +1,7 @@
 <!-- Footer -->
 {% load static %}
 <footer class="footer">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row mt-5 pt-5 pb-5 fcontent">
 			<div class="col-md-6">
 				<img class="img-fluid" src="{% static 'images/servir-mekong.png' %}" alt="SERVIR Mekong">
@@ -20,12 +20,9 @@
 					<br>
 					<b>Fax:</b> +66 2 298 0012
 				</p>
-				<br>
-				<a type="button" class="btn btn-primary mb-5" href="https://servir.adpc.net/services/technical-assistance">
-					Request Technical Assistance
-				</a>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-6"></div>
+			<!-- <div class="col-md-3">
 				<h4><b>Menu Links</b></h4>
 				<ul class="footer-menu">
 					<li class="footer-menu-item">
@@ -41,8 +38,8 @@
 						<i class="fa fa-angle-right" aria-hidden="true"></i><a href="/usecase/" target="_blank">Feedback</a>
 					</li>
 				</ul>
-			</div>
-			<div class="col-md-3">
+			</div> -->
+			<!-- <div class="col-md-3">
 				<h4><b>Explore SERVIR Mekong</b></h4>
 				<ul class="footer-menu">
 					<li class="footer-menu-item">
@@ -67,6 +64,21 @@
 						<i class="fa fa-angle-right" aria-hidden="true"></i><a href="https://servir.adpc.net/about/contact-servir-mekong" target="_blank">Contact Us</a>
 					</li>
 				</ul>
+			</div> -->
+		</div>
+		<div class="row">
+			<div class="col-md-6 fcontent">
+				<a type="button" class="btn btn-primary mb-5" href="https://servir.adpc.net/services/technical-assistance">
+					Request Technical Assistance
+				</a>
+			</div>
+			<div class="col-md-6 disclaimer">
+				<h4 class="fw-bold fs-5">Disclaimer</h4>
+				<p class="fs-6">SERVIR-Mekong, NASA, USAID and ADPC make no express or implied warranty of this data as to the merchantability or 
+					fitness for a particular purpose. SERVIR-Mekong, NASA, USAID and ADPC make no express or implied warranty as to the 
+					accuracy of the map or as to the merchantability or fitness for a particular purpose of the data. Neither the US Government 
+					nor its contractors shall be liable for special, consequential or incidental damages attributed to this data.
+				</p>
 			</div>
 		</div>
 	</div>
@@ -74,7 +86,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<p class="copyright-content">
-					<em>© 2021 Asian Disaster Preparedness Center (ADPC). All Rights Reserved.</em>
+					<em>© 2022 Asian Disaster Preparedness Center (ADPC). All Rights Reserved.</em>
 				</p>
 			</div>
 		</div>
