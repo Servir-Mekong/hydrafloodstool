@@ -63,11 +63,81 @@ document.getElementById('usecase1').addEventListener('click', () => {
     });
 });
 
+// map.on('load', () => {
+//     //Get Daily Surface Water Area Layer
+//     var selected_date = '2021-10-25';
+//     $.ajax({
+//         url: '/ajax/floodwatermap/',
+//         type: "GET",
+//         data: {
+//             "selected_date": selected_date,
+//         },
+//         dataType: 'json',
+//         async: false,
+//         success: (data) => {
+//             getDailyFloodWater = data;
+//             var dailyfloodwater = getDailyFloodWater;        
+//             map.addSource('floodwater', {
+//                 'type': 'raster',
+//                 'tiles': [
+//                     dailyfloodwater
+//                 ],
+//                 'tileSize': 256,
+//                 'minzoom': 0,
+//                 'maxzoom': 10
+//             });
+//             map.addLayer({
+//                 'id': 'floodwater', // Layer ID
+//                 'type': 'raster',
+//                 'source': 'floodwater', // ID of the tile source created above
+//                 'layout': {
+//                     // Make the layer visible by default.
+//                     'visibility': 'visible'
+//                 },
+//             });
+//         },
+//         error: (error) => {
+//             console.log(error);
+//         }
+//     });
+// });
 map.on('load', () => {
-    //Get Daily Surface Water Area Layer
+    //JRC Permanent Water Map
+    $.ajax({
+        url: '/ajax/jrcpermanentwatermap/',
+        type: "GET",
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            var getPermanentWater = data;        
+            map.addSource('jrcpermanentwater', {
+                'type': 'raster',
+                'tiles': [
+                    getPermanentWater 
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'jrcpermanentwater', // Layer ID
+                'type': 'raster',
+                'source': 'jrcpermanentwater', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'visible'
+                },
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    //Case 01 Flood Map
     var selected_date = '2021-10-25';
     $.ajax({
-        url: '/ajax/surfacewatermap/',
+        url: '/ajax/casefloodmap/',
         type: "GET",
         data: {
             "selected_date": selected_date,
@@ -75,21 +145,20 @@ map.on('load', () => {
         dataType: 'json',
         async: false,
         success: (data) => {
-            getDailySurWater = data;
-            var dailySurfaceWater = getDailySurWater;        
-            map.addSource('surfacewater', {
+            var getFloodWaterMap = data;    
+            map.addSource('floodwater', {
                 'type': 'raster',
                 'tiles': [
-                    dailySurfaceWater
+                    getFloodWaterMap
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
                 'maxzoom': 10
             });
             map.addLayer({
-                'id': 'surfacewater', // Layer ID
+                'id': 'floodewater', // Layer ID
                 'type': 'raster',
-                'source': 'surfacewater', // ID of the tile source created above
+                'source': 'floodwater', // ID of the tile source created above
                 'layout': {
                     // Make the layer visible by default.
                     'visibility': 'visible'
@@ -103,19 +172,19 @@ map.on('load', () => {
 });
 
 document.getElementById('usecase2').addEventListener('click', () => {
-    // Fly to a random location by offsetting the point -74.50, 40
     // by up to 5 degrees.
     map.flyTo({
         center: [101.68533325195312, 15.489746308990687],
         essential: true,
         zoom: 8
     });
-    map.removeLayer('surfacewater');
-    map.removeSource('surfacewater');
-    //Get Daily Surface Water Area Layer
+    map.removeLayer('floodwater');
+    map.removeSource('floodwater');
+
+    //Get 14 Days Flood Water Layer (7 days before and after the flood event)
     var selected_date = '2021-09-27';
     $.ajax({
-        url: '/ajax/surfacewatermap/',
+        url: '/ajax/casefloodmap/',
         type: "GET",
         data: {
             "selected_date": selected_date,
@@ -123,21 +192,20 @@ document.getElementById('usecase2').addEventListener('click', () => {
         dataType: 'json',
         async: false,
         success: (data) => {
-            getDailySurWater = data;
-            var dailySurfaceWater = getDailySurWater;        
-            map.addSource('surfacewater', {
+            var getFloodWaterMap = data;
+            map.addSource('floodwater', {
                 'type': 'raster',
                 'tiles': [
-                    dailySurfaceWater
+                    getFloodWaterMap
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
                 'maxzoom': 10
             });
             map.addLayer({
-                'id': 'surfacewater', // Layer ID
+                'id': 'floodwater', // Layer ID
                 'type': 'raster',
-                'source': 'surfacewater', // ID of the tile source created above
+                'source': 'floodwater', // ID of the tile source created above
                 'layout': {
                     // Make the layer visible by default.
                     'visibility': 'visible'
@@ -151,19 +219,19 @@ document.getElementById('usecase2').addEventListener('click', () => {
 });
 
 document.getElementById('usecase3').addEventListener('click', () => {
-    // Fly to a random location by offsetting the point -74.50, 40
-    // by up to 5 degrees.
+    // fly to flood location
     map.flyTo({
         center: [109.13749694824219, 13.874746422868933],
         essential: true,
         zoom: 10
     });
-    map.removeLayer('surfacewater');
-    map.removeSource('surfacewater');
-    //Get Daily Surface Water Area Layer
+    map.removeLayer('floodwater');
+    map.removeSource('floodwater');
+
+    //Get 14 Days Flood Water Layer (7 days before and after the flood event)
     var selected_date = '2021-11-30';
     $.ajax({
-        url: '/ajax/surfacewatermap/',
+        url: '/ajax/casefloodmap/',
         type: "GET",
         data: {
             "selected_date": selected_date,
@@ -171,21 +239,20 @@ document.getElementById('usecase3').addEventListener('click', () => {
         dataType: 'json',
         async: false,
         success: (data) => {
-            getDailySurWater = data;
-            var dailySurfaceWater = getDailySurWater;        
-            map.addSource('surfacewater', {
+            var getFloodWaterMap = data;       
+            map.addSource('floodwater', {
                 'type': 'raster',
                 'tiles': [
-                    dailySurfaceWater
+                    getFloodWaterMap
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
                 'maxzoom': 10
             });
             map.addLayer({
-                'id': 'surfacewater', // Layer ID
+                'id': 'floodwater', // Layer ID
                 'type': 'raster',
-                'source': 'surfacewater', // ID of the tile source created above
+                'source': 'floodwater', // ID of the tile source created above
                 'layout': {
                     // Make the layer visible by default.
                     'visibility': 'visible'

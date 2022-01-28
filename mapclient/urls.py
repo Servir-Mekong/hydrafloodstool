@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^ajax/surfacewatermap/$', api.get_dailysurface_water_map),
     url(r'^ajax/permanaentwatermap/$', api.get_permanent_water_map),
     url(r'^ajax/downloadfloodmap/$', api.get_download_url),
+    url(r'^ajax/casefloodmap/$', api.get_case_flood_map),
+    url(r'^ajax/jrcpermanentwatermap/$', api.get_jrc_permanent_water_map),
 ]
