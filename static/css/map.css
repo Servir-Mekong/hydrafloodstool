@@ -243,10 +243,13 @@ body .mapboxgl-map {line-height: 1.4;}
     left: 450px;
     padding: 10px;
     top: 130px;
-    background: palegreen;
+    background: #b3e5fc;
+    border-radius: 25px 25px 25px 25px;
+    /* border: 1px solid red; */
 }
 .closebtn {
     margin-left: 15px;
+    margin-right: 10px;
     color: #000;
     font-weight: bold;
     float: right;

@@ -8,9 +8,10 @@ mts/*
 hydrafloodviewer/static/vendor/*
 static/vendor/*
 static/app/*
-
+db.sqlite3
 #node and related environment files
 .npmignore
+.sqlite3
 node_modules/
 __pycache__/
 
