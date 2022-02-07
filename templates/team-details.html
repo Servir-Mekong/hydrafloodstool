@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% load static %}
+
+<!-- CSS files -->
+{% block extra_css %} {% endblock %} 
+
+{% block container %} 
+{% include 'navigation.html' %}
+
+<div class="container team-details mt-5">
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-3">
+        <div class="card text-center border-0"> 
+          <div class="card-body">
+            <img src="{{object.img.url}}" width="200" alt="{{object.name}}">
+            <h5 class="card-title fw-bold pt-4">{{object.name}}</h5>
+            <p class="card-text">{{object.position}}</p>
+            <p class="pt-1">
+              <a class="btn btn-primary" href="{{tm.website}}" target="_blank" role="button"><i class="fa fa-globe"></i></a>
+              <a class="btn btn-primary" href="{{tm.linkedin}}" target="_blank" role="button"><i class="fab fa-linkedin"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-body border-0 mt-0 pt-0">
+          <p class="card-text fs-5 ps-3 pt-0 mt-0">{{object.about}}</p>
+        </div>   
+      </div> 
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+<div class="container">
+  {% include 'partners.html' %}
+</div>
+{% include 'footer.html' %}
+{% endblock container %}

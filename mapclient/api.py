@@ -27,6 +27,14 @@ def get_precipitation_map(request):
         data = core.getPrecipMap(date, accumulation=accum, cmap_name=cmap)
         return JsonResponse(data, safe=False)
 
+#Get potential flood map
+def get_potential_flood_map(request):
+    if request.is_ajax and request.method == "GET":
+        date = request.GET.get('selected_date')        
+        core = MainGEEApi()
+        data = core.getPotentialFloodMap(date)
+        return JsonResponse(data, safe=False)
+
 #Get daily surface water map
 @csrf_exempt
 def get_dailysurface_water_map(request):

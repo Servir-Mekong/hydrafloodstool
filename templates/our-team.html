@@ -1,0 +1,23 @@
+{% load static %}
+<!-- Our Team Section -->
+<div class="row mt-5 mb-5">
+    <h3 class="h4 fw-bold pt-5 pb-5">OUR TEAM</h3>
+    {% for tm in team_list %}
+        {% if forloop.counter0|divisibleby:4 and not forloop.first %}<div class="cal-md-12"></div>{% endif %}
+        <div class="col-md-3 mt-3 mb-5">
+            <div class="team-card shadow-lg p-3 mb-0 bg-body rounded">
+                <div class="card border-0 text-center">  
+                    <div class="card-body text-center">
+                        <a href="{% url 'team-detail' tm.slug %}"><img src="{{tm.img.url}}" class="circular--square" width="150" alt="{{tm.name}}"></a>
+                        <h5 class="card-title fw-bold mt-3"><a href="{% url 'team-detail' tm.slug %}">{{tm.name}}</a></h5>
+                        <p class="card-text">{{tm.position}}</p>
+                    </div>
+                    <p class="pt-1">
+                        <a class="btn btn-primary" href="{{tm.website}}" target="_blank" role="button"><i class="fa fa-globe"></i></a>
+                        <a class="btn btn-primary" href="{{tm.linkedin}}" target="_blank" role="button"><i class="fab fa-linkedin"></i></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

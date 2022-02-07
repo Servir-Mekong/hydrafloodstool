@@ -264,3 +264,9 @@ document.getElementById('usecase3').addEventListener('click', () => {
         }
     });  
 });
+
+//Legend
+const legendEl = document.getElementById('legend');
+map.on('load', () => {
+    legendEl.style.display = 'block';
+});

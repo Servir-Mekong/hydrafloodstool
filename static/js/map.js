@@ -166,6 +166,7 @@ var msg_date = document.getElementById('mesg-date');
 //Get slider value to add opacity to layer
 $("#precip-opacity").slider();
 $("#swater-opacity").slider();
+$("#fwater-opacity").slider();
 $("#browse-opacity").slider();
 $("#historical-opacity").slider();
 
@@ -240,6 +241,52 @@ map.on('style.load', () => {
         }
     });
 
+    //Get Potential Flood Layer
+    var getPotentialFldWater;
+    $.ajax({
+        url: '/ajax/potentialfloodmap/',
+        type: "GET",
+        data: {
+            "selected_date": latest_date,
+        },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            getPotentialFldWater = data;
+            var dailyPotentialFloodWater = getPotentialFldWater;        
+            map.addSource('floodwater', {
+                'type': 'raster',
+                'tiles': [
+                    dailyPotentialFloodWater
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'floodwater', // Layer ID
+                'type': 'raster',
+                'source': 'floodwater', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'visible'
+                },
+            });
+            $("#fwater-opacity").on("slide", function(slideEvt) {
+                //console.log(slideEvt.value);
+                var opac = slideEvt.value
+                map.setPaintProperty(
+                    'floodwater',
+                    'raster-opacity',
+                    opac
+                );
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
     //Get Daily Surface Water Area Layer
     var getDailySurWater;
     $.ajax({
@@ -268,7 +315,7 @@ map.on('style.load', () => {
                 'source': 'surfacewater', // ID of the tile source created above
                 'layout': {
                     // Make the layer visible by default.
-                    'visibility': 'visible'
+                    'visibility': 'none'
                 },
             });
             $("#swater-opacity").on("slide", function(slideEvt) {
@@ -319,7 +366,7 @@ map.on('style.load', () => {
                 'source': 'permanentwater', // ID of the tile source created above
                 'layout': {
                     // Make the layer visible by default.
-                    'visibility': 'none'
+                    'visibility': 'visible'
                 },
             });
             $("#historical-opacity").on("slide", function(slideEvt) {
@@ -348,9 +395,14 @@ $('#product_selection').change(function(){
     updatePrecipitationData();
 });
 
-//Defining function to update layer 
+//Defining function to update flood layer 
 $('#date_selection').change(function(){
     updateFloodMapLayer()
+});
+
+//Defining function to update daily surface water layer 
+$('#date_selection').change(function(){
+    updateSurfaceWaterMapLayer()
 });
 
 //Update permanent water area layer by changing parameters
@@ -482,6 +534,49 @@ function updateFloodMapLayer(){
     //var flood_color = $('#color-picker-flood').val();
     var selected_date = $('#date_selection').val();
     //Update flood layer
+    map.removeLayer('floodwater');
+    map.removeSource('floodwater');
+    var getPotentialFldWater;
+    $.ajax({
+        url: '/ajax/surfacewatermap/',
+        type: "GET",
+        data: {
+            "selected_date": selected_date,
+        },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            getPotentialFldWater = data;
+            var dailyPotentialFloodWater = getPotentialFldWater;
+            map.addSource('surfacewater', {
+                'type': 'raster',
+                'tiles': [
+                    dailyPotentialFloodWater
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'floodwater', // Layer ID
+                'type': 'raster',
+                'source': 'floodwater', // ID of the tile source created above
+                // 'layout': {
+                //     // Make the layer visible by default.
+                //     'visibility': 'visible'
+                // },
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+}
+//Defining function to update surface water layer
+function updateSurfaceWaterMapLayer(){
+    //var flood_color = $('#color-picker-flood').val();
+    var selected_date = $('#date_selection').val();
+    //Update flood layer
     map.removeLayer('surfacewater');
     map.removeSource('surfacewater');
     var getDailySurWater;
@@ -574,42 +669,139 @@ function updatePermanentWater(){
     });
 }
 
+// Create a function to get unique feature
+function getUniqueFeatures(features, comparatorProperty) {
+    const uniqueIds = new Set();
+    const uniqueFeatures = [];
+    for (const feature of features) {
+        const id = feature.properties[comparatorProperty];
+        if (!uniqueIds.has(id)) {
+            uniqueIds.add(id);
+            uniqueFeatures.push(feature);
+        }
+    }
+    return uniqueFeatures;
+}
+
+// Create a popup, but don't add it to the map yet.
+const popup = new mapboxgl.Popup({
+    closeButton: false
+});
+
 map.on('style.load', () => {
-    map.addSource('adm2_new-src', {
+    // Country layer
+    map.addSource('adm0-src', {
         type: 'vector',
-        url: 'mapbox://kamalh27.adm2_new',
+        url: 'mapbox://kamalh27.adm0',
         'minzoom': 0,
-        'maxzoom': 10
+        'maxzoom': 6
     });
     map.addLayer(
         {
-        'id': 'adm2_new',
+        'id': 'adm0',
         'type': 'fill',
-        'source': 'adm2_new-src',
-        'source-layer': 'adm2_new',
+        'source': 'adm0-src',
+        'source-layer': 'adm0',
         'layout': {
-            'visibility': 'none',
+            'visibility': 'visible',
         },
         'paint': {
-            'fill-color': '#A6CF98',
-            'fill-opacity': 0.5
+            'fill-color': 'transparent',
+            'fill-opacity': 1.0,
+            'fill-outline-color': 'rgba(200, 230, 201, 1)'
         }
     });
     map.addLayer(
         {
-        'id': 'adm22',
-        'type': 'line',
-        'source': 'adm2_new-src',
-        'source-layer': 'adm2_new',
+            'id': 'adm0-highlighted',
+            'type': 'line',
+            'source': 'adm0-src',
+            'source-layer': 'adm0',
+            'paint': {
+                'line-color': '#ffc107',
+                'line-width': 1.5
+            },
+            // Display none by adding a
+            // filter with an empty string.
+            'filter': ['in', 'NAME_0', '']
+        },    
+    );
+
+    // Province layer
+    map.addSource('adm1-src', {
+        type: 'vector',
+        url: 'mapbox://kamalh27.adm1',
+        'minzoom': 6,
+        'maxzoom': 8
+    });
+    map.addLayer(
+        {
+        'id': 'adm1',
+        'type': 'fill',
+        'source': 'adm1-src',
+        'source-layer': 'adm1',
         'layout': {
-            'visibility': 'none',
+            'visibility': 'visible',
         },
         'paint': {
-            'line-color': '#eee',
-            'line-width': 1
+            'fill-color': 'transparent',
+            'fill-opacity': 1.0,
+            'fill-outline-color': '#69f0ae'
         }
     });
-    map.on('click', 'adm2_new', (e) => {
+    map.addLayer(
+        {
+            'id': 'adm1-highlighted',
+            'type': 'line',
+            'source': 'adm1-src',
+            'source-layer': 'adm1',
+            'paint': {
+                'line-color': '#ffc107',
+                'line-width': 1.5
+            },
+            // Display none by adding a
+            // filter with an empty string.
+            'filter': ['in', 'NAME_1', '']
+        },    
+    );
+
+    // District layer
+    map.addSource('adm2-src', {
+        type: 'vector',
+        url: 'mapbox://kamalh27.adm2',
+        'minzoom': 8,
+        'maxzoom': 16
+    });
+    map.addLayer(
+        {
+        'id': 'adm2',
+        'type': 'fill',
+        'source': 'adm2-src',
+        'source-layer': 'adm2',
+        'layout': {
+            'visibility': 'visible',
+        },
+        'paint': {
+            'fill-color': 'transparent',
+            'fill-opacity': 1.0,
+            'fill-outline-color': '#fff9c4'
+        }
+    });
+    map.addLayer(
+        {
+            'id': 'adm2-highlighted',
+            'type': 'line',
+            'source': 'adm2-src',
+            'source-layer': 'adm2',
+            'paint': {
+                'line-color': '#ffc107',
+                'line-width': 1.5
+            },
+            'filter': ['in', 'NAME_2', '']
+        },    
+    );
+    
+    map.on('click', 'adm2', (e) => {
         var district = e.features[0].properties.NAME_2;
         var province = e.features[0].properties.NAME_1;
         var country = e.features[0].properties.NAME_0;
@@ -701,15 +893,128 @@ map.on('style.load', () => {
             '</table>'+
         '</div>')
         .addTo(map);
+        const f = e.features[0];
+        var coordinates = f.geometry.coordinates[0];
+        var bounds = coordinates.reduce(function (bounds, coord) {
+            return bounds.extend(coord);
+        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+        
+        map.fitBounds(bounds, {
+            padding: 20
+        });
     });
-    // Change the cursor to a pointer when the mouse is over the places layer.
-    map.on('mouseenter', 'adm2_new', () => {
+
+    // map.on('click', 'adm0', (e) => {
+    //     const adm0_f = e.features[0];
+    //     var adm0_coordinates = adm0_f.geometry.coordinates[0];
+    //     var adm0_bounds = adm0_coordinates.reduce(function (adm0_bounds, adm0_coord) {
+    //         return adm0_bounds.extend(adm0_coord);
+    //     }, new mapboxgl.LngLatBounds(adm0_coordinates[0], adm0_coordinates[0]));
+        
+    //     map.fitBounds(adm0_bounds, {
+    //         padding: 15
+    //     });
+    // });
+
+    // map.on('click', 'adm1', (e) => {
+    //     const adm1_f = e.features[0];
+    //     var adm1_coordinates = adm1_f.geometry.coordinates[0];
+    //     var adm1_bounds = adm1_coordinates.reduce(function (adm1_bounds, adm1_coord) {
+    //         return adm1_bounds.extend(adm1_coord);
+    //     }, new mapboxgl.LngLatBounds(adm1_coordinates[0], adm1_coordinates[0]));
+        
+    //     map.fitBounds(adm1_bounds, {
+    //         padding: 25
+    //     });
+    // });
+
+    map.on('mousemove', 'adm0', (e) => {
+        // Change the cursor style as a UI indicator.
         map.getCanvas().style.cursor = 'pointer';
+         
+        // Use the first found feature.
+        const feature = e.features[0];
+         
+        // Add features with the same county name
+        // to the highlighted layer.
+        // map.setFilter('adm0-highlighted', [
+        //     'in',
+        //     'NAME_0',
+        //     feature.properties.NAME_0
+        // ]);
+         
+        // Display a popup with the name of the county.
+        popup
+        .setLngLat(e.lngLat)
+        .setText(feature.properties.NAME_0)
+        .addTo(map);
     });
-     
-    // Change it back to a pointer when it leaves.
-    map.on('mouseleave', 'adm2_new', () => {
+         
+    map.on('mouseleave', 'adm0', () => {
         map.getCanvas().style.cursor = '';
+        popup.remove();
+        map.setFilter('adm0-highlighted', ['in', 'NAME_0', '']);
+        //overlay.style.display = 'none';
+    });
+
+    map.on('mousemove', 'adm1', (e) => {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+         
+        // Use the first found feature.
+        const feature = e.features[0];
+         
+        // Add features with the same county name
+        // to the highlighted layer.
+        // map.setFilter('adm1-highlighted', [
+        //     'in',
+        //     'NAME_0',
+        //     feature.properties.NAME_1
+        // ]);
+         
+        // Display a popup with the name of the county.
+        popup
+        .setLngLat(e.lngLat)
+        .setText(feature.properties.NAME_1)
+        .addTo(map);
+    });
+         
+    map.on('mouseleave', 'adm1', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+        map.setFilter('adm1-highlighted', ['in', 'NAME_1', '']);
+        //overlay.style.display = 'none';
+    });
+
+    
+
+    map.on('mousemove', 'adm2', (e) => {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+         
+        // Use the first found feature.
+        const feature = e.features[0];
+         
+        // Add features with the same county name
+        // to the highlighted layer.
+        map.setFilter('adm2-highlighted', [
+            'in',
+            'NAME_2',
+            feature.properties.NAME_2
+        ]);
+         
+        // Display a popup with the name of the county.
+        popup
+        .setLngLat(e.lngLat)
+        .setText(feature.properties.NAME_2)
+        .addTo(map);
+    });
+         
+    map.on('mouseleave', 'adm2', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+        map.setFilter('adm2-highlighted', ['in', 'NAME_2', '']);
+        //overlay.style.display = 'none';
     });
 });
 
@@ -746,6 +1051,40 @@ $('#nav-basemap div').on('click', function(e) {
         map.setStyle('mapbox://styles/mapbox/dark-v10');
     }else if(selected_basemap === "outdoors-v11"){
         map.setStyle('mapbox://styles/mapbox/outdoors-v11');
+    }
+});
+
+//Legend
+const legendEl = document.getElementById('legend');
+map.on('load', () => {
+    legendEl.style.display = 'block';
+});
+
+var fwater_legend = document.getElementById('fwater-legend');
+var swater_legend = document.getElementById('swater-legend');
+var pwater_legend = document.getElementById('pwater-legend');
+
+$('#floodwaterCB').change(function(){
+    if(this.checked) {
+        fwater_legend.style.display="block";
+    } else {
+        fwater_legend.style.display="none";
+    }
+});
+
+$('#surfacewaterCB').change(function(){
+    if(this.checked) {
+        swater_legend.style.display="block";
+    } else {
+        swater_legend.style.display="none";
+    }
+});
+
+$('#permanentwaterCB').change(function(){
+    if(this.checked) {
+        pwater_legend.style.display="block";
+    } else {
+        pwater_legend.style.display="none";
     }
 });
 

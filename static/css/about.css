@@ -11,3 +11,23 @@
 .about-hf{
     color: green;
 }
+.team-card{
+    width: 100%;
+    height: 100%;
+    background-color: beige;
+}
+.team-card:hover{
+    border: 1px solid #78909c;
+}
+.card{
+    width: 100%;
+    height: 100%;
+}
+.team-details{
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+hr {
+    border: 1px solid #000;
+  }
+  

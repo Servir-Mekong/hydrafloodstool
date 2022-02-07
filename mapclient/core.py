@@ -267,17 +267,17 @@ class MainGEEApi():
 
     # -------------------------------------------------------------------------
     def getHistoricalMap(self, startYear, endYear, startMonth, endMonth, method='discrete',
-                      climatology=True,
-                      month=None,
-                      defringe=True,
-                      pcnt_perm=40,
-                      pcnt_temp=8,
-                      water_thresh=0.35,
-                      ndvi_thresh=0.5,
-                      hand_thresh=30,
-                      cloud_thresh=10,
-                      algorithm='SWT',
-                      wcolor='#00008b',):
+        climatology=True,
+        month=None,
+        defringe=True,
+        pcnt_perm=40,
+        pcnt_temp=8,
+        water_thresh=0.35,
+        ndvi_thresh=0.5,
+        hand_thresh=30,
+        cloud_thresh=10,
+        algorithm='SWT',
+        wcolor='#00008b',):
 
         # def spatialSelect(feature):
         #     test = ee.Algorithms.If(geom.contains(feature.geometry()),feature,None)
@@ -321,7 +321,7 @@ class MainGEEApi():
         elif algorithm == 'JRC':
             water = self.JRCAlgorithm(startYear, endYear, startMonth, endMonth, method).clip(shape)
             #water = JRCAlgorithm(geom,iniTime,endTime).clip(countries)
-            waterMap = self.getTileLayerUrl(water.visualize(min=0,max=1,bands='water',palette='#ffffff,'+ wcolor))
+            waterMap = self.getTileLayerUrl(water.visualize(min=0,max=1,bands='water',opacity = 0.5, palette='#ffffff,'+ wcolor))
 
         else:
             raise NotImplementedError('Selected algorithm string not available. Options are: "SWT" or "JRC"')
@@ -392,7 +392,7 @@ class MainGEEApi():
         end_date = event_date + timedelta(days=7)
         #start_date = "2021-10-20"
         #end_date = "2021-10-30"
-        print(start_date, end_date)
+        #print(start_date, end_date)
         fc = image.filterDate(start_date, end_date).max() 
         image = ee.Image(fc.select(0))
         sw_image = image.updateMask(image)
@@ -423,3 +423,33 @@ class MainGEEApi():
         waterOcc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater').select('occurrence').clip(shape)
         JRCPermanentMap = self.getTileLayerUrl( waterOcc.visualize(palette=['ffffff', 'ffbbbb', '0000ff'], min=0.0, max=100.0) )
         return JRCPermanentMap
+
+    #Get Potential Flood Map
+    def getPotentialFloodMap(self, date):
+        #sentinel 1 surfacece water map
+        image = ee.ImageCollection("projects/servir-mekong/hydrafloodsS1Daily")
+        fc = image.filterDate(date)
+        image = ee.Image(fc.first()).select(0)
+        sw_image = image.updateMask(image)
+
+        #JRC Image Collection version GSW1_3
+        waterOcc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater').select('occurrence')
+        jrc_data0 = ee.Image("JRC/GSW1_3/Metadata").select('total_obs').lte(0)
+        waterOccFilled = waterOcc.unmask(0).max(jrc_data0)
+        waterMask = waterOccFilled.lt(50)
+
+        onlyFloodImg = sw_image.updateMask(waterMask)
+
+        # startYear = 2000
+        # endYear = 2021
+        # startMonth = 1
+        # endMonth = 12
+        # method = 'discrete'
+        # permanent_water = self.JRCAlgorithm(startYear, endYear, startMonth, endMonth, method)
+        # #print( permanent_water)
+        # onlyFloodImg = sw_image.updateMask(permanent_water.not())
+
+        potentialFloodMap = self.getTileLayerUrl(onlyFloodImg.visualize(palette="#e57373",min=0,max=1))
+        return potentialFloodMap
+
+    

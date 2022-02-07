@@ -32,20 +32,19 @@
           <div class="accordion m-3" id="accordionExample">
               <!-- Date selection card -->
               <div class="accordion-item mb-2">
-                  <h2 class="accordion-header text-white" id="headingOne">
-                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <h2 class="accordion-header text-white" id="dateSelection">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDateSelection" aria-expanded="true" aria-controls="collapseDateSelection">
                           <i class="fas fa-calendar pe-2"></i>Date Selection
                       </button>
                   </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div id="collapseDateSelection" class="accordion-collapse collapse show" aria-labelledby="dateSelection" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                           <p> Select Date (YYYY-MM-DD) </p>
                           <div class="form-group ">
                               <input class = "form-control" id="date_selection"
                               name="date_selection"
                               type="text"
-                              data-provide="datepicker"
-                              
+                              data-provide="datepicker"                          
                               data-date-autoclose="true"
                               data-date-format="yyyy-mm-dd"
                               data-date-min-view-mode="days"
@@ -58,19 +57,19 @@
               </div>
               <!-- Precipitation data card -->
               <div class="accordion-item mb-2">
-                  <h2 class="accordion-header" id="headingTwo">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <h2 class="accordion-header" id="precipMap">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrecipMap" aria-expanded="false" aria-controls="collapsePrecipMap">
                           <i class="fas fa-cloud-rain pe-2"></i>Precipitation Data
                       </button>
                   </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                  <div id="collapsePrecipMap" class="accordion-collapse collapse" aria-labelledby="precipMap" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                           <div class="form-check pb-2">
                               <input class="form-check-input" id="precipCB" type="checkbox" value="precip" onchange="switchlayer('precip')">
                               <label class="form-check-label" for="precipCB"><b>Precipitation Map</b><br><small>Checked to overlay precipitation map</small></label>
                           </div>
                           <label for="precip-opacity" class="form-label">Opacity:</label><br>
-                          <input id="precip-opacity" data-slider-id='precip-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <input id="precip-opacity" data-slider-id='precip-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                           <p class="pt-3">Select Accumulation Map:</p>
                           <select class="form-select" id="product_selection">
                               <option value="1|0">1 Day Accumulation</option>
@@ -85,41 +84,59 @@
                           </select>
                       </div>
                   </div>
-              </div>                   
+              </div>  
+              <!-- Daily flood water card -->
+              <div class="accordion-item mb-2">
+                <h2 class="accordion-header" id="floodMap">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodMap" aria-expanded="false" aria-controls="collapseFloodMap">
+                        <i class="fas fa-water pe-2"></i> Potential Floods Water
+                    </button>
+                </h2>
+                <div id="collapseFloodMap" class="accordion-collapse collapse" aria-labelledby="floodMap" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="form-check">
+                            <input class="form-check-input" id="floodwaterCB" type="checkbox" value="floodwater" onchange="switchlayer('floodwater')" checked>
+                            <label class="form-check-label" for="floodwaterCB"><b>Potential Floods Water Map</b><br><small>Checked to overlay flood water area estimated from Sentinel 1 satellite imagery analysis</small></label>
+                        </div>
+                        <label for="fwater-opacity" class="form-label">Opacity:</label><br>
+                        <input id="fwater-opacity" data-slider-id='fwater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
+                    </div>
+                </div>
+            </div>                 
               <!-- Daily surface water card -->
               <div class="accordion-item mb-2">
-                  <h2 class="accordion-header" id="headingThree">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  <h2 class="accordion-header" id="surfaceWaterMap">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSurfaceWaterMap" aria-expanded="false" aria-controls="collapsesurfaceWaterMap">
                           <i class="fas fa-water pe-2"></i> Daily Surface Water
                       </button>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                  <div id="collapseSurfaceWaterMap" class="accordion-collapse collapse" aria-labelledby="surfaceWaterMap" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                           <div class="form-check">
-                              <input class="form-check-input" id="surfacewaterCB" type="checkbox" value="surfacewater" onchange="switchlayer('surfacewater')" checked>
+                              <input class="form-check-input" id="surfacewaterCB" type="checkbox" value="surfacewater" onchange="switchlayer('surfacewater')">
                               <label class="form-check-label" for="surfacewaterCB"><b>Surface Water Map</b><br><small>Checked to overlay surface water area estimated from Sentinel 1 satellite imagery analysis</small></label>
                           </div>
                           <label for="swater-opacity" class="form-label">Opacity:</label><br>
-                          <input id="swater-opacity" data-slider-id='swater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <input id="swater-opacity" data-slider-id='swater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                           <!-- <input id="swater-opacity" type="range" min="0" max="100" step="0" value="100"> -->
                       </div>
                   </div>
               </div>
               <!-- Permanent water card -->
               <div class="accordion-item mb-2">
-                  <h2 class="accordion-header" id="headingFour">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  <h2 class="accordion-header" id="permanentWaterMap">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePermanentWaterMap" aria-expanded="false" aria-controls="collapsePermanentWaterMap">
                           <i class="fas fa-water pe-2"></i> Parmanent Water
                       </button>
                   </h2>
-                  <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                  <div id="collapsePermanentWaterMap" class="accordion-collapse collapse" aria-labelledby="permanentWaterMap" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                           <div class="form-check">
-                              <input class="form-check-input" id="permanentwaterCB" type="checkbox" value="permanentwater" onchange="switchlayer('permanentwater')">
+                              <input class="form-check-input" id="permanentwaterCB" type="checkbox" value="permanentwater" onchange="switchlayer('permanentwater')" checked>
                               <label class="form-check-label" for="permanentwaterCB"><b>Permanent Water Layer</b><br><small>Checked to overlay permamnet water area map estimated from Landsat satellite imagery analysis</small></label>
                           </div>
                           <label for="historical-opacity" class="form-label">Opacity:</label><br>
-                          <input id="historical-opacity" data-slider-id='historical-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <input id="historical-opacity" data-slider-id='historical-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                           <p>Select reference period:</p>
                           <table style="width:100%">
                               <tr>
@@ -169,19 +186,19 @@
               </div>
               <!-- Satellite imagery card -->
               <div class="accordion-item mb-2">
-                  <h2 class="accordion-header" id="headingFive">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                  <h2 class="accordion-header" id="satelliteImagery">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSatelliteImagery" aria-expanded="false" aria-controls="collapseSatelliteImagery">
                           <i class="fas fa-satellite pe-2"></i> Raw Satellite Imagery
                       </button>
                   </h2>
-                  <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                  <div id="collapseSatelliteImagery" class="accordion-collapse collapse" aria-labelledby="satelliteImagery" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                           <div class="form-check">
                               <input class="form-check-input" id="gibsCB" type="checkbox" value="gibs" onchange="switchlayer('gibs')">
                               <label class="form-check-label" for="gibsCB"><b>NRT Browse Imagery</b><br><small>Checked to overlay various types of raw satellite image</small></label>
                           </div>
                           <label for="browse-opacity" class="form-label">Opacity:</label><br>
-                          <input id="browse-opacity" data-slider-id='browse-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="0.5"/>
+                          <input id="browse-opacity" data-slider-id='browse-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                           <p>Select Browse Imagery:</p>
                           <select class="form-select" id="browse_selection">
                               <option value="1|VIIRS_SNPP_CorrectedReflectance_TrueColor">VIIRS NRT TRUE COLOR</option>
@@ -201,9 +218,17 @@
       <div class="tab-pane fade" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">          
           <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-layer-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Layer Panel"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Layer Panel</span></div>
           <div class="card card-body layer-card m-2 border-0">
+            <div class="form-check form-switch">
+                <input class="form-check-input" id="adm0CB" type="checkbox" value="adm0" onchange="toggleLayer('adm0')" name="adm0" checked>
+                <label class="form-check-label" for="adm0CB">Country Boundary</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" id="adm1CB" type="checkbox" value="adm1" onchange="toggleLayer('adm1')" name="adm1" checked>
+                <label class="form-check-label" for="adm1CB">Province Boundary</label>
+            </div>
               <div class="form-check form-switch">
-                  <input class="form-check-input" id="adm2_newCB" type="checkbox" value="adm2_new" onchange="toggleLayer('adm2_new')" name="adm2_new">
-                  <label class="form-check-label" for="adm2_newCB">Mekong Region</label>
+                  <input class="form-check-input" id="adm2CB" type="checkbox" value="adm2" onchange="toggleLayer('adm2')" name="adm2" checked>
+                  <label class="form-check-label" for="adm2CB">District Boundary</label>
               </div>
               <!-- <div class="form-check form-switch pt-2">
                   <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
@@ -324,6 +349,13 @@
 <div class="map-overlay top">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
     <h5 class="pt-2">The map data is showing on <span id="mesg-date" class="fw-bold"></span></h5>
+</div>
+
+<div id="legend" class="legend">
+    <h4 class="fw-bold h5">Legend</h4>
+    <div id="fwater-legend" style="display: block;"><span style="background-color: #e57373"></span>Potential Floods Water</div>
+    <div id="swater-legend" style="display: none;"><span style="background-color: #2389da"></span>Daily Surface Water</div>
+    <div id="pwater-legend" style="display: block;"><span style="background-color: #00008b"></span>Permament Water</div>
 </div>
 
 {% endblock container %}
