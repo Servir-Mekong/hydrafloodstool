@@ -1,0 +1,11 @@
+python manage.py shell < ./mapclient/external_scripts/floodedAreaCalcAll.py
+python manage.py shell < ./mapclient/external_scripts/countPOI.py
+
+python manage.py shell < ./mapclient/external_scripts/countFldedEduCtr.py
+python manage.py shell < ./mapclient/external_scripts/countFldedHealthCtr.py
+
+python manage.py shell < ./mapclient/external_scripts/cambodia/cambodiaFloodedAreaCalc.py
+python manage.py shell < ./mapclient/external_scripts/laos/laosFloodedAreaCalc.py
+python manage.py shell < ./mapclient/external_scripts/myanmar/myanmarFloodedAreaCalc.py
+python manage.py shell < ./mapclient/external_scripts/thailand/thailandFloodedAreaCalc.py
+python manage.py shell < ./mapclient/external_scripts/vietnam/vietnamFloodedAreaCalc.py

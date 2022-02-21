@@ -35,28 +35,203 @@
                 <a href="/map" class="btn btn-jumbotron btn-lg hvr-bounce-to-right" role="button">LAUNCH TOOL</a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card card-body border-0 mt-5 p-0">
-                <ul class="fs-5">
-                    <li class="pt-4"><i class="fas fa-users fa-lg ps-3"></i><span class="fw-bold ps-3">175, 872</span> <span>households affected</span></li>
-                    <li><img class="ps-3" src="{% static 'images/displaced.png' %}" style="width: 2.43em;"><span class="fw-bold ps-3">14, 299</span> <span>households displaced</span></li>
-                    <li><img class="ps-3" src="{% static 'images/rip.png' %}" style="width: 2.43em;"><span class="fw-bold ps-3">38</span> <span>persons have died</span></li>
-                    <li class="pb-4"><img class="ps-3" src="{% static 'images/flooded-house.png' %}" style="width: 2.13em;"><span class="fw-bold ps-3">161, 552</span> <span>houses affected</span></li>
-                </ul>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-9">
+                    <ul class="nav nav-pills fld-dash-filter mb-5 mt-0" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="true">All Countries</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-cambodia-tab" data-bs-toggle="pill" data-bs-target="#pills-cambodia" type="button" role="tab" aria-controls="pills-cambodia" aria-selected="false">Cambodia</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-laos-tab" data-bs-toggle="pill" data-bs-target="#pills-laos" type="button" role="tab" aria-controls="pills-laos" aria-selected="false">Laos</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-myanmar-tab" data-bs-toggle="pill" data-bs-target="#pills-myanmar" type="button" role="tab" aria-controls="pills-myanmar" aria-selected="false">Myanmar</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-thailand-tab" data-bs-toggle="pill" data-bs-target="#pills-thailand" type="button" role="tab" aria-controls="pills-thailand" aria-selected="false">Thailand</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-vietnam-tab" data-bs-toggle="pill" data-bs-target="#pills-vietnam" type="button" role="tab" aria-controls="pills-vietnam" aria-selected="false">Vietnam</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="h5 fw-bold pt-2">Flood Event: <span  id="eventDate"></span></h4>
+                </div>
             </div>
-        </div>
-        <div class="col-md-5">
-            <h4 class="h5 fw-bold">Flood Event: 25-01-2022</h4>
-            <div class="card card-body border-0 p-0 mt-4">
-                <ul class="fs-5">
-                    <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3">22</span> <span>health centres affected</span></li>
-                    <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3">686</span> <span>schools affected</span></li>
-                    <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
-                    <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li>
-                </ul>
+            <div class="row">
+                <div class="tab-content mb-5" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card-body border-0 pt-3 bg-light text-center">
+                                    <!-- <div class="circle fs-4 text-center text-danger mt-3"><span class="pe-2" id="cambodiaFldArea"></span>&#13218;</div> -->
+                                    <p class="fs-4 text-center text-danger pt-3"><span  id="totalFldArea"></span> &#13218;</p>
+                                    <p class="fs-5 text-center">Area of Land is Flooded</p>
+                                </div>
+                                
+                                <!-- <div class="card card-body border-0 p-0">  border-0 shadow p-3 mb-5 bg-white rounded            
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-users fa-lg ps-3"></i><span class="fw-bold ps-3">175, 872</span> <span>households affected</span></li>
+                                        <li><img class="ps-3" src="{% static 'images/displaced.png' %}" style="width: 2.43em;"><span class="fw-bold ps-3">14, 299</span> <span>households displaced</span></li>
+                                        <li><img class="ps-3" src="{% static 'images/rip.png' %}" style="width: 2.43em;"><span class="fw-bold ps-3">38</span> <span>persons have died</span></li>
+                                        <li class="pb-4"><img class="ps-3" src="{% static 'images/flooded-house.png' %}" style="width: 2.13em;"><span class="fw-bold ps-3">161, 552</span> <span>houses affected</span></li> 
+                                    </ul>
+                                </div> -->
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card card-body border-0 p-0">
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="totalFldedHC"></span> <span>health centres affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="totalFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
+                                        <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-cambodia" role="tabpanel" aria-labelledby="pills-cambodia-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card-body border-0 pt-3 bg-light text-center">
+                                    <p class="fs-4 text-center text-danger pt-3"><span  id="cambodiaFldArea"></span> &#13218;</p>
+                                    <p class="fs-5 text-center">Area of Land is Flooded</p>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card card-body border-0 p-0">
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="cambodiaFldedHC"></span> <span>health centres affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="cambodiaFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
+                                        <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-laos" role="tabpanel" aria-labelledby="pills-laos-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card-body border-0 pt-3 bg-light text-center">
+                                    <p class="fs-4 text-center text-danger pt-3"><span  id="laosFldArea"></span> &#13218;</p>
+                                    <p class="fs-5 text-center">Area of Land is Flooded</p>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card card-body border-0 p-0">
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="laosFldedHC"></span> <span>health centres affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="laosFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
+                                        <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-myanmar" role="tabpanel" aria-labelledby="pills-myanmar-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card-body border-0 pt-3 bg-light text-center">
+                                    <p class="fs-4 text-center text-danger pt-3"><span  id="myanmarFldArea"></span> &#13218;</p>
+                                    <p class="fs-5 text-center">Area of Land is Flooded</p>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card card-body border-0 p-0">
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="myanmarFldedHC"></span> <span>health centres affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="myanmarFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
+                                        <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-thailand" role="tabpanel" aria-labelledby="pills-thailand-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card-body border-0 pt-3 bg-light text-center">
+                                    <p class="fs-4 text-center text-danger pt-3"><span  id="thailandFldArea"></span> &#13218;</p>
+                                    <p class="fs-5 text-center">Area of Land is Flooded</p>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card card-body border-0 p-0">
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="thailandFldedHC"></span> <span>health centres affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="thailandFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
+                                        <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-vietnam" role="tabpanel" aria-labelledby="pills-vietnam-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card-body border-0 pt-3 bg-light text-center">
+                                    <p class="fs-4 text-center text-danger pt-3"><span  id="vietnamFldArea"></span> &#13218;</p>
+                                    <p class="fs-5 text-center">Area of Land is Flooded</p>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card card-body border-0 p-0">
+                                    <ul class="fs-5 fld-dash-content">
+                                        <li class="pt-4"><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="vietnamFldedHC"></span> <span>health centres affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="vietnamFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
+                                        <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- <div class="row mt-5 mb-5">
+        <h5 class="h5 fw-bold mb-5">Potential Flooded Area on <span  id="eventDate"></span></h5>
+        <div class="col-md">
+            <div class="card card-body border-0 shadow p-3 mb-5 bg-white rounded pt-3">
+                <p class="fs-4 text-center text-danger"><span  id="cambodiaFldArea"></span> &#13218;</p>
+                <p class="fs-4 text-center">Cambodia</p>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card card-body border-0 shadow p-3 mb-5 bg-white rounded pt-3">
+                <p class="fs-4 text-center text-danger"><span  id="laosFldArea"></span> &#13218;</p>
+                <p class="fs-4 text-center">Laos</p>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card card-body border-0 shadow p-3 mb-5 bg-white rounded pt-3">
+                <p class="fs-4 text-center text-danger"><span  id="myanmarFldArea"></span> &#13218;</p>
+                <p class="fs-4 text-center">Myanmar</p>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card card-body border-0 shadow p-3 mb-5 bg-white rounded pt-3">
+                <p class="fs-4 text-center text-danger"><span  id="thailandFldArea"></span> &#13218;</p>
+                <p class="fs-4 text-center">Thailand</p>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card card-body border-0 shadow p-3 mb-5 bg-white rounded pt-3">
+                <p class="fs-4 text-center text-danger"><span  id="vietnamFldArea"></span> &#13218;</p>
+                <p class="fs-4 text-center">Vietnam</p>
+            </div>
+        </div>
+    </div> -->
 </div>
 <div class="container-fluid mt-5">
     {% include 'partners.html' %}
@@ -64,6 +239,9 @@
 {% include 'footer.html' %}
 
 {% endblock container %}
+{% block extra_script %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
 
 
 

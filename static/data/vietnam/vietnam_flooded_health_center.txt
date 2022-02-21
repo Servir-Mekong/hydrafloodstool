@@ -1,0 +1,3 @@
+Date,vietnamFloodedHealthCenter,vietnamNonFloodedHealthCenter
+2022-02-10,0,367
+2022-02-13,0,367
