@@ -1,3 +1,4 @@
 Date,thailandFloodedEducationCenter,thailandNonFloodedEducationCenter
 2022-02-10,3,5143
 2022-02-13,3,5143
+2022-02-20,2,5144
