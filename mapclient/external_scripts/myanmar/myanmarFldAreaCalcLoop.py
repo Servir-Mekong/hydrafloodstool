@@ -1,7 +1,11 @@
 from datetime import date
 from email import header
 import ee, os, csv
-ee.Initialize()
+#ee.Initialize()
+service_account = 'hydrafloods@hydrafloods-308007.iam.gserviceaccount.com'
+EE_PRIVATE_KEY_FILE = '/home/ubuntu/hydrafloodstool/hydrafloodviewer/credentials/privatekey.json'
+credentials = ee.ServiceAccountCredentials(service_account, EE_PRIVATE_KEY_FILE)
+ee.Initialize(credentials)
 
 with open('./static/data/myanmar_flooded_area.txt', 'w') as txt:
   header = "Date,TotalAreainSqKm"

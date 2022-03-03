@@ -2,3 +2,4 @@ Date,vietnamFloodedEducationCenter,vietnamNonFloodedEducationCenter
 2022-02-10,2,1639
 2022-02-13,3,1638
 2022-02-20,2,1639
+2022-03-02,3,1638

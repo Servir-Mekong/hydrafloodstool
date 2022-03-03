@@ -4,7 +4,11 @@ import imghdr
 import nntplib
 from unittest import result
 import ee, os, csv
-ee.Initialize()
+#ee.Initialize()
+service_account = 'hydrafloods@hydrafloods-308007.iam.gserviceaccount.com'
+EE_PRIVATE_KEY_FILE = '/home/ubuntu/hydrafloodstool/hydrafloodviewer/credentials/privatekey.json'
+credentials = ee.ServiceAccountCredentials(service_account, EE_PRIVATE_KEY_FILE)
+ee.Initialize(credentials)
 
 # Get list of date from image collection
 def getDateList():
@@ -65,14 +69,14 @@ cambodiaFloodedEducationCenter = ee.Number(floodedEduCambodia.size())
 cambodiaFloodedAreaDate = ee.String(selectCambodiaFloodedWaterPixel.get('date'))
 #print(cambodiaNonFloodedEducationCenter.getInfo(), cambodiaFloodedEducationCenter.getInfo(), cambodiaFloodedAreaDate.getInfo())
 
-if os.path.exists('./static/data/cambodia/cambodia_flooded_education_center.txt') == False: 
-  series = "Date,cambodiaFloodedEducationCenter,cambodiaNonFloodedEducationCenter"
-  output = series +'\n'+str(cambodiaFloodedAreaDate.getInfo())+','+ str(cambodiaFloodedEducationCenter.getInfo())+','+str(cambodiaNonFloodedEducationCenter.getInfo())
-  print(output)
-else:
-  print ("Already calculated.")
+# if os.path.exists('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/cambodia/cambodia_flooded_education_center.txt') == False: 
+#   series = "Date,cambodiaFloodedEducationCenter,cambodiaNonFloodedEducationCenter"
+#   output = series +'\n'+str(cambodiaFloodedAreaDate.getInfo())+','+ str(cambodiaFloodedEducationCenter.getInfo())+','+str(cambodiaNonFloodedEducationCenter.getInfo())
+#   print(output)
+# else:
+#   print ("Already calculated.")
 
-with open('./static/data/cambodia/cambodia_flooded_education_center.txt', "a+") as f:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/cambodia/cambodia_flooded_education_center.txt', "a+") as f:
   f.seek(0)
   data = f.read(100)
   if len(data) > 0 :
@@ -110,14 +114,14 @@ laosFloodedEducationCenter = ee.Number(floodedEduLaos.size())
 laosFloodedAreaDate = ee.String(selectLaosFloodedWaterPixel.get('date'))
 #print(laosNonFloodedEducationCenter.getInfo(), laosFloodedEducationCenter.getInfo(), laosFloodedAreaDate.getInfo())
 
-if os.path.exists('./static/data/laos/laos_flooded_education_center.txt') == False: 
-  series = "Date,laosFloodedEducationCenter,laosNonFloodedEducationCenter"
-  output = series +'\n'+str(laosFloodedAreaDate.getInfo())+','+ str(laosFloodedEducationCenter.getInfo())+','+str(laosNonFloodedEducationCenter.getInfo())
-  print(output)
-else:
-  print ("Already calculated.")
+# if os.path.exists('./static/data/laos/laos_flooded_education_center.txt') == False: 
+#   series = "Date,laosFloodedEducationCenter,laosNonFloodedEducationCenter"
+#   output = series +'\n'+str(laosFloodedAreaDate.getInfo())+','+ str(laosFloodedEducationCenter.getInfo())+','+str(laosNonFloodedEducationCenter.getInfo())
+#   print(output)
+# else:
+#   print ("Already calculated.")
 
-with open('./static/data/laos/laos_flooded_education_center.txt', "a+") as f:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/laos/laos_flooded_education_center.txt', "a+") as f:
   f.seek(0)
   data = f.read(100)
   if len(data) > 0 :
@@ -155,14 +159,14 @@ myanmarFloodedEducationCenter = ee.Number(floodedEduMyanmar.size())
 myanmarFloodedAreaDate = ee.String(selectMyanmarFloodedWaterPixel.get('date'))
 #print(myanmarNonFloodedEducationCenter.getInfo(), myanmarFloodedEducationCenter.getInfo(), myanmarFloodedAreaDate.getInfo())
 
-if os.path.exists('./static/data/myanmar/myanmar_flooded_education_center.txt') == False: 
-  series = "Date,myanmarFloodedEducationCenter,myanmarNonFloodedEducationCenter"
-  output = series +'\n'+str(myanmarFloodedAreaDate.getInfo())+','+ str(myanmarFloodedEducationCenter.getInfo())+','+str(myanmarNonFloodedEducationCenter.getInfo())
-  print(output)
-else:
-  print ("Already calculated.")
+# if os.path.exists('./static/data/myanmar/myanmar_flooded_education_center.txt') == False: 
+#   series = "Date,myanmarFloodedEducationCenter,myanmarNonFloodedEducationCenter"
+#   output = series +'\n'+str(myanmarFloodedAreaDate.getInfo())+','+ str(myanmarFloodedEducationCenter.getInfo())+','+str(myanmarNonFloodedEducationCenter.getInfo())
+#   print(output)
+# else:
+#   print ("Already calculated.")
 
-with open('./static/data/myanmar/myanmar_flooded_education_center.txt', "a+") as f:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/myanmar/myanmar_flooded_education_center.txt', "a+") as f:
   f.seek(0)
   data = f.read(100)
   if len(data) > 0 :
@@ -200,14 +204,14 @@ thailandFloodedEducationCenter = ee.Number(floodedEduThailand.size())
 thailandFloodedAreaDate = ee.String(selectThailandFloodedWaterPixel.get('date'))
 #print(thailandNonFloodedEducationCenter.getInfo(), thailandFloodedEducationCenter.getInfo(), thailandFloodedAreaDate.getInfo())
 
-if os.path.exists('./static/data/thailand/thailand_flooded_education_center.txt') == False: 
-  series = "Date,thailandFloodedEducationCenter,thailandNonFloodedEducationCenter"
-  output = series +'\n'+str(thailandFloodedAreaDate.getInfo())+','+ str(thailandFloodedEducationCenter.getInfo())+','+str(thailandNonFloodedEducationCenter.getInfo())
-  print(output)
-else:
-  print ("Already calculated.")
+# if os.path.exists('./static/data/thailand/thailand_flooded_education_center.txt') == False: 
+#   series = "Date,thailandFloodedEducationCenter,thailandNonFloodedEducationCenter"
+#   output = series +'\n'+str(thailandFloodedAreaDate.getInfo())+','+ str(thailandFloodedEducationCenter.getInfo())+','+str(thailandNonFloodedEducationCenter.getInfo())
+#   print(output)
+# else:
+#   print ("Already calculated.")
 
-with open('./static/data/thailand/thailand_flooded_education_center.txt', "a+") as f:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/thailand/thailand_flooded_education_center.txt', "a+") as f:
   f.seek(0)
   data = f.read(100)
   if len(data) > 0 :
@@ -245,14 +249,14 @@ vietnamFloodedEducationCenter = ee.Number(floodedEduVietnam.size())
 vietnamFloodedAreaDate = ee.String(selectVietnamFloodedWaterPixel.get('date'))
 #print(vietnamNonFloodedEducationCenter.getInfo(), vietnamFloodedEducationCenter.getInfo(), vietnamFloodedAreaDate.getInfo())
 
-if os.path.exists('./static/data/vietnam/vietnam_flooded_education_center.txt') == False: 
-  series = "Date,vietnamFloodedEducationCenter,vietnamNonFloodedEducationCenter"
-  output = series +'\n'+str(vietnamFloodedAreaDate.getInfo())+','+ str(vietnamFloodedEducationCenter.getInfo())+','+str(vietnamNonFloodedEducationCenter.getInfo())
-  print(output)
-else:
-  print ("Already calculated.")
+# if os.path.exists('./static/data/vietnam/vietnam_flooded_education_center.txt') == False: 
+#   series = "Date,vietnamFloodedEducationCenter,vietnamNonFloodedEducationCenter"
+#   output = series +'\n'+str(vietnamFloodedAreaDate.getInfo())+','+ str(vietnamFloodedEducationCenter.getInfo())+','+str(vietnamNonFloodedEducationCenter.getInfo())
+#   print(output)
+# else:
+#   print ("Already calculated.")
 
-with open('./static/data/vietnam/vietnam_flooded_education_center.txt', "a+") as f:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/vietnam/vietnam_flooded_education_center.txt', "a+") as f:
   f.seek(0)
   data = f.read(100)
   if len(data) > 0 :

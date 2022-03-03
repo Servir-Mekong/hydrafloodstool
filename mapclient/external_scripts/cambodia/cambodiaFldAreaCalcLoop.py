@@ -1,9 +1,13 @@
 from datetime import date
 from email import header
 import ee, os, csv
-ee.Initialize()
+#ee.Initialize()
+service_account = 'hydrafloods@hydrafloods-308007.iam.gserviceaccount.com'
+EE_PRIVATE_KEY_FILE = '/home/ubuntu/hydrafloodstool/hydrafloodviewer/credentials/privatekey.json'
+credentials = ee.ServiceAccountCredentials(service_account, EE_PRIVATE_KEY_FILE)
+ee.Initialize(credentials)
 
-with open('./static/data/cambodia_flooded_area.txt', 'w') as txt:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/cambodia_flooded_area.txt', 'w') as txt:
   header = "Date,TotalAreainSqKm"
   txt.write(header)
   txt.close()
@@ -58,7 +62,7 @@ for i in d:
   cambodiaFloodedAreaDate = ee.String(ee.Date(floodedWaterCambodia.get('system:time_start')).format('YYYY-MM-dd'))
   print(cambodiaFloodedAreaSqKm.getInfo(), cambodiaFloodedAreaDate.getInfo())
 
-  with open('./static/data/cambodia_flooded_area.txt', 'a+') as f:
+  with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/cambodia_flooded_area.txt', 'a+') as f:
     # Move read cursor to the start of file.
     f.seek(0)
     # If file is not empty then append '\n'

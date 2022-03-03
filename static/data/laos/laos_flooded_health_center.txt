@@ -2,3 +2,4 @@ Date,laosFloodedHealthCenter,laosNonFloodedHealthCenter
 2022-02-10,0,138
 2022-02-13,0,138
 2022-02-20,0,138
+2022-03-02,0,138

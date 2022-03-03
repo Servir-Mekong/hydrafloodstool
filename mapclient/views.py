@@ -42,6 +42,48 @@ class TeamList(ListView):
     queryset = Team.objects.all().order_by('id')
     template_name = 'about.html'
 
+#=============== Get Number of Flooded Districts =======================#
+
+# Get latest flooded number of districts of Cambodia
+def getCambodiaFloodedDistricts(request):
+    df = pd.read_csv('./static/data/cambodia/cambodia_flooded_districts.txt')
+    #print(df)
+    recent_data = df.tail(1)
+    #concatenated = pd.concat([recent_data])
+    #print(concatenated)
+    json_data = recent_data.to_json(orient='records')
+    #print(json)
+    return JsonResponse(json_data, safe=False)
+
+# Get latest flooded number of districts of Laos
+def getLaosFloodedDistricts(request):
+    df = pd.read_csv('./static/data/laos/laos_flooded_districts.txt')
+    recent_data = df.tail(1)
+    json_data = recent_data.to_json(orient='records')
+    return JsonResponse(json_data, safe=False)
+
+# Get latest flooded number of districts of Myanmar
+def getMyanmarFloodedDistricts(request):
+    df = pd.read_csv('./static/data/myanmar/myanmar_flooded_districts.txt')
+    recent_data = df.tail(1)
+    json_data = recent_data.to_json(orient='records')
+    return JsonResponse(json_data, safe=False)
+
+# Get latest flooded number of districts of Thailand
+def getThailandFloodedDistricts(request):
+    df = pd.read_csv('./static/data/thailand/thailand_flooded_districts.txt')
+    recent_data = df.tail(1)
+    json_data = recent_data.to_json(orient='records')
+    return JsonResponse(json_data, safe=False)
+
+# Get latest flooded number of districts of Vietnam
+def getVietnamFloodedDistricts(request):
+    df = pd.read_csv('./static/data/vietnam/vietnam_flooded_districts.txt')
+    recent_data = df.tail(1)
+    json_data = recent_data.to_json(orient='records')
+    return JsonResponse(json_data, safe=False)
+
+## ============ Get Flooded Area ================== */
 
 # Get latest flooded area of Cambodia
 def getCambodiaFloodedArea(request):

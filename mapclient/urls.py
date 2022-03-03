@@ -24,6 +24,12 @@ urlpatterns = [
     url(r'^ajax/thailandfloodedarea/$', views.getThailandFloodedArea),
     url(r'^ajax/vietnamfloodedarea/$', views.getVietnamFloodedArea),
 
+    url(r'^ajax/cambodiafloodeddistricts/$', views.getCambodiaFloodedDistricts),
+    url(r'^ajax/laosfloodeddistricts/$', views.getLaosFloodedDistricts),
+    url(r'^ajax/myanmarfloodeddistricts/$', views.getMyanmarFloodedDistricts),
+    url(r'^ajax/thailandfloodeddistricts/$', views.getThailandFloodedDistricts),
+    url(r'^ajax/vietnamfloodeddistricts/$', views.getVietnamFloodedDistricts),
+
     url(r'^ajax/cambodiafloodedhealthcenter/$', views.getCambodiaFloodedHealthCenter),
     url(r'^ajax/laosfloodedhealthcenter/$', views.getLaosFloodedHealthCenter),
     url(r'^ajax/myanmarfloodedhealthcenter/$', views.getMyanmarFloodedHealthCenter),

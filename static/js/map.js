@@ -731,8 +731,8 @@ map.on('style.load', () => {
     map.addSource('adm1-src', {
         type: 'vector',
         url: 'mapbox://kamalh27.adm1',
-        'minzoom': 6,
-        'maxzoom': 8
+        minZoom: 6,
+        maxZoom: 8
     });
     map.addLayer(
         {

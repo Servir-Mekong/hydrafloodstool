@@ -3,7 +3,11 @@ from datetime import date
 from unittest import result
 import ee, os, csv
 import pandas as pd
-ee.Initialize()
+#ee.Initialize()
+service_account = 'hydrafloods@hydrafloods-308007.iam.gserviceaccount.com'
+EE_PRIVATE_KEY_FILE = '/home/ubuntu/hydrafloodstool/hydrafloodviewer/credentials/privatekey.json'
+credentials = ee.ServiceAccountCredentials(service_account, EE_PRIVATE_KEY_FILE)
+ee.Initialize(credentials)
 
 # Get list of date from image collection
 def getDateList():
@@ -17,7 +21,7 @@ dateList = getDateList()
 
 recent_date = dateList[-1]
 
-with open('./static/data/laos/laos_flooded_area.txt', "a+") as f:
+with open('/home/ubuntu/hydrafloodstool/hydrafloodviewer/static/data/laos/laos_flooded_area.txt', "a+") as f:
   # Move read cursor to the start of file.
   f.seek(0)
   # If file is not empty then append '\n'

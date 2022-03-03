@@ -6,6 +6,13 @@ var pfa_thailand = document.getElementById('thailandFldArea');
 var pfa_vietnam = document.getElementById('vietnamFldArea');
 var pfa_all = document.getElementById('totalFldArea');
 
+var pfd_cambodia = document.getElementById('cambodiaFldedDistricts');
+var pfd_laos = document.getElementById('laosFldedDistricts');
+var pfd_myanmar = document.getElementById('myanmarFldedDistricts');
+var pfd_thailand = document.getElementById('thailandFldedDistricts');
+var pfd_vietnam = document.getElementById('vietnamFldedDistricts');
+var pfd_total = document.getElementById('totalFldedDistricts');
+
 var pfhc_cambodia = document.getElementById('cambodiaFldedHC');
 var pfhc_laos = document.getElementById('laosFldedHC');
 var pfhc_myanmar = document.getElementById('myanmarFldedHC');
@@ -133,7 +140,7 @@ $.ajax({
     }
 });
 
-var total_flded_area = cambodia_flded_area + laos_flded_area + myanmar_flded_area + thailand_flded_area + vietnam_flded_area;
+var total_flded_area = parseInt(cambodia_flded_area) + parseInt(laos_flded_area) + parseInt(myanmar_flded_area) + parseInt(thailand_flded_area) + parseInt(vietnam_flded_area);
 // console.log(total_flded_area);
 pfa_all.innerHTML = total_flded_area;
 
@@ -396,3 +403,135 @@ for (var i=0; i<vietnam_ec_data.length; i++){
 var total_flooded_ec = pfec_cambodia + pfec_laos + pfec_myanmar + pfec_thailand + pfec_vietnam;
 // console.log(total_flooded_ec)
 pfec_total.innerHTML = total_flooded_ec;
+
+/* ================== Potential Number of Flooded Districts ====================== */
+
+// Cambodia - Number of Potential Flooded Districts
+var cambodia_pfd_data;
+$.ajax({
+    type: "GET",
+    url: "/ajax/cambodiafloodeddistricts/",
+    dataType: 'json',
+    'async': false,
+    success: function(response){
+        //console.log(response);
+        cambodia_pfd_data = JSON.parse(response);
+        //console.log(cambodia_hc_data)
+        for (var i=0; i<cambodia_pfd_data.length; i++){
+            pfd_cambodia.innerHTML = cambodia_pfd_data[i].NumberOfFloodedDistricts
+        }
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+//console.log(cambodia_hc_data)
+
+// Laos - Number of Potential Flooded Districts
+var laos_pfd_data;
+$.ajax({
+    type: "GET",
+    url: "/ajax/laosfloodeddistricts/",
+    dataType: 'json',
+    'async': false,
+    success: function(response){
+        //console.log(response);
+        laos_pfd_data = JSON.parse(response);
+        //console.log(data)
+        for (var i=0; i<laos_pfd_data.length; i++){
+            pfd_laos.innerHTML = laos_pfd_data[i].NumberOfFloodedDistricts
+        }
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+// Myanmar - Number of Potential Flooded Districts
+var myanmar_pfd_data;
+$.ajax({
+    type: "GET",
+    url: "/ajax/myanmarfloodeddistricts/",
+    dataType: 'json',
+    'async': false,
+    success: function(response){
+        //console.log(response);
+        myanmar_pfd_data = JSON.parse(response);
+        //console.log(myanmar_hc_data)
+        for (var i=0; i<myanmar_pfd_data.length; i++){
+            pfd_myanmar.innerHTML = myanmar_pfd_data[i].NumberOfFloodedDistricts
+        }
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+// Thailand - Number of Potential Flooded Districts
+var thailand_pfd_data;
+$.ajax({
+    type: "GET",
+    url: "/ajax/thailandfloodeddistricts/",
+    dataType: 'json',
+    'async': false,
+    success: function(response){
+        //console.log(response);
+        thailand_pfd_data = JSON.parse(response);
+        //console.log(data)
+        for (var i=0; i<thailand_pfd_data.length; i++){
+            pfd_thailand.innerHTML = thailand_pfd_data[i].NumberOfFloodedDistricts
+        }
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+// Vietnam - Number of Potential Flooded Districts
+var vietnam_pfd_data;
+$.ajax({
+    type: "GET",
+    url: "/ajax/vietnamfloodeddistricts/",
+    dataType: 'json',
+    'async': false,
+    success: function(response){
+        //console.log(response);
+        vietnam_pfd_data = JSON.parse(response);
+        //console.log(vietnam_hc_data)
+        for (var i=0; i<vietnam_pfd_data.length; i++){
+            pfd_vietnam.innerHTML = vietnam_pfd_data[i].NumberOfFloodedDistricts
+        }
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+//console.log(vietnam_hc_data);
+
+// Total - Number of Potential Flooded Districts
+for (var i=0; i<cambodia_pfd_data.length; i++){
+    pfd_cambodia = cambodia_pfd_data[0].NumberOfFloodedDistricts
+}
+for (var i=0; i<laos_pfd_data.length; i++){
+    pfd_laos = laos_pfd_data[0].NumberOfFloodedDistricts
+}
+for (var i=0; i<myanmar_pfd_data.length; i++){
+    pfd_myanmar = myanmar_pfd_data[0].NumberOfFloodedDistricts
+}
+for (var i=0; i<thailand_pfd_data.length; i++){
+    pfd_thailand = thailand_pfd_data[0].NumberOfFloodedDistricts
+}
+for (var i=0; i<vietnam_pfd_data.length; i++){
+    pfd_vietnam = vietnam_pfd_data[0].NumberOfFloodedDistricts
+}
+// console.log(pfd_cambodia);
+// console.log(pfd_laos);
+// console.log(pfd_myanmar);
+// console.log(pfd_thailand);
+// console.log(pfd_vietnam);
+
+var total_flooded_districts = pfd_cambodia + pfd_laos + pfd_myanmar + pfd_thailand + pfd_vietnam;
+// console.log(total_flooded_districts)
+pfd_total.innerHTML = total_flooded_districts;
