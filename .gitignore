@@ -7,8 +7,10 @@ mts/*
 # vendore files
 hydrafloodviewer/static/vendor/*
 static/vendor/*
+static/js/map-backup.js
 static/app/*
 db.sqlite3
+static/data/*
 #node and related environment files
 .npmignore
 .sqlite3

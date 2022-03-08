@@ -1,5 +1,0 @@
-Date,vietnamFloodedHealthCenter,vietnamNonFloodedHealthCenter
-2022-02-10,0,367
-2022-02-13,0,367
-2022-02-20,0,367
-2022-03-02,0,367

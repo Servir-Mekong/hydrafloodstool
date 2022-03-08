@@ -1,2 +1,0 @@
-Date,NumberOfFloodedDistricts
-2022-02-10,0

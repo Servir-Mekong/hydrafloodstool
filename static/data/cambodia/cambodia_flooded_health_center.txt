@@ -1,5 +1,0 @@
-Date,cambodiaFloodedHealthCenter,cambodiaNonFloodedHealthCenter
-2022-02-10,0,126
-2022-02-13,0,126
-2022-02-20,0,126
-2022-03-02,0,126

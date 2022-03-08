@@ -1,2 +1,0 @@
-Date,TotalAreainSqKm
-2022-02-20,1642

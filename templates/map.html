@@ -14,13 +14,13 @@
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-  <nav>
-    <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
-      <button class="nav-link pt-3 pb-3" id="home" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Menu"><i class="fas fa-bars fa-lg"></i></button>
-      <button class="nav-link pt-3 pb-3" id="layer" data-bs-toggle="tab" data-bs-target="#nav-layer" type="button" role="tab" aria-controls="nav-layer" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Layer Panel"><i class="fas fa-layer-group fa-lg"></i></button>
-      <button class="nav-link pt-3 pb-3" id="basemap" data-bs-toggle="tab" data-bs-target="#nav-basemap" type="button" role="tab" aria-controls="nav-basemap" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Basemap Style"><i class="fa fa-globe fa-lg"></i></button>
-    </div>
-  </nav>
+    <nav>
+        <div class="nav nav-tabs flex-column" id="nav-tab" role="tablist">
+            <button class="nav-link pt-3 pb-3" id="home" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Menu"><i class="fas fa-bars fa-lg"></i></button>
+            <button class="nav-link pt-3 pb-3" id="layer" data-bs-toggle="tab" data-bs-target="#nav-layer" type="button" role="tab" aria-controls="nav-layer" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Layer Panel"><i class="fas fa-layer-group fa-lg"></i></button>
+            <button class="nav-link pt-3 pb-3" id="basemap" data-bs-toggle="tab" data-bs-target="#nav-basemap" type="button" role="tab" aria-controls="nav-basemap" aria-selected="false" data-bs-toggle="tooltip" data-bs-placement="right" title="Basemap Style"><i class="fa fa-globe fa-lg"></i></button>
+        </div>
+    </nav>
 </div>
 
 <!-- Sidebar Content -->
@@ -214,28 +214,36 @@
           </div>
       </div>
 
-      <!--Layer tab content area -->
-      <div class="tab-pane fade" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">          
-          <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-layer-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Layer Panel"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Layer Panel</span></div>
-          <div class="card card-body layer-card m-2 border-0">
-            <div class="form-check form-switch">
-                <input class="form-check-input" id="adm0CB" type="checkbox" value="adm0" onchange="toggleLayer('adm0')" name="adm0" checked>
-                <label class="form-check-label" for="adm0CB">Country Boundary</label>
+        <!--Layer tab content area -->
+        <div class="tab-pane fade" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">          
+            <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-layer-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Layer Panel"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Layer Panel</span></div>
+                <div class="card card-body layer-card m-2 border-0">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="hospitalCB" type="checkbox" value="hospital" onchange="toggleLayer('hospital')" name="hospital" checked>
+                        <label class="form-check-label" for="hospitalCB">Hospital</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="educationCB" type="checkbox" value="education" onchange="toggleLayer('education')" name="education" checked>
+                        <label class="form-check-label" for="educationCB">Educational Institutions</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="adm0CB" type="checkbox" value="adm0" onchange="toggleLayer('adm0')" name="adm0" checked>
+                        <label class="form-check-label" for="adm0CB">Country Boundary</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="adm1CB" type="checkbox" value="adm1" onchange="toggleLayer('adm1')" name="adm1" checked>
+                        <label class="form-check-label" for="adm1CB">Province Boundary</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="adm2CB" type="checkbox" value="adm2" onchange="toggleLayer('adm2')" name="adm2" checked>
+                        <label class="form-check-label" for="adm2CB">District Boundary</label>
+                    </div>
+                    <!-- <div class="form-check form-switch pt-2">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Country Boundary</label>
+                    </div> -->
+                </div>
             </div>
-            <div class="form-check form-switch">
-                <input class="form-check-input" id="adm1CB" type="checkbox" value="adm1" onchange="toggleLayer('adm1')" name="adm1" checked>
-                <label class="form-check-label" for="adm1CB">Province Boundary</label>
-            </div>
-              <div class="form-check form-switch">
-                  <input class="form-check-input" id="adm2CB" type="checkbox" value="adm2" onchange="toggleLayer('adm2')" name="adm2" checked>
-                  <label class="form-check-label" for="adm2CB">District Boundary</label>
-              </div>
-              <!-- <div class="form-check form-switch pt-2">
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                  <label class="form-check-label" for="flexSwitchCheckDefault">Country Boundary</label>
-              </div> -->
-          </div>
-      </div>
 
       <!-- Basemap tab content area -->
       <div class="tab-pane fade nav-basemap" id="nav-basemap" role="tabpanel" aria-labelledby="nav-basemap-tab">

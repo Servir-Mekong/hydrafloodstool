@@ -1,5 +1,0 @@
-Date,myanmarFloodedHealthCenter,myanmarNonFloodedHealthCenter
-2022-02-10,0,448
-2022-02-13,0,448
-2022-02-20,0,448
-2022-03-02,0,448
