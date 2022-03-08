@@ -4,6 +4,7 @@ credentials/*
 # ignore settings
 hydrafloodviewer/settings.py
 mts/*
+mapclient/external_scripts/*
 # vendore files
 hydrafloodviewer/static/vendor/*
 static/vendor/*
