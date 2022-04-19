@@ -15,7 +15,7 @@ import ee, json, os, time
 from django.http import JsonResponse
 from django.http import HttpResponse
 from ee.ee_exception import EEException
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 ####/////////////////////////////////////////////
 class MainGEEApi():
@@ -424,7 +424,7 @@ class MainGEEApi():
         JRCPermanentMap = self.getTileLayerUrl( waterOcc.visualize(palette=['ffffff', 'ffbbbb', '0000ff'], min=0.0, max=100.0) )
         return JRCPermanentMap
 
-    #Get Potential Flood Map
+    # Get Potential Flood Map
     def getPotentialFloodMap(self, date):
         #sentinel 1 surfacece water map
         image = ee.ImageCollection("projects/servir-mekong/hydrafloodsS1Daily")
@@ -452,4 +452,107 @@ class MainGEEApi():
         potentialFloodMap = self.getTileLayerUrl(onlyFloodImg.visualize(palette="#e57373",min=0,max=1))
         return potentialFloodMap
 
-    
+    # Get Flood Age Map
+    def getFloodAgeMap(self): 
+        # Import data
+        HF_S1_daily = ee.ImageCollection("projects/servir-mekong/hydrafloodsS1Daily")
+        # HF_S2_daily = ee.ImageCollection("projects/servir-mekong/hydrafloodsS2DailyKH")
+        # HF_L8_daily = ee.ImageCollection("projects/servir-mekong/hydrafloodsL8DailyKH")
+        # HF_S1 = ee.ImageCollection("projects/servir-mekong/hydrafloodsSen1")
+        # HF_S2 = ee.ImageCollection("projects/servir-mekong/sentinel2QA")
+        # HF_L8 = ee.ImageCollection("projects/servir-mekong/landsatQA")
+        countries = ee.FeatureCollection("FAO/GAUL_SIMPLIFIED_500m/2015/level0")
+        # AoI = ee.FeatureCollection("projects/servir-mekong/hydrafloods/CountryBasins")
+
+        #  countries
+        country_na = [
+            'Cambodia',
+            'Thailand',
+            'Viet Nam',
+            "Lao People's Democratic Republic",
+            'Myanmar'
+        ]
+        # date_time_curr = ee.Date(date)
+        # date_curr = ee.Date.fromYMD(date_time_curr.get('year'), date_time_curr.get('month'), date_time_curr.get('day'))
+        # doy_curr  = date_curr.getRelative('day','year')
+
+        date_time_curr_py = datetime.now()
+        date_time_curr = ee.Date(date_time_curr_py)
+        date_curr = ee.Date.fromYMD(date_time_curr.get('year'), date_time_curr.get('month'), date_time_curr.get('day'))
+        doy_curr  = date_curr.getRelative('day','year')
+
+        # filter countries
+        countries = countries.filter(ee.Filter.inList('ADM0_NAME', country_na))
+
+        # # filter image by date
+        # HF_S1_Selected_Flood_Map = HF_S1_daily.filterDate(date)
+
+        # get latest HYDRAFloods maps
+        def getLatestImage(imgs, name):
+            latest_img = imgs.sort('system:time_start', False).first()
+            # print('Latest date ' + name, latest_img.date())
+            return latest_img
+
+        # HF_S1_latest = getLatestImage(HF_S1, 'S1')
+        # HF_S2_latest = getLatestImage(HF_S2, 'S2')
+        # HF_L8_latest = getLatestImage(HF_L8, 'L8')
+        HF_S1_daily_latest = getLatestImage(HF_S1_daily, 'S1 daily')
+        # HF_S2_daily_latest = getLatestImage(HF_S2_daily, 'S2 daily')
+        # HF_L8_daily_latest = getLatestImage(HF_L8_daily, 'L8 daily')
+        # print(HF_S1_daily_latest.getInfo())
+
+        # get doy-of-year (DOY) of latest (flood) pixels
+        doy_img = ee.Image.constant(doy_curr)
+
+        def calcAge(img):
+            age_all   = doy_img.subtract(img.select('DOY')).rename('age_all_days')
+            age_water = doy_img.subtract(img.select('DOY').updateMask(img.select('water'))).rename('age_water_days')
+            age_flood = doy_img.subtract(img.select('DOY').updateMask(img.select('pwater_mask'))).rename('age_flood_days')
+            return img.addBands(age_all).addBands(age_water).addBands(age_flood)
+
+        image = calcAge(HF_S1_daily_latest)
+        # HF_S2_daily_latest = calcAge(HF_S2_daily_latest)
+        # HF_L8_daily_latest = calcAge(HF_L8_daily_latest)
+
+        # visual parameters
+        # visParams_water = {'bands':['water'], 'min':0, 'max':1, 'palette':['white','blue']}
+        # visParams_flood = {'bands':['pwater_mask'], 'min':0, 'max':1, 'palette':['white','red']}
+        # visParams_age = {'bands':['age_all_days'], 'min':0, 'max':6, 'palette':['ae017e','f768a1','fbb4b9','feebe2']}
+
+        image =  image.select('age_all_days').selfMask()
+        # image = image.selfMask()
+        # selected = age_image.select('age_all_days')
+        floodAgeMap = self.getTileLayerUrl(image.visualize(min=0, max=6, palette=['ae017e','f768a1','fbb4b9','feebe2']))#['ae017e','f768a1','fbb4b9','feebe2']
+        return floodAgeMap
+
+    # Get flood duration map
+    def getFloodDurationMap(self):
+        #  import data
+        HF_S1_daily = ee.ImageCollection("projects/servir-mekong/hydrafloodsS1Daily")
+        # print(HF_S1_daily.getInfo())
+
+        # system properties
+        sys_props = ['system:time_start', 'system:index', 'system:footprint']
+
+        # get latest HYDRAFloods maps
+        HF_S1_daily_latest = HF_S1_daily.sort('system:time_start', False).first()
+        # print(HF_S1_daily_latest.date());
+
+        # calculate duration
+        def calcDuration(curr, prev):
+            curr = ee.Image(curr)
+            prev_2 = ee.Image(ee.ImageCollection(prev).reduce(ee.Reducer.last())).rename('pwater_mask').cast({'pwater_mask':'byte'}, ['pwater_mask'])
+            duration = ee.Image(prev_2.add(curr)).multiply(curr).cast({'pwater_mask':'byte'}, ['pwater_mask']).copyProperties(curr, sys_props)
+            return ee.ImageCollection(prev).merge(ee.ImageCollection(ee.Image(duration)))
+
+        HF_S1_daily_for_duration = HF_S1_daily.filterDate(HF_S1_daily_latest.date().advance(-2, 'month'), HF_S1_daily_latest.date().advance(1, 'day'))
+        HF_S1_daily_for_duration_first = HF_S1_daily_for_duration.first()
+        HF_S1_daily_for_duration_all_except_first = HF_S1_daily_for_duration.filterDate(HF_S1_daily_for_duration.first().date().advance(1, 'day'), HF_S1_daily_latest.date().advance(1, 'day'))
+        # print(HF_S1_daily_for_duration.size());
+        HF_S1_duration = ee.ImageCollection(HF_S1_daily_for_duration_all_except_first.sort('system:time_start').select('pwater_mask').iterate(calcDuration, ee.ImageCollection(HF_S1_daily_for_duration_first.select('pwater_mask')))).select(['pwater_mask'], ['duration_days'])
+        # print(HF_S1_duration.size())
+        HF_S1_daily_duration_latest = HF_S1_duration.sort('system:time_start', False).first()
+
+        image =  HF_S1_daily_duration_latest.select('duration_days').selfMask()
+        floodDurationMap = self.getTileLayerUrl(image.visualize(min=0, max=10, palette=['white','black']))
+        return floodDurationMap

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#from celery.result import AsyncResult
+# from celery.result import AsyncResult
 from . core import MainGEEApi
 from django.conf import settings
 from django.http import JsonResponse
@@ -8,7 +8,7 @@ import ee, json, os, time
 from ee.ee_exception import EEException
 from django.views.decorators.csrf import csrf_exempt
 
-#Get date list
+# Get date list
 def dateList(request):
     if request.is_ajax and request.method == "GET":
         #core = MainGEEApi(date)
@@ -16,7 +16,7 @@ def dateList(request):
         data = core.getDateList()
         return JsonResponse(data, safe=False)
 
-#Get precipitation map
+# Get precipitation map
 @csrf_exempt
 def get_precipitation_map(request):
     if request.is_ajax and request.method == "GET": 
@@ -27,7 +27,7 @@ def get_precipitation_map(request):
         data = core.getPrecipMap(date, accumulation=accum, cmap_name=cmap)
         return JsonResponse(data, safe=False)
 
-#Get potential flood map
+# Get potential flood map
 def get_potential_flood_map(request):
     if request.is_ajax and request.method == "GET":
         date = request.GET.get('selected_date')        
@@ -35,7 +35,7 @@ def get_potential_flood_map(request):
         data = core.getPotentialFloodMap(date)
         return JsonResponse(data, safe=False)
 
-#Get daily surface water map
+# Get daily surface water map
 @csrf_exempt
 def get_dailysurface_water_map(request):
     if request.is_ajax and request.method == "GET":
@@ -44,7 +44,26 @@ def get_dailysurface_water_map(request):
         data = core.getSurfaceWaterMap(date)
         return JsonResponse(data, safe=False)
 
-#Get permanent water map
+# Get flood age map
+@csrf_exempt
+def get_flood_age_map(request):
+    if request.is_ajax and request.method == "GET":
+        # date = request.GET.get('selected_date')        
+        core = MainGEEApi()
+        data = core.getFloodAgeMap()
+        return JsonResponse(data, safe=False)
+
+# Get flood duration map
+@csrf_exempt
+def get_flood_duration_map(request):
+    if request.is_ajax and request.method == "GET":
+        # date = request.GET.get('selected_date')        
+        core = MainGEEApi()
+        data = core.getFloodDurationMap()
+        return JsonResponse(data, safe=False)
+
+
+# Get permanent water map
 @csrf_exempt
 def get_permanent_water_map(request):
     if request.is_ajax and request.method == "GET":

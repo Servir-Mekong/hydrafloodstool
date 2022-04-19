@@ -167,6 +167,8 @@ var msg_date = document.getElementById('mesg-date');
 $("#precip-opacity").slider();
 $("#swater-opacity").slider();
 $("#fwater-opacity").slider();
+$("#fage-opacity").slider();
+$("#fduration-opacity").slider();
 $("#browse-opacity").slider();
 $("#historical-opacity").slider();
 
@@ -252,6 +254,7 @@ map.on('style.load', () => {
         dataType: 'json',
         async: false,
         success: (data) => {
+            console.log(data)
             getPotentialFldWater = data;
             var dailyPotentialFloodWater = getPotentialFldWater;        
             map.addSource('floodwater', {
@@ -287,7 +290,101 @@ map.on('style.load', () => {
         }
     });
 
-    //Get Daily Surface Water Area Layer
+    // Get Flood Age Layer
+    var getFloodAgeLayer;
+    $.ajax({
+        url: '/ajax/floodagemap/',
+        type: "GET",
+        // data: {
+        //     "selected_date": latest_date,
+        // },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            console.log(data)
+            getFloodAgeLayer = data;
+            var dailyFloodAgeLayer = getFloodAgeLayer;        
+            map.addSource('floodage', {
+                'type': 'raster',
+                'tiles': [
+                    dailyFloodAgeLayer
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 14
+            });
+            map.addLayer({
+                'id': 'floodage', // Layer ID
+                'type': 'raster',
+                'source': 'floodage', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'none'
+                },
+            });
+            $("#fage-opacity").on("slide", function(slideEvt) {
+                //console.log(slideEvt.value);
+                var opac = slideEvt.value
+                map.setPaintProperty(
+                    'floodage',
+                    'raster-opacity',
+                    opac
+                );
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    // Get Flood Duration Layer
+    var getFloodDurationLayer;
+    $.ajax({
+        url: '/ajax/flooddurationmap/',
+        type: "GET",
+        // data: {
+        //     "selected_date": latest_date,
+        // },
+        dataType: 'json',
+        async: false,
+        success: (data) => {
+            // console.log(data)
+            getFloodDurationLayer = data;
+            var dailyFloodDurationLayer = getFloodDurationLayer;        
+            map.addSource('floodduration', {
+                'type': 'raster',
+                'tiles': [
+                    dailyFloodDurationLayer
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 14
+            });
+            map.addLayer({
+                'id': 'floodduration', // Layer ID
+                'type': 'raster',
+                'source': 'floodduration', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'none'
+                },
+            });
+            $("#fduration-opacity").on("slide", function(slideEvt) {
+                //console.log(slideEvt.value);
+                var opac = slideEvt.value
+                map.setPaintProperty(
+                    'floodduration',
+                    'raster-opacity',
+                    opac
+                );
+            });
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    // Get Daily Surface Water Area Layer
     var getDailySurWater;
     $.ajax({
         url: '/ajax/surfacewatermap/',
