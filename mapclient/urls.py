@@ -7,6 +7,9 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('map/', views.MapView.as_view(), name='mapviewer'),
     path('usecase/', views.UsecaseView.as_view(), name='usecase'),
+    path('usecase/01/', views.Usecase01.as_view(), name='usecase01'),
+    path('usecase/02/', views.Usecase02.as_view(), name='usecase02'),
+    path('usecase/03/', views.Usecase03.as_view(), name='usecase03'),
     #path('about/', views.AboutView.as_view(), name='about'),
     path('about/', views.TeamList.as_view(), name='about'),
     path('people/<slug:slug>/', views.TeamDetailView.as_view(), name='team-detail'),
@@ -15,6 +18,7 @@ urlpatterns = [
     url(r'^ajax/potentialfloodmap/$', api.get_potential_flood_map),
     url(r'^ajax/surfacewatermap/$', api.get_dailysurface_water_map),
     url(r'^ajax/permanaentwatermap/$', api.get_permanent_water_map),
+    url(r'^ajax/doymap/$', api.get_doy_map),
 
     url(r'^ajax/floodagemap/$', api.get_flood_age_map),
     url(r'^ajax/flooddurationmap/$', api.get_flood_duration_map),

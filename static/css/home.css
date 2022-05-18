@@ -80,6 +80,9 @@
 .hvr-bounce-to-right:before {
     background: #ef6c00;
 }
+.hvr-shutter-out-horizontal:before {
+    background: #ef6c00;
+}
 .jumbotron p{
     color: #fff;
     font-size: 20px;

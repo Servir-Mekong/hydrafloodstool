@@ -24,6 +24,15 @@ class MapView(TemplateView):
 class UsecaseView(TemplateView):
     template_name = "usecase.html"
 
+class Usecase01(TemplateView):
+    template_name = "usecase_01.html"
+
+class Usecase02(TemplateView):
+    template_name = "usecase_02.html"
+
+class Usecase03(TemplateView):
+    template_name = "usecase_03.html"
+
 # class AboutView(TemplateView):
 #     template_name = "about.html"
 

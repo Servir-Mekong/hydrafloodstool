@@ -30,7 +30,7 @@
             <h6 class="usecase-title">Floods in Phnom Penh, Cambodia</h6>
             <p class="usecase-date">Mon, 25 Oct 2021</p> 
             <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal1">View Details</button>
-            <button type="button" class="btn btn-outline-primary" id="usecase1">View on Map</button>  
+            <a type="button" class="btn btn-outline-primary" role="button" href="/usecase/01/" id="usecase1">View on Map</a>  
           </div>
         </div>
         <!-- <div class="card mt-4 mb-5 ms-3 me-3 border-0">
@@ -51,7 +51,7 @@
             <h6 class="usecase-title">Floods in Chaiyaphum Province, Thailand</h6>
             <p class="usecase-date">27 September 2021</p>           
             <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal2">View Details</button>
-            <button type="button" class="btn btn-outline-primary" id="usecase2">View on Map</button>
+            <a type="button" class="btn btn-outline-primary" role="button" href="/usecase/02/" id="usecase2">View on Map</a>
           </div>
         </div>
         <!-- Usecase 3 Card -->
@@ -62,7 +62,7 @@
             <h6 class="usecase-title">Floods in Vietnam</h6>
             <p class="usecase-date">30 November 2021</p>            
             <button type="button" class="btn btn-usecase me-3" data-bs-toggle="modal" data-bs-target="#usecaseModal3">View Details</button>
-            <button type="button" class="btn btn-outline-primary" id="usecase3">View on Map</button>
+            <a type="button" class="btn btn-outline-primary" role="button" href="/usecase/03/" id="usecase3">View on Map</a>
           </div>
         </div>
         <!-- Usecase 4 Card -->
@@ -229,6 +229,6 @@
 
 <!-- Extra JS files -->
 {% block extra_script %}
-<script src="{% static 'js/usecase.js' %}"></script>
+<script src="{% static 'js/usecase_03.js' %}"></script>
 <script src="{% static 'js/admin-layer.js' %}"></script>
 {% endblock %}

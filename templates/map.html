@@ -3,8 +3,6 @@
 
 <!-- CSS files -->
 {% block extra_css %}
-<link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
-<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
 <link rel="stylesheet" href="{% static 'css/map.css' %}">
 {% endblock %}
 
@@ -55,6 +53,27 @@
                         </div>
                     </div>
                 </div>
+                <!-- Admin boundary selection card -->
+                <div class="accordion-item mb-2">
+                    <h2 class="accordion-header text-white" id="adminSelection">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdminSelection" aria-expanded="true" aria-controls="collapseAdminSelection">
+                            <i class="fas fa-map pe-2"></i>Administrative Boundary Selection
+                        </button>
+                    </h2>
+                    <div id="collapseAdminSelection" class="accordion-collapse collapse" aria-labelledby="adminSelection" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p> Select Administrative Boundary</p>
+                            <select class="form-select" id="admin_selection">
+                                <option value="all" selected>Mekong Region</option>
+                                <option value="Cambodia">Cambodia</option>
+                                <option value="Laos">Laos</option>
+                                <option value="Burma">Myanmar</option>
+                                <option value="Thailand">Thailand</option>
+                                <option value="Vietnam">Vietnam</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <!-- Precipitation data card -->
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="precipMap">
@@ -100,6 +119,8 @@
                             </div>
                             <label for="fwater-opacity" class="form-label">Opacity:</label><br>
                             <input id="fwater-opacity" data-slider-id='fwater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
+                            <!-- <button type="button" id="dwnld-button" name="dwnld-button" class="btn btn-primary text-white mt-5 mb-3"><i class="fa fa-download"></i>  Download Potential Flood Layer</button> -->
+                            <a class="btn btn-primary text-white mt-5 mb-3" href="#" id="dwnld-button" name="dwnld-button" role="button"><i class="fa fa-download"></i>  Download Potential Flood Layer</a>
                         </div>
                     </div>
                 </div>  
@@ -185,7 +206,7 @@
                                         name="end_year_selection_historical"
                                         type="text"
                                         data-provide="datepicker"
-                                        value="2010"
+                                        value="2000"
                                         data-date-autoclose="true"
                                         data-date-clear-btn="true"
                                         data-date-format="yyyy"
@@ -201,7 +222,7 @@
                                             name="end_year_selection_historical"
                                             type="text"
                                             data-provide="datepicker"
-                                            value="2020"
+                                            value="2022"
                                             data-date-autoclose="true"
                                             data-date-clear-btn="true"
                                             data-date-format="yyyy"
@@ -223,6 +244,24 @@
                         </div>
                     </div>
                 </div>
+                <!-- DOY card -->
+                <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="doyMap">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDOYMap" aria-expanded="false" aria-controls="collapseDOYMap">
+                            <i class="fas fa-water pe-2"></i> DOY Map
+                        </button>
+                    </h2>
+                    <div id="collapseDOYMap" class="accordion-collapse collapse" aria-labelledby="doyMap" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="form-check">
+                                <input class="form-check-input" id="doymapCB" type="checkbox" value="doymap" onchange="switchlayer('doymap')" checked>
+                                <label class="form-check-label" for="doymapCB"><b>DOY Map</b><br><small>Checked to overlay DOY map</small></label>
+                            </div>
+                            <label for="doy-opacity" class="form-label">Opacity:</label><br>
+                            <input id="doy-opacity" data-slider-id='fwater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
+                        </div>
+                    </div>
+                </div> 
                 <!-- Satellite imagery card -->
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="satelliteImagery">
@@ -409,9 +448,6 @@
 
 <!-- Extra JS files -->
 {% block extra_script %}
-
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
 <script src="{% static 'js/map.js' %}"></script>
 
 {% endblock %}

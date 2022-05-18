@@ -4,6 +4,7 @@
 <!-- CSS files -->
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/map.css' %}">
 {% endblock %}
 
 {% block container %}
@@ -24,7 +25,7 @@
     </div>
 </div>
 <!-- Main Container -->
-<div class="container-fluid fld-dashboard">
+<!-- <div class="container-fluid fld-dashboard">
     <h2 class="h4 fw-bold">POTENTIAL FLOOD IMPACTS DASHBOARD</h2>
     <div class="row mt-5">
         <div class="col-md-3">
@@ -69,10 +70,10 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="card card-body border-0 pt-3 bg-light text-center">
-                                    <!-- <div class="circle fs-4 text-center text-danger mt-3"><span class="pe-2" id="cambodiaFldArea"></span>&#13218;</div> -->
+                                    <div class="circle fs-4 text-center text-danger mt-3"><span class="pe-2" id="cambodiaFldArea"></span>&#13218;</div>
                                     <p class="fs-4 text-center text-danger pt-3"><span  id="totalFldArea"></span> &#13218;</p>
                                     <p class="fs-5 text-center">Area of Land Affected</p>
-                                </div>
+                                </div> -->
                                 
                                 <!-- <div class="card card-body border-0 p-0">  border-0 shadow p-3 mb-5 bg-white rounded            
                                     <ul class="fs-5 fld-dash-content">
@@ -82,16 +83,16 @@
                                         <li class="pb-4"><img class="ps-3" src="{% static 'images/flooded-house.png' %}" style="width: 2.13em;"><span class="fw-bold ps-3">161, 552</span> <span>houses affected</span></li> 
                                     </ul>
                                 </div> -->
-                            </div>
+                            <!-- </div>
                             <div class="col-md-8">
                                 <div class="card card-body border-0 p-0">
                                     <ul class="fs-5 fld-dash-content">
                                         <li class="pt-4"><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3" id="totalFldedDistricts"></span> <span>districts affected</span></li>
                                         <li><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="totalFldedHC"></span> <span>health centers affected</span></li>
-                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="totalFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="totalFldedEC"></span> <span>educational institutions affected</span></li> -->
                                         <!-- <li><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
                                         <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
-                                    </ul>
+                                    <!-- </ul>
                                 </div>
                             </div>
                         </div>
@@ -109,10 +110,10 @@
                                     <ul class="fs-5 fld-dash-content">
                                         <li class="pt-4"><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3" id="cambodiaFldedDistricts"></span> <span>districts affected</span></li>
                                         <li><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="cambodiaFldedHC"></span> <span>health centers affected</span></li>
-                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="cambodiaFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="cambodiaFldedEC"></span> <span>educational institutions affected</span></li> -->
                                         <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
                                         <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
-                                    </ul>
+                                    <!-- </ul>
                                 </div>
                             </div>
                         </div>
@@ -130,10 +131,10 @@
                                     <ul class="fs-5 fld-dash-content">
                                         <li class="pt-4"><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3" id="laosFldedDistricts"></span> <span>districts affected</span></li>
                                         <li><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="laosFldedHC"></span> <span>health centers affected</span></li>
-                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="laosFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="laosFldedEC"></span> <span>educational institutions affected</span></li> -->
                                         <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
                                         <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
-                                    </ul>
+                                    <!-- </ul>
                                 </div>
                             </div>
                         </div>
@@ -151,10 +152,10 @@
                                     <ul class="fs-5 fld-dash-content">
                                         <li class="pt-4"><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3" id="myanmarFldedDistricts"></span> <span>districts affected</span></li>
                                         <li><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="myanmarFldedHC"></span> <span>health centers affected</span></li>
-                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="myanmarFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="myanmarFldedEC"></span> <span>educational institutions affected</span></li> -->
                                         <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
                                         <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
-                                    </ul>
+                                    <!-- </ul>
                                 </div>
                             </div>
                         </div>
@@ -172,10 +173,10 @@
                                     <ul class="fs-5 fld-dash-content">
                                         <li class="pt-4"><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3" id="thailandFldedDistricts"></span> <span>districts affected</span></li>
                                         <li><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="thailandFldedHC"></span> <span>health centers affected</span></li>
-                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="thailandFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="thailandFldedEC"></span> <span>educational institutions affected</span></li> -->
                                         <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
                                         <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
-                                    </ul>
+                                    <!-- </ul>
                                 </div>
                             </div>
                         </div>
@@ -193,10 +194,10 @@
                                     <ul class="fs-5 fld-dash-content">
                                         <li class="pt-4"><i class="fas fa-map fa-lg ps-3"></i><span class="fw-bold ps-3" id="vietnamFldedDistricts"></span> <span>districts affected</span></li>
                                         <li><i class="fas fa-hospital fa-lg ps-3"></i><span class="fw-bold ps-3" id="vietnamFldedHC"></span> <span>health centers affected</span></li>
-                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="vietnamFldedEC"></span> <span>educational institutions affected</span></li>
+                                        <li><i class="fas fa-school fa-lg ps-3"></i><span class="fw-bold ps-3" id="vietnamFldedEC"></span> <span>educational institutions affected</span></li> -->
                                         <!-- <li><i class="fas fa-road fa-lg ps-3"></i><span class="fw-bold ps-3">2, 148, 433</span> <span>meters of road affected</span></li>
                                         <li class="pb-4"><i class="fab fa-pagelines fa-lg ps-3"></i><span class="fw-bold ps-3">329, 754</span> <span>ha of agricultural land affected</span></li> -->
-                                    </ul>
+                                    <!-- </ul>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +205,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- <div class="row mt-5 mb-5">
         <h5 class="h5 fw-bold mb-5">Potential Flooded Area on <span  id="eventDate"></span></h5>
         <div class="col-md">
@@ -238,6 +239,25 @@
             </div>
         </div>
     </div> -->
+<!-- </div> --> 
+<div class="container-fluid mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-4" class="umap">
+            <h5 class="h6 fw-bold mt-5 mb-3">Floods in Phnom Penh, Cambodia | Mon, 25 Oct 2021</h5>
+            <div id="umap-01" style="height: 300px; width: 100%;"></div>
+            <a class="btn btn-outline-secondary btn-lg mt-5 mb-5" href="usecase/01/" role="button">View Details</a>
+        </div>
+        <div class="col-md-4">
+            <h5 class="h6 fw-bold mt-5 mb-3">Floods in Chaiyaphum, Thailand | 27 September 2021</h5>
+            <div id="umap-02" style="height: 300px; width: 100%;"></div>
+            <a class="btn btn-outline-secondary btn-lg mt-5 mb-5" href="usecase/02/" role="button">View Details</a>
+        </div>
+        <div class="col-md-4">
+            <h5 class="h6 fw-bold mt-5 mb-3">Floods in Vietnam | 30 November 2021</h5>
+            <div id="umap-03" style="height: 300px; width: 100%;"></div>
+            <a class="btn btn-outline-secondary btn-lg mt-5 mb-5" href="usecase/03/" role="button">View Details</a>
+        </div>
+    </div>
 </div>
 <div class="container-fluid mt-5">
     {% include 'partners.html' %}
@@ -246,7 +266,9 @@
 
 {% endblock container %}
 {% block extra_script %}
-<script src="{% static 'js/home.js' %}"></script>
+<!-- <script src="{% static 'js/home.js' %}"></script> -->
+<script src="{% static 'js/home-map.js' %}"></script>
+<script src="{% static 'js/usecase.js' %}"></script>
 {% endblock %}
 
 

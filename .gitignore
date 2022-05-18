@@ -6,6 +6,7 @@ hydrafloodviewer/settings.py
 mts/*
 mapclient/external_scripts/*
 /mapclient/external_scripts
+mapclient/backup.py
 # vendore files
 hydrafloodviewer/static/vendor/*
 static/vendor/*

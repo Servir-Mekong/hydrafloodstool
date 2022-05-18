@@ -8,8 +8,8 @@ var sidebarContent = document.getElementById("sidebar-content");
 var map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
-    center: [100.523186, 15.736717], // starting position [lng, lat]
-    zoom: 5 // starting zoom
+    center: [104.9249267578125, 11.549998444541838],
+    zoom: 8
 });
 
 function displaySidebar(){
@@ -54,44 +54,6 @@ map.addControl(
     })
 );
 
-// map.on('load', () => {
-//     //Get Daily Surface Water Area Layer
-//     var selected_date = '2021-10-25';
-//     $.ajax({
-//         url: '/ajax/floodwatermap/',
-//         type: "GET",
-//         data: {
-//             "selected_date": selected_date,
-//         },
-//         dataType: 'json',
-//         async: false,
-//         success: (data) => {
-//             getDailyFloodWater = data;
-//             var dailyfloodwater = getDailyFloodWater;        
-//             map.addSource('floodwater', {
-//                 'type': 'raster',
-//                 'tiles': [
-//                     dailyfloodwater
-//                 ],
-//                 'tileSize': 256,
-//                 'minzoom': 0,
-//                 'maxzoom': 10
-//             });
-//             map.addLayer({
-//                 'id': 'floodwater', // Layer ID
-//                 'type': 'raster',
-//                 'source': 'floodwater', // ID of the tile source created above
-//                 'layout': {
-//                     // Make the layer visible by default.
-//                     'visibility': 'visible'
-//                 },
-//             });
-//         },
-//         error: (error) => {
-//             console.log(error);
-//         }
-//     });
-// });
 map.on('load', () => {
     //JRC Permanent Water Map
     $.ajax({
@@ -170,10 +132,7 @@ document.getElementById('usecase1').addEventListener('click', () => {
         essential: true,
         zoom: 8
     });
-    map.removeLayer('floodwater');
-    map.removeSource('floodwater');
 
-    //Get 14 Days Flood Water Extent Layer (7 days before and 7 days after the flood event)
     var selected_date = '2021-10-25';
     $.ajax({
         url: '/ajax/casefloodmap/',
@@ -309,4 +268,3 @@ const legendEl = document.getElementById('legend');
 map.on('load', () => {
     legendEl.style.display = 'block';
 });
-

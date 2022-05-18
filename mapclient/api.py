@@ -30,9 +30,10 @@ def get_precipitation_map(request):
 # Get potential flood map
 def get_potential_flood_map(request):
     if request.is_ajax and request.method == "GET":
-        date = request.GET.get('selected_date')        
+        date = request.GET.get('selected_date') 
+        adm =  request.GET.get('adm_selection')     
         core = MainGEEApi()
-        data = core.getPotentialFloodMap(date)
+        data = core.getPotentialFloodMap(date, adm)
         return JsonResponse(data, safe=False)
 
 # Get daily surface water map
@@ -79,9 +80,10 @@ def get_permanent_water_map(request):
 def get_download_url(request):
     if request.is_ajax and request.method == "GET":
         date = request.GET.get('selected_date', '')
-        shape = request.GET.get('geom', '')
+        #shape = request.GET.get('geom', '')
+        adm =  request.GET.get('adm_selection') 
         core = MainGEEApi()
-        data = core.getDownloadURL(date, shape)
+        data = core.getDownloadURL(date, adm)
     return JsonResponse(data, safe=False)
 
 def get_case_flood_map(request):
@@ -95,4 +97,12 @@ def get_jrc_permanent_water_map(request):
     if request.is_ajax:
         core = MainGEEApi()
         data = core.getJRCPermanentWaterMap()
+    return JsonResponse(data, safe=False)
+
+def get_doy_map(request):
+    if request.is_ajax and request.method == "GET":
+        date = request.GET.get('selected_date')
+        # selected_region = request.GET.get('selected_region')
+        core = MainGEEApi()
+        data = core.getDOYMap(date)
     return JsonResponse(data, safe=False)
