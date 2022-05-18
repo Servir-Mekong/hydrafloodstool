@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 from turtle import st
 from django.core import serializers
 from django.http import HttpResponse
-import datetime
 import numpy as np
 import base64
 import matplotlib as mpl
