@@ -135,7 +135,7 @@
                     <div id="collapseFloodAgeMap" class="accordion-collapse collapse" aria-labelledby="floodAgeMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="floodageCB" type="checkbox" value="floodage" onchange="switchlayer('floodage')" checked>
+                                <input class="form-check-input" id="floodageCB" type="checkbox" value="floodage" onchange="switchlayer('floodage')">
                                 <label class="form-check-label" for="floodageCB"><b>Flood Age Map</b><br><small>Checked to overlay flood age layer estimated from SAR data analysis</small></label>
                             </div>
                             <label for="fwater-opacity" class="form-label">Opacity:</label><br>
@@ -154,7 +154,7 @@
                     <div id="collapseFloodDurationMap" class="accordion-collapse collapse" aria-labelledby="floodDurationMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="flooddurationCB" type="checkbox" value="floodduration" onchange="switchlayer('floodduration')" checked>
+                                <input class="form-check-input" id="flooddurationCB" type="checkbox" value="floodduration" onchange="switchlayer('floodduration')">
                                 <label class="form-check-label" for="flooddurationCB"><b>Flood Duration Map</b><br><small>Checked to overlay flood duration map estimated from Sentinel 1 satellite imagery analysis</small></label>
                             </div>
                             <label for="fduration-opacity" class="form-label">Opacity:</label><br>
@@ -254,7 +254,7 @@
                     <div id="collapseDOYMap" class="accordion-collapse collapse" aria-labelledby="doyMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="doymapCB" type="checkbox" value="doymap" onchange="switchlayer('doymap')" checked>
+                                <input class="form-check-input" id="doymapCB" type="checkbox" value="doymap" onchange="switchlayer('doymap')">
                                 <label class="form-check-label" for="doymapCB"><b>DOY Map</b><br><small>Checked to overlay DOY map</small></label>
                             </div>
                             <label for="doy-opacity" class="form-label">Opacity:</label><br>
@@ -439,9 +439,105 @@
 
 <div id="legend" class="legend">
     <h4 class="fw-bold h5">Legend</h4>
-    <div id="fwater-legend" style="display: block;"><span style="background-color: #e57373"></span>Potential Floods Water</div>
-    <div id="swater-legend" style="display: none;"><span style="background-color: #2389da"></span>Daily Surface Water</div>
-    <div id="pwater-legend" style="display: block;"><span style="background-color: #00008b"></span>Permament Water</div>
+    <div class="row">
+        <div class="col-md-12 lg-content">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                            Water Layers
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                        <div class="accordion-body">
+                            <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #e57373; width:18px; height: 18px;"></div></span> Potential Floods Water</div>
+                            <div id="swater-legend" style="display: none; padding-bottom: 5px;"><span><div style="background-color: #2389da; width:18px; height: 18px;"></div></span> Daily Surface Water</div>
+                            <div id="pwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #00008b; width:18px; height: 18px;"></div></span> Permament Water</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                            Administrative Layers
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                        <div class="accordion-body">
+                            <div id="adm1-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: rgba(200, 230, 201, 1); border: 2px solid rgba(200, 230, 201, 1); width:18px; height: 18px;"></div></span> Country Boundary</div>
+                            <div id="adm2-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #bdbdbd; border: 2px solid #bdbdbd; width:18px; height: 18px;"></div></span> Province Boundary</div>
+                            <div id="adm3-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #fff9c4; border: 2px solid #fff9c4; width:18px; height: 18px;"></div></span> District Boundary</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                            Facilities
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                        <div class="accordion-body">
+                            <div id="edu-legend" style="display: block; padding-bottom: 5px;"><span><div><img src="/static/images/education.png" style="width:18px; height: 18px;" alt="Educational Institutions"></div></span> Educational Institutions</div>
+                            <div id="health-legend" style="display: block; padding-bottom: 5px;"><span><div><img src="/static/images/hospital.png" style="width:18px; height: 18px;" alt="Educational Institutions"></div></span> Health Care Facilities</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
+                            Flood Age Layer
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
+                        <div class="accordion-body">
+                            <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_age_legend.png" style="width: 200px; height: 50px;" alt="Flood Age Legend"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
+                            Flood Duration Layer
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
+                        <div class="accordion-body">
+                            <div id="flduration-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_duration_legend.png" style="width: 200px; height: 50px;" alt="Flood Duration Legend"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="true" aria-controls="panelsStayOpen-collapseSix">
+                            Precipitation Layer
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                        <div class="accordion-body">
+                            <div id="precip-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/precip_colorbar.png" style="width:200px; height: 70px;" alt="Precipitation Legend"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <h6 class="h6 pt-3 fw-500">Water Layers</h6>
+    <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #e57373; width:18px; height: 18px;"></div></span> Potential Floods Water</div>
+    <div id="swater-legend" style="display: none; padding-bottom: 5px;"><span><div style="background-color: #2389da; width:18px; height: 18px;"></div></span> Daily Surface Water</div>
+    <div id="pwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #00008b; width:18px; height: 18px;"></div></span> Permament Water</div>
+    
+
+    <h6 class="h6 pt-3 fw-500">Administrative Boundary</h6>
+    <div id="adm1-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: rgba(200, 230, 201, 1); border: 2px solid rgba(200, 230, 201, 1); width:18px; height: 18px;"></div></span> Country Boundary</div>
+    <div id="adm2-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #bdbdbd; border: 2px solid #bdbdbd; width:18px; height: 18px;"></div></span> Province Boundary</div>
+    <div id="adm3-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #fff9c4; border: 2px solid #fff9c4; width:18px; height: 18px;"></div></span> District Boundary</div>
+
+    <h6 class="h6 pt-3 fw-500"></h6>
+    <div id="edu-legend" style="display: block; padding-bottom: 5px;"><span><div><img src="/static/images/education.png" style="width:18px; height: 18px;" alt="Educational Institutions"></div></span> Educational Institutions</div>
+    <div id="health-legend" style="display: block; padding-bottom: 5px;"><span><div><img src="/static/images/hospital.png" style="width:18px; height: 18px;" alt="Educational Institutions"></div></span> Health Care Facilities</div> -->
+
 </div>
 
 {% endblock container %}

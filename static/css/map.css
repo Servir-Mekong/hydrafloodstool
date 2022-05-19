@@ -318,3 +318,7 @@ body .mapboxgl-map {line-height: 1.4;}
     margin-right: 5px;
     width: 15px;
 }
+.lg-content{
+    max-height: 350px;
+    overflow: scroll;
+}

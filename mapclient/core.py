@@ -639,8 +639,7 @@ class MainGEEApi():
         image = image.select('age_all_days').selfMask()
         # image = image.selfMask()
         # selected = age_image.select('age_all_days')
-        floodAgeMap = self.getTileLayerUrl(image.visualize(min=0, max=6, palette=[
-                                           'ae017e', 'f768a1', 'fbb4b9', 'feebe2']))  # ['ae017e','f768a1','fbb4b9','feebe2']
+        floodAgeMap = self.getTileLayerUrl(image.visualize(min=0, max=10, palette=['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']))  # ['ae017e','f768a1','fbb4b9','feebe2']
         return floodAgeMap
 
     # Get flood duration map
@@ -681,7 +680,7 @@ class MainGEEApi():
 
         image = HF_S1_daily_duration_latest.select('duration_days').selfMask()
         floodDurationMap = self.getTileLayerUrl(
-            image.visualize(min=0, max=10, palette=['white', 'black']))
+            image.visualize(min=0, max=10, palette=['white', 'black'])) #'white', 'black'
         return floodDurationMap
 
     def getDOYMap(self, date):
