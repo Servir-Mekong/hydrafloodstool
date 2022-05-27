@@ -38,6 +38,21 @@
                     <div id="collapseDateSelection" class="accordion-collapse collapse show" aria-labelledby="dateSelection" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <p> Select Date (YYYY-MM-DD) </p>
+                            <!-- <h6 class="fs-6 fw-bold">Start Date</h6>
+                            <div class="form-group ">
+                                <input class = "form-control" id="date_selection_start"
+                                name="date_selection_start"
+                                type="text"
+                                value="2021-01-01"
+                                data-provide="datepicker"                          
+                                data-date-autoclose="true"
+                                data-date-format="yyyy-mm-dd"
+                                data-date-min-view-mode="days"
+                                data-date-multidate="1"
+                                data-date-start-view="decade"
+                                data-date-today-btn="false">
+                            </div> 
+                            <h6 class="pt-3 fs-6 fw-bold">End Date</h6> -->
                             <div class="form-group ">
                                 <input class = "form-control" id="date_selection"
                                 name="date_selection"
@@ -54,7 +69,7 @@
                     </div>
                 </div>
                 <!-- Admin boundary selection card -->
-                <div class="accordion-item mb-2">
+                <div class="accordion-item mb-2" style="display: none;">
                     <h2 class="accordion-header text-white" id="adminSelection">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdminSelection" aria-expanded="true" aria-controls="collapseAdminSelection">
                             <i class="fas fa-map pe-2"></i>Administrative Boundary Selection
@@ -108,19 +123,65 @@
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="floodMap">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodMap" aria-expanded="false" aria-controls="collapseFloodMap">
-                            <i class="fas fa-water pe-2"></i> Potential Floods Water
+                            <i class="fa-solid fa-house-flood-water pe-2"></i> Potential Floods Water
                         </button>
                     </h2>
                     <div id="collapseFloodMap" class="accordion-collapse collapse" aria-labelledby="floodMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
                                 <input class="form-check-input" id="floodwaterCB" type="checkbox" value="floodwater" onchange="switchlayer('floodwater')" checked>
-                                <label class="form-check-label" for="floodwaterCB"><b>Potential Floods Water Map</b><br><small>Checked to overlay flood water area estimated from Sentinel 1 satellite imagery analysis</small></label>
+                                <label class="form-check-label" for="floodwaterCB"><b>Potential Floods Water Map</b><br><small>Checked to overlay flood water area estimated from satellite imagery analysis</small></label>
                             </div>
-                            <label for="fwater-opacity" class="form-label">Opacity:</label><br>
+                            <p class="pt-3">Select Mode: </p>
+                            <select class="form-select" id="mode_selection">
+                                <option value="operational">Operational</option>
+                                <option value="historical">Historical</option>
+                            </select>
+                            <div class="pt-3" id="update_historical_pfwl" style="display: none;">
+                                <p> Select Date (YYYY-MM-DD) </p>
+                                <h6 class="fs-6">Start Date</h6>
+                                <div class="form-group ">
+                                    <input class = "form-control" id="date_selection_start"
+                                    name="date_selection_start"
+                                    type="text"
+                                    value="2021-01-01"
+                                    data-provide="datepicker"                          
+                                    data-date-autoclose="true"
+                                    data-date-format="yyyy-mm-dd"
+                                    data-date-min-view-mode="days"
+                                    data-date-multidate="1"
+                                    data-date-start-view="decade"
+                                    data-date-today-btn="false">
+                                </div> 
+                                <h6 class="pt-3 fs-6">End Date</h6>
+                                <div class="form-group ">
+                                    <input class = "form-control" id="date_selection_end"
+                                    name="date_selection_end"
+                                    type="text"
+                                    value="2022-05-25"
+                                    data-provide="datepicker"                          
+                                    data-date-autoclose="true"
+                                    data-date-format="yyyy-mm-dd"
+                                    data-date-min-view-mode="days"
+                                    data-date-multidate="1"
+                                    data-date-start-view="decade"
+                                    data-date-today-btn="false">
+                                </div> 
+                            </div>
+                            <p class="pt-3">Select Sensor: </p>
+                            <select class="form-select" id="sensor_selection">
+                                <option value="all">All Merged</option>
+                                <option value="sentinel1">Sentinel 1 (SAR)</option>
+                                <option value="sentinel2">Sentinel 2</option>
+                                <option value="landsat8">Landsat 8</option>
+                            </select>
+                            <div class="center_obj mt-4" id="update_his_pfwl_button" style="display: none;">
+                                <button type="submit" id="update-historical-pfw-button" name="update-historical-pfw-button" class="btn btn-primary text-white"><i class="fa fa-refresh"></i> Update Historical Floods Layer</button>
+                            </div>
+                            <label for="fwater-opacity" class="form-label pt-3">Opacity:</label><br>
                             <input id="fwater-opacity" data-slider-id='fwater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                             <!-- <button type="button" id="dwnld-button" name="dwnld-button" class="btn btn-primary text-white mt-5 mb-3"><i class="fa fa-download"></i>  Download Potential Flood Layer</button> -->
-                            <a class="btn btn-primary text-white mt-5 mb-3" href="#" id="dwnld-button" name="dwnld-button" role="button"><i class="fa fa-download"></i>  Download Potential Flood Layer</a>
+                            <!-- <a class="btn btn-primary text-white mt-5 mb-3" href="#" id="dwnld-button" name="dwnld-button" role="button"><i class="fa fa-download"></i>  Download Potential Flood Layer</a> -->
                         </div>
                     </div>
                 </div>  
@@ -129,7 +190,7 @@
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="floodAgeMap">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodAgeMap" aria-expanded="false" aria-controls="collapseFloodAgeMap">
-                            <i class="fas fa-water pe-2"></i> Flood Age Map
+                            <i class="fas fa-calendar-times pe-2"></i> Flood Age Map
                         </button>
                     </h2>
                     <div id="collapseFloodAgeMap" class="accordion-collapse collapse" aria-labelledby="floodAgeMap" data-bs-parent="#accordionExample">
@@ -138,17 +199,29 @@
                                 <input class="form-check-input" id="floodageCB" type="checkbox" value="floodage" onchange="switchlayer('floodage')">
                                 <label class="form-check-label" for="floodageCB"><b>Flood Age Map</b><br><small>Checked to overlay flood age layer estimated from SAR data analysis</small></label>
                             </div>
-                            <label for="fwater-opacity" class="form-label">Opacity:</label><br>
+                            <!-- <p> Select Age Days:</p>
+                            <select class="form-select" id="age_type_selection">
+                                <option value="age_days">All Merged Age</option>
+                                <option value="flood_age_days">All Merged Flood Age</option>
+                            </select> -->
+                            <p class="mt-3">Select Sensor:</p>
+                            <select class="form-select" id="age_sensor_selection">
+                                <option value="all">All Merged</option>
+                                <option value="sentinel1">Sentinel 1 (SAR)</option>
+                                <option value="sentinel2">Sentinel 2</option>
+                                <option value="landsat8">Landsat 8</option>
+                            </select>
+                            <label for="fwater-opacity" class="form-label pt-3">Opacity:</label><br>
                             <input id="fage-opacity" data-slider-id='fage-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                         </div>
                     </div>
                 </div>    
                 
-                <!-- Flood Duration card -->
+                <!-- Flood Duration card
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="floodDurationMap">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodDurationMap" aria-expanded="false" aria-controls="collapseFloodDurationMap">
-                            <i class="fas fa-water pe-2"></i> Flood Duration Map
+                            <i class="fas fa-calendar-times pe-2"></i> Flood Duration Map
                         </button>
                     </h2>
                     <div id="collapseFloodDurationMap" class="accordion-collapse collapse" aria-labelledby="floodDurationMap" data-bs-parent="#accordionExample">
@@ -161,7 +234,7 @@
                             <input id="fduration-opacity" data-slider-id='fduration-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                         </div>
                     </div>
-                </div>     
+                </div>      -->
                 
                 <!-- Daily surface water card -->
                 <div class="accordion-item mb-2">
@@ -174,9 +247,15 @@
                         <div class="accordion-body">
                             <div class="form-check">
                                 <input class="form-check-input" id="surfacewaterCB" type="checkbox" value="surfacewater" onchange="switchlayer('surfacewater')">
-                                <label class="form-check-label" for="surfacewaterCB"><b>Surface Water Map</b><br><small>Checked to overlay surface water area estimated from Sentinel 1 satellite imagery analysis</small></label>
+                                <label class="form-check-label" for="surfacewaterCB"><b>Surface Water Map</b><br><small>Checked to overlay surface water area estimated from satellite imagery analysis</small></label>
                             </div>
-                            <label for="swater-opacity" class="form-label">Opacity:</label><br>
+                            <p class="pt-3">Select Sensor: </p>
+                            <select class="form-select" id="sensor_selection_swater">
+                                <option value="sentinel1">Sentinel 1 (SAR)</option>
+                                <option value="sentinel2">Sentinel 2</option>
+                                <option value="landsat8">Landsat 8</option>
+                            </select>
+                            <label for="swater-opacity" class="form-label pt-3">Opacity:</label><br>
                             <input id="swater-opacity" data-slider-id='swater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                             <!-- <input id="swater-opacity" type="range" min="0" max="100" step="0" value="100"> -->
                         </div>
@@ -197,7 +276,7 @@
                             </div>
                             <label for="historical-opacity" class="form-label">Opacity:</label><br>
                             <input id="historical-opacity" data-slider-id='historical-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
-                            <p>Select reference period:</p>
+                            <p class="pt-3">Select reference period:</p>
                             <table style="width:100%">
                                 <tr>
                                     <td style="width:45%">
@@ -233,7 +312,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <p>Select seasonal period: </p>
+                            <p class="pt-3">Select seasonal period: </p>
                             <div style="width:95%; margin:3px;">
                                 <input type="text" class="js-range-slider" id="month_range" name="month_range" />
                             </div>
@@ -245,10 +324,10 @@
                     </div>
                 </div>
                 <!-- DOY card -->
-                <div class="accordion-item mb-2">
+                <!-- <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="doyMap">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDOYMap" aria-expanded="false" aria-controls="collapseDOYMap">
-                            <i class="fas fa-water pe-2"></i> DOY Map
+                            <i class="fas fa-calendar-day pe-2"></i> DOY Map
                         </button>
                     </h2>
                     <div id="collapseDOYMap" class="accordion-collapse collapse" aria-labelledby="doyMap" data-bs-parent="#accordionExample">
@@ -261,7 +340,7 @@
                             <input id="doy-opacity" data-slider-id='fwater-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                         </div>
                     </div>
-                </div> 
+                </div>  -->
                 <!-- Satellite imagery card -->
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="satelliteImagery">
@@ -445,14 +524,18 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                            Water Layers
+                            Water/Flood Layers
                         </button>
                     </h2>
                     <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                         <div class="accordion-body">
-                            <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #e57373; width:18px; height: 18px;"></div></span> Potential Floods Water</div>
+                            <!-- <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #e57373; width:18px; height: 18px;"></div></span> Potential Floods Water</div> -->
+                            <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: yellow; width:18px; height: 18px;"></div></span> Flooded Water (SAR)</div>
+                            <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: orange; width:18px; height: 18px;"></div></span> Flooded Water (Optical)</div>
+                            <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: red; width:18px; height: 18px;"></div></span> Flooded Water All (Merged)</div>
+                            <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: green; width:18px; height: 18px;"></div></span> Seasonal</div>
                             <div id="swater-legend" style="display: none; padding-bottom: 5px;"><span><div style="background-color: #2389da; width:18px; height: 18px;"></div></span> Daily Surface Water</div>
-                            <div id="pwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #00008b; width:18px; height: 18px;"></div></span> Permament Water</div>
+                            <div id="pwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #00008b; width:18px; height: 18px;"></div></span> Permament/regular Water</div>
                         </div>
                     </div>
                 </div>
@@ -485,19 +568,23 @@
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-headingFour">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
                             Flood Age Layer
                         </button>
                     </h2>
                     <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
                         <div class="accordion-body">
-                            <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_age_legend.png" style="width: 200px; height: 50px;" alt="Flood Age Legend"></div>
+                            <!-- <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_age_legend.png" style="width: 200px; height: 50px;" alt="Flood Age Legend"></div> -->
+                            <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ae017e; width:18px; height: 18px;"></div></span> 0-1</div>
+                            <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #f768a1; width:18px; height: 18px;"></div></span> 2-3</div>
+                            <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #fbb4b9; width:18px; height: 18px;"></div></span> 4-5</div>
+                            <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #feebe2; width:18px; height: 18px;"></div></span> 6+</div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" style="display: none;">
                     <h2 class="accordion-header" id="panelsStayOpen-headingFive">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
                             Flood Duration Layer
                         </button>
                     </h2>
@@ -509,7 +596,7 @@
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-headingSix">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="true" aria-controls="panelsStayOpen-collapseSix">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="true" aria-controls="panelsStayOpen-collapseSix">
                             Precipitation Layer
                         </button>
                     </h2>

@@ -9,12 +9,12 @@ from ee.ee_exception import EEException
 from django.views.decorators.csrf import csrf_exempt
 
 # Get date list
-def dateList(request):
-    if request.is_ajax and request.method == "GET":
-        #core = MainGEEApi(date)
-        core = MainGEEApi()
-        data = core.getDateList()
-        return JsonResponse(data, safe=False)
+# def dateList(request):
+#     if request.is_ajax and request.method == "GET":
+#         #core = MainGEEApi(date)
+#         core = MainGEEApi()
+#         data = core.getDateList()
+#         return JsonResponse(data, safe=False)
 
 # Get precipitation map
 @csrf_exempt
@@ -30,28 +30,34 @@ def get_precipitation_map(request):
 # Get potential flood map
 def get_potential_flood_map(request):
     if request.is_ajax and request.method == "GET":
-        date = request.GET.get('selected_date') 
-        adm =  request.GET.get('adm_selection')     
+        start_date = request.GET.get('selected_start_date')
+        end_date = request.GET.get('selected_end_date') 
+        adm =  request.GET.get('selected_adm') 
+        sensor =  request.GET.get('selected_sensor')  
+        mode =  request.GET.get('selected_mode')   
         core = MainGEEApi()
-        data = core.getPotentialFloodMap(date, adm)
+        data = core.getPotentialFloodMap(start_date, end_date, adm, mode, sensor)
         return JsonResponse(data, safe=False)
 
 # Get daily surface water map
 @csrf_exempt
 def get_dailysurface_water_map(request):
     if request.is_ajax and request.method == "GET":
-        date = request.GET.get('selected_date')        
+        date = request.GET.get('selected_date') 
+        sensor =  request.GET.get('sensor')       
         core = MainGEEApi()
-        data = core.getSurfaceWaterMap(date)
+        data = core.getSurfaceWaterMap(date, sensor)
         return JsonResponse(data, safe=False)
 
 # Get flood age map
 @csrf_exempt
 def get_flood_age_map(request):
     if request.is_ajax and request.method == "GET":
-        # date = request.GET.get('selected_date')        
+        # date = request.GET.get('selected_date')  
+        # age_type =  request.GET.get('selected_age_type') 
+        age_sensor =  request.GET.get('selected_age_sensor')   
         core = MainGEEApi()
-        data = core.getFloodAgeMap()
+        data = core.getFloodAgeMap(age_sensor)
         return JsonResponse(data, safe=False)
 
 # Get flood duration map
@@ -79,9 +85,8 @@ def get_permanent_water_map(request):
 
 def get_download_url(request):
     if request.is_ajax and request.method == "GET":
-        date = request.GET.get('selected_date', '')
-        #shape = request.GET.get('geom', '')
-        adm =  request.GET.get('adm_selection') 
+        date = request.GET.get('selected_date')
+        adm =  request.GET.get('adm_selection')
         core = MainGEEApi()
         data = core.getDownloadURL(date, adm)
     return JsonResponse(data, safe=False)
@@ -101,8 +106,9 @@ def get_jrc_permanent_water_map(request):
 
 def get_doy_map(request):
     if request.is_ajax and request.method == "GET":
-        date = request.GET.get('selected_date')
+        start_date = request.GET.get('selected_start_date')
+        end_date = request.GET.get('selected_date')
         # selected_region = request.GET.get('selected_region')
         core = MainGEEApi()
-        data = core.getDOYMap(date)
+        data = core.getDOYMap(start_date, end_date)
     return JsonResponse(data, safe=False)
