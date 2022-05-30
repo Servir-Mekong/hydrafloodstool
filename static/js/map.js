@@ -174,7 +174,6 @@ document.getElementById('date_selection').value = precip_date;
 document.getElementById('date_selection_simg').value = latest_date;
 
 map.on('style.load', () => {
-    loadingSpinner(true);
 
     //Get Potential Flood Layer
     var getPotentialFldWater;
@@ -316,7 +315,6 @@ map.on('style.load', () => {
                     opac
                 );
             });
-            map.on('render', stopSpinner);
         },
         error: (error) => {
             console.log(error);
@@ -419,24 +417,13 @@ map.on('style.load', () => {
             console.log(error);
         }
     });
+    //Hide loading bar once tiles from geojson are loaded
+    map.on('data', function (e) {
+        if (e.dataType === 'source' && e.sourceId === 'floodwater') {
+            document.getElementById("loader").style.visibility = "hidden";
+        }
+    })
 });
-function stopSpinner (e) {
-    if (e.target && e.target.loaded()) {
-        loadingSpinner(false);
-        map.off('render', stopSpinner)
-    }
-}
-function loadingSpinner(on) {
-    if (on) {
-        spinnerEl.classList.add('loading');
-        backgroundEl.classList.add('absolute');
-        backgroundEl.classList.remove('none');
-    } else {
-        spinnerEl.classList.remove('loading');
-        backgroundEl.classList.remove('absolute');
-        backgroundEl.classList.add('none');
-    }
-}
 
 // Defining function to update layer 
 $('#date_selection').change(function(){
@@ -630,6 +617,14 @@ function updateFloodMapLayer(){
     // Update flood layer
     map.removeLayer('floodwater');
     map.removeSource('floodwater');
+    //Hide loading bar once tiles from geojson are loaded
+    map.on('data', function (e) {
+        if (e.dataType === 'source' && e.sourceId === 'floodwater') {
+            document.getElementById("loader").style.visibility = "hidden";
+        } else{
+            document.getElementById("loader").style.visibility = "visible";
+        }
+    });
     var getPotentialFldWater;
     $.ajax({
         url: '/ajax/potentialfloodmap/',
@@ -642,7 +637,7 @@ function updateFloodMapLayer(){
             "selected_sensor": pfl_sensor_selection
         },
         dataType: 'json',
-        async: false,
+        // async: false,
         success: (data) => {
             getPotentialFldWater = data;
             var dailyPotentialFloodWater = getPotentialFldWater;
@@ -676,6 +671,16 @@ function updateFloodAgeMapLayer(){
     // Update flood age layer
     map.removeLayer('floodage');
     map.removeSource('floodage');
+    
+    //Hide loading bar once tiles from geojson are loaded
+    map.on('data', function (e) {
+        if (e.dataType === 'source' && e.sourceId === 'floodage') {
+            document.getElementById("loader").style.visibility = "hidden";
+        } else{
+            document.getElementById("loader").style.visibility = "visible";
+        }
+    });
+
     // var selected_age_type = $('#age_type_selection').val();
     var selected_age_sensor = $('#age_sensor_selection').val();
     // Get Flood Age Layer
@@ -767,6 +772,14 @@ function updateFloodAgeMapLayer(){
 function updatePermanentWater(){
     map.removeLayer('permanentwater');
     map.removeSource('permanentwater');
+    //Hide loading bar once tiles from geojson are loaded
+    map.on('data', function (e) {
+        if (e.dataType === 'source' && e.sourceId === 'permanentwater') {
+            document.getElementById("loader").style.visibility = "hidden";
+        } else{
+            document.getElementById("loader").style.visibility = "visible";
+        }
+    });
     var startYear = $('#start_year_selection_historical').val();
     var endYear = $('#end_year_selection_historical').val();
     var slider = $("#month_range").data("ionRangeSlider");  

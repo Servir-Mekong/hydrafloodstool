@@ -522,14 +522,17 @@
 </div>
 <div class="map" id="map"></div>
 
-<div id="loading-background" class='flex-parent flex-parent--center-cross flex-parent--center-main absolute top right bottom left bg-darken10 z5'>
-    <div id="spinner" class='flex-child loading'></div>
-</div>
-
 <div class="map-overlay top">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
     <h5 class="pt-2 ps-3">The map data is showing on <span id="mesg-date" class="fw-bold"></span></h5>
 </div>
+
+<div class="map-overlay-loader top">
+    <div class="loader"id="loader">
+        <!-- <img src="/static/images/loading-gif.gif" width="80px"> -->
+    </div>
+</div>
+
 
 <div id="legend" class="legend">
     <div class="row">
