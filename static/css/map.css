@@ -1,12 +1,12 @@
 .sidebar{
-    height: calc(100% - 107px);
+    height: calc(100% - 116px);
     width: 60px;
     color: whiter;
     background-color: #303235;
     position: fixed;
 }
 .sidebar-content{
-    height: calc(100% - 107px);
+    height: calc(100% - 116px);
     width: 0;
     position: fixed;
     top: 40;
@@ -21,7 +21,7 @@
 #map {
     /* position: fixed; */
     position: absolute;
-    height: calc(100% - 107px); 
+    height: calc(100% - 116px); 
     width: calc(100% - 60px);
     margin-left: 60px;
 }
