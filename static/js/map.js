@@ -98,63 +98,10 @@ $(document).ready(function() {
     });
 });
 
-// get datelist
-// var dateList;
-// $.ajax({
-//     url: '/ajax/date/',
-//     type: "GET",
-//     dataType: "json",
-//     async: false,
-//     success: (data) => {
-//         //console.log(data);
-//         dateList = data;
-//         var enableDates = data;
-//         var enableDatesArray=[];
-//         $("#date_selection").datepicker("destroy");
-//         for (var i = 0; i < enableDates.length; i++) {
-//             var dt = enableDates[i];
-//             var dd, mm, yyyy;
-//             if (parseInt(dt.split('-')[2]) <= 9 || parseInt(dt.split('-')[1]) <= 9) {
-//                 dd = parseInt(dt.split('-')[2]);
-//                 mm = parseInt(dt.split('-')[1]);
-//                 yyyy = dt.split('-')[0];
-//                 enableDatesArray.push(yyyy + '-' + mm + '-' + dd);
-//             }
-//             else {
-//                 enableDatesArray.push(dt);
-//             }
-//         }
-//         $('#date_selection').datepicker({
-//             beforeShow: function (input, inst) {
-//                 setTimeout(function () {
-//                     inst.dpDiv.css({
-//                         top: $(".datepicker").offset().top + 35,
-//                         left: $(".datepicker").offset().left
-//                     });
-//                 }, 0);
-//             },
-//             beforeShowDay: function (date) {
-//                 var dt_ddmmyyyy = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() ;
-//                 if (enableDatesArray.indexOf(dt_ddmmyyyy) !== -1) {
-//                     return {
-//                         tooltip: 'There is data available',
-//                         classes: 'active'
-//                     };
-//                 } else {
-//                     return false;
-//                 }
-//             }
-//         });
-//     },
-//         error: (error) => {
-//         console.log(error);
-//     }
-// });
-
 var latest_date = new Date().toISOString().split('T')[0];
 // var latest_date = dateList.slice(-1).pop();
-//console.log(latest_date);
-//Get adm, precipitation, sensor, mode and date values
+// console.log(latest_date);
+// Get adm, precipitation, sensor, mode and date values
 var selected_adm = $('#admin_selection').val();
 var prod = $('#product_selection').val();
 var cmap = $('#cmap_selection').val();
@@ -168,18 +115,19 @@ var selected_mode = $('#mode_selection').val();
 // var selected_age_type = $('#age_type_selection').val();
 var selected_age_sensor = $('#age_sensor_selection').val();
 
+const spinnerEl = document.getElementById('spinner');
+const backgroundEl = document.getElementById('loading-background');
+
 // Show/hide date selection panel based on mode selection
 $('#mode_selection').on('change', function() {
     if($(this).val() === 'historical') {
         $('#update_historical_pfwl').show();
-        $('#update_his_pfwl_button').show();
+        //$('#update_his_pfwl_button').show();
     } else {
         $('#update_historical_pfwl').hide();
-        $('#update_his_pfwl_button').hide();
+        //$('#update_his_pfwl_button').hide();
     }
 });
-
-document.getElementById('date_selection').value = latest_date;
 
 var msg_date = document.getElementById('mesg-date');
     msg_date.innerHTML = latest_date;  
@@ -222,52 +170,11 @@ var d = new Date();
 d.setDate(d.getDate() - 1);
 var precip_date = d.toISOString().split('T')[0]
 
+document.getElementById('date_selection').value = precip_date;
+document.getElementById('date_selection_simg').value = latest_date;
+
 map.on('style.load', () => {
-    //Get Precipitation Layer 
-    var getPrecip;
-    $.ajax({
-        url: '/ajax/precipmap/',
-        type: "GET",
-        data: {
-            "selected_date": precip_date,
-            "cmap": cmap,
-            "accum": accum
-        },
-        dataType: 'json',
-        success: (precip_data) => {
-            getPrecip = precip_data;
-            var dailyPrecip = getPrecip;   
-            map.addSource('precip', {
-                'type': 'raster',
-                'tiles': [
-                    dailyPrecip
-                ],
-                'tileSize': 256,
-                'minzoom': 0,
-                'maxzoom': 10
-            });
-            map.addLayer({
-                'id': 'precip', // Layer ID
-                'type': 'raster',
-                'source': 'precip', // ID of the tile source created above
-                'layout': {
-                    // Make the layer visible by default.
-                    'visibility': 'none'
-                },
-            });
-            $("#precip-opacity").on("slide", function(slideEvt) {
-                var opac = slideEvt.value
-                map.setPaintProperty(
-                    'precip',
-                    'raster-opacity',
-                    opac
-                );
-            });
-        },
-        error: (error) => {
-            console.log(error);
-        }
-    });
+    loadingSpinner(true);
 
     //Get Potential Flood Layer
     var getPotentialFldWater;
@@ -282,7 +189,7 @@ map.on('style.load', () => {
             "selected_sensor": pfl_sensor_selection
         },
         dataType: 'json',
-        async: false,
+        //async: false,
         success: (data) => {
             // console.log(data)
             getPotentialFldWater = data;
@@ -331,7 +238,7 @@ map.on('style.load', () => {
             "selected_age_sensor": selected_age_sensor
         },
         dataType: 'json',
-        async: false,
+        //async: false,
         success: (data) => {
             // console.log(data)
             getFloodAgeLayer = data;
@@ -369,43 +276,90 @@ map.on('style.load', () => {
         }
     });
 
-    // Get Flood Duration Layer
-    // var getFloodDurationLayer;
+    //Get Precipitation Layer 
+    var getPrecip;
+    $.ajax({
+        url: '/ajax/precipmap/',
+        type: "GET",
+        data: {
+            "selected_date": precip_date,
+            "cmap": cmap,
+            "accum": accum
+        },
+        dataType: 'json',
+        success: (precip_data) => {
+            getPrecip = precip_data;
+            var dailyPrecip = getPrecip;   
+            map.addSource('precip', {
+                'type': 'raster',
+                'tiles': [
+                    dailyPrecip
+                ],
+                'tileSize': 256,
+                'minzoom': 0,
+                'maxzoom': 10
+            });
+            map.addLayer({
+                'id': 'precip', // Layer ID
+                'type': 'raster',
+                'source': 'precip', // ID of the tile source created above
+                'layout': {
+                    // Make the layer visible by default.
+                    'visibility': 'none'
+                },
+            });
+            $("#precip-opacity").on("slide", function(slideEvt) {
+                var opac = slideEvt.value
+                map.setPaintProperty(
+                    'precip',
+                    'raster-opacity',
+                    opac
+                );
+            });
+            map.on('render', stopSpinner);
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+    // // Get Daily Surface Water Area Layer
+    // var getDailySurWater;
     // $.ajax({
-    //     url: '/ajax/flooddurationmap/',
+    //     url: '/ajax/surfacewatermap/',
     //     type: "GET",
-    //     // data: {
-    //     //     "selected_date": latest_date,
-    //     // },
+    //     data: {
+    //         "selected_date": latest_date,
+    //         "sensor": swl_sensor_selection,
+    //     },
     //     dataType: 'json',
     //     async: false,
     //     success: (data) => {
-    //         // console.log(data)
-    //         getFloodDurationLayer = data;
-    //         var dailyFloodDurationLayer = getFloodDurationLayer;        
-    //         map.addSource('floodduration', {
+    //         getDailySurWater = data;
+    //         var dailySurfaceWater = getDailySurWater;        
+    //         map.addSource('surfacewater', {
     //             'type': 'raster',
     //             'tiles': [
-    //                 dailyFloodDurationLayer
+    //                 dailySurfaceWater
     //             ],
     //             'tileSize': 256,
     //             'minzoom': 0,
-    //             'maxzoom': 14
+    //             'maxzoom': 10
     //         });
     //         map.addLayer({
-    //             'id': 'floodduration', // Layer ID
+    //             'id': 'surfacewater', // Layer ID
     //             'type': 'raster',
-    //             'source': 'floodduration', // ID of the tile source created above
+    //             'source': 'surfacewater', // ID of the tile source created above
     //             'layout': {
     //                 // Make the layer visible by default.
     //                 'visibility': 'none'
     //             },
     //         });
-    //         $("#fduration-opacity").on("slide", function(slideEvt) {
+    //         $("#swater-opacity").on("slide", function(slideEvt) {
     //             //console.log(slideEvt.value);
     //             var opac = slideEvt.value
     //             map.setPaintProperty(
-    //                 'floodduration',
+    //                 'surfacewater',
     //                 'raster-opacity',
     //                 opac
     //             );
@@ -415,53 +369,6 @@ map.on('style.load', () => {
     //         console.log(error);
     //     }
     // });
-
-    // Get Daily Surface Water Area Layer
-    var getDailySurWater;
-    $.ajax({
-        url: '/ajax/surfacewatermap/',
-        type: "GET",
-        data: {
-            "selected_date": latest_date,
-            "sensor": swl_sensor_selection,
-        },
-        dataType: 'json',
-        async: false,
-        success: (data) => {
-            getDailySurWater = data;
-            var dailySurfaceWater = getDailySurWater;        
-            map.addSource('surfacewater', {
-                'type': 'raster',
-                'tiles': [
-                    dailySurfaceWater
-                ],
-                'tileSize': 256,
-                'minzoom': 0,
-                'maxzoom': 10
-            });
-            map.addLayer({
-                'id': 'surfacewater', // Layer ID
-                'type': 'raster',
-                'source': 'surfacewater', // ID of the tile source created above
-                'layout': {
-                    // Make the layer visible by default.
-                    'visibility': 'none'
-                },
-            });
-            $("#swater-opacity").on("slide", function(slideEvt) {
-                //console.log(slideEvt.value);
-                var opac = slideEvt.value
-                map.setPaintProperty(
-                    'surfacewater',
-                    'raster-opacity',
-                    opac
-                );
-            });
-        },
-        error: (error) => {
-            console.log(error);
-        }
-    });
 
     //Get Permanent Water Area Layer
     var getPermanentWater; 
@@ -512,54 +419,24 @@ map.on('style.load', () => {
             console.log(error);
         }
     });
-
-    // // Get DOY Map
-    // var date = Date.now();
-    // var cdate = new Date(date).toISOString().split('T')[0];
-    // var getDOYMap;
-    // $.ajax({
-    //     url: '/ajax/doymap/',
-    //     type: "GET",
-    //     data: {
-    //         'selected_start_date': selected_start_date,
-    //         'selected_date': cdate
-    //     },
-    //     dataType: 'json',
-    //     success: (doy_data) => {
-    //         getDOYMap = doy_data;
-    //         var dailyDOYMap = getDOYMap;
-    //         map.addSource('doymap', {
-    //             'type': 'raster',
-    //             'tiles': [
-    //                 dailyDOYMap
-    //             ],
-    //             'tileSize': 256,
-    //             'minzoom': 0,
-    //             'maxzoom': 10
-    //         });
-    //         map.addLayer({
-    //             'id': 'doymap', // Layer ID
-    //             'type': 'raster',
-    //             'source': 'doymap', // ID of the tile source created above
-    //             'layout': {
-    //                 // Make the layer visible by default.
-    //                 'visibility': 'none'
-    //             },
-    //         });
-    //         $("#doy-opacity").on("slide", function(slideEvt) {
-    //             var opac = slideEvt.value
-    //             map.setPaintProperty(
-    //                 'doymap',
-    //                 'raster-opacity',
-    //                 opac
-    //             );
-    //         });
-    //     },
-    //     error: (error) => {
-    //         console.log(error);
-    //     }
-    // });
 });
+function stopSpinner (e) {
+    if (e.target && e.target.loaded()) {
+        loadingSpinner(false);
+        map.off('render', stopSpinner)
+    }
+}
+function loadingSpinner(on) {
+    if (on) {
+        spinnerEl.classList.add('loading');
+        backgroundEl.classList.add('absolute');
+        backgroundEl.classList.remove('none');
+    } else {
+        spinnerEl.classList.remove('loading');
+        backgroundEl.classList.remove('absolute');
+        backgroundEl.classList.add('none');
+    }
+}
 
 // Defining function to update layer 
 $('#date_selection').change(function(){
@@ -573,15 +450,15 @@ $('#product_selection').change(function(){
 });
 
 // Defining function to update flood layer 
-$('#admin_selection').change(function(){
-    updateFloodMapLayer();
-});
-$('#mode_selection').change(function(){
-    updateFloodMapLayer();
-});
-$('#sensor_selection').change(function(){
-    updateFloodMapLayer();
-});
+// $('#admin_selection').change(function(){
+//     updateFloodMapLayer();
+// });
+// $('#mode_selection').change(function(){
+//     updateFloodMapLayer();
+// });
+// $('#sensor_selection').change(function(){
+//     updateFloodMapLayer();
+// });
 $("#update-historical-pfw-button").on("click",function(){
     updateFloodMapLayer();
 }); 
@@ -595,41 +472,33 @@ $('#age_sensor_selection').change(function(){
 });
 
 // Defining function to update daily surface water layer 
-$('#date_selection').change(function(){
-    updateSurfaceWaterMapLayer();
-});
-// $('#date_selection_start').change(function(){
+// $('#date_selection').change(function(){
 //     updateSurfaceWaterMapLayer();
 // });
-// $('#admin_selection').change(function(){
+
+// $('#sensor_selection_swater').change(function(){
 //     updateSurfaceWaterMapLayer();
 // });
-$('#sensor_selection_swater').change(function(){
-    updateSurfaceWaterMapLayer();
-});
 
 // Update permanent water area layer by changing parameters
 $("#update-button").on("click",function(){
     updatePermanentWater();
 }); 
 
-// Defining function to update daily doy map layer 
-// $('#date_selection').change(function(){
-//     updateDOYMap();
-// });
-// $('#date_selection_start').change(function(){
-//     updateDOYMap();
-// });
-
 //Get values related to raw satellite imagery
-var selected_date = $('#date_selection').val();
+var td = new Date();
+td.setDate(td.getDate() - 1);
+var td = td.toISOString().split('T')[0]
+
+document.getElementById('date_selection_simg').value = td;
+var selected_simg_date = $('#date_selection_simg').val();
 var viirs_product = "VIIRS_SNPP_CorrectedReflectance_TrueColor";
 
 map.on('style.load', () => {   
     var layer = viirs_product;
     var tilePath = 'wmts/epsg3857/best/' +
         layer+'/default/' +
-        selected_date +'/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg';
+        selected_simg_date +'/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg';
     map.addSource('gibs', {
         'type': 'raster',
         'tiles': [
@@ -662,14 +531,23 @@ map.on('style.load', () => {
 });
 
 $('#browse_selection').change(function(){
-    var selected_date = $('#date_selection').val();
-    var prod = $('#browse_selection').val();
-    var id = prod.split('|')[1];
+    updateBrowseData();
+});
+$('#date_selection_simg').change(function(){
+    updateBrowseData();
+});
+
+// Update satellite imagery
+function updateBrowseData() {
     map.removeLayer('gibs');
     map.removeSource('gibs');
+    var selected_simg_date = $('#date_selection_simg').val();
+    var prod = $('#browse_selection').val();
+    var id = prod.split('|')[1];
+
     var tilePath = 'wmts/epsg3857/best/' +
         id+'/default/' +
-        selected_date +'/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg';
+        selected_simg_date +'/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg';
     //console.log(tilePath);
     map.addSource('gibs', {
         'type': 'raster',
@@ -692,7 +570,8 @@ $('#browse_selection').change(function(){
             'visibility': 'visible'
         },
     });
-});
+    map.moveLayer('gibs', 'floodwater');
+}
 
 // Update precipitation layer
 function updatePrecipitationData(){
@@ -839,51 +718,51 @@ function updateFloodAgeMapLayer(){
     });
 }
 
-//Defining function to update surface water layer
-function updateSurfaceWaterMapLayer(){
-    // Update flood layer
-    map.removeLayer('surfacewater');
-    map.removeSource('surfacewater');
-    // var flood_color = $('#color-picker-flood').val();
-    var selected_date = $('#date_selection').val();
-    var swl_sensor_selection = $('#sensor_selection_swater').val();
-    var getDailySurWater;
-    $.ajax({
-        url: '/ajax/surfacewatermap/',
-        type: "GET",
-        data: {
-            "selected_date": selected_date,
-            "sensor": swl_sensor_selection
-        },
-        dataType: 'json',
-        async: false,
-        success: (data) => {
-            getDailySurWater = data;
-            var dailySurfaceWater = getDailySurWater;
-            map.addSource('surfacewater', {
-                'type': 'raster',
-                'tiles': [
-                    dailySurfaceWater
-                ],
-                'tileSize': 256,
-                'minzoom': 0,
-                'maxzoom': 10
-            });
-            map.addLayer({
-                'id': 'surfacewater', // Layer ID
-                'type': 'raster',
-                'source': 'surfacewater', // ID of the tile source created above
-                'layout': {
-                    // Make the layer visible by default.
-                    'visibility': 'visible'
-                },
-            });
-        },
-        error: (error) => {
-            console.log(error);
-        }
-    });
-}
+// //Defining function to update surface water layer
+// function updateSurfaceWaterMapLayer(){
+//     // Update flood layer
+//     map.removeLayer('surfacewater');
+//     map.removeSource('surfacewater');
+//     // var flood_color = $('#color-picker-flood').val();
+//     var selected_date = $('#date_selection').val();
+//     var swl_sensor_selection = $('#sensor_selection_swater').val();
+//     var getDailySurWater;
+//     $.ajax({
+//         url: '/ajax/surfacewatermap/',
+//         type: "GET",
+//         data: {
+//             "selected_date": selected_date,
+//             "sensor": swl_sensor_selection
+//         },
+//         dataType: 'json',
+//         async: false,
+//         success: (data) => {
+//             getDailySurWater = data;
+//             var dailySurfaceWater = getDailySurWater;
+//             map.addSource('surfacewater', {
+//                 'type': 'raster',
+//                 'tiles': [
+//                     dailySurfaceWater
+//                 ],
+//                 'tileSize': 256,
+//                 'minzoom': 0,
+//                 'maxzoom': 10
+//             });
+//             map.addLayer({
+//                 'id': 'surfacewater', // Layer ID
+//                 'type': 'raster',
+//                 'source': 'surfacewater', // ID of the tile source created above
+//                 'layout': {
+//                     // Make the layer visible by default.
+//                     'visibility': 'visible'
+//                 },
+//             });
+//         },
+//         error: (error) => {
+//             console.log(error);
+//         }
+//     });
+// }
 // Defining function to update permanent water area layer
 function updatePermanentWater(){
     map.removeLayer('permanentwater');
@@ -937,52 +816,6 @@ function updatePermanentWater(){
         }
     });
 }
-
-// // Defining function to update DOY map layer
-// function updateDOYMap(){
-//     map.removeLayer('doymap');
-//     map.removeSource('doymap');
-//     var selected_start_date = $('#date_selection_start').val();
-//     var selected_date = $('#date_selection').val();
-//     // var wcolor = $('#color-picker-water').val();
-//     // var geom = JSON.stringify(drawing_polygon);
-//     var getDOYMap;
-//     $.ajax({
-//         url: '/ajax/doymap/',
-//         type: "GET",
-//         data: {
-//             "selected_start_date": selected_start_date,
-//             'selected_date': selected_date
-//         },
-//         dataType: 'json',
-//         success: (doy_data) => {
-//             getDOYMap = doy_data;
-//             var dailyDOYMap = getDOYMap;
-//             map.addSource('doymap', {
-//                 'type': 'raster',
-//                 'tiles': [
-//                     dailyDOYMap
-//                 ],
-//                 'tileSize': 256,
-//                 'minzoom': 0,
-//                 'maxzoom': 10
-//             });
-//             map.addLayer({
-//                 'id': 'doymap', // Layer ID
-//                 'type': 'raster',
-//                 'source': 'doymap', // ID of the tile source created above
-//                 'layout': {
-//                     // Make the layer visible by default.
-//                     'visibility': 'none'
-//                 },
-//             });
-//         },
-//         error: (error) => {
-//             console.log(error);
-//         }
-//     });
-// }
-
 
 // Create a function to get unique feature
 function getUniqueFeatures(features, comparatorProperty) {
@@ -1194,7 +1027,7 @@ map.on('style.load', () => {
         // to the highlighted layer.
         map.setFilter('adm1-highlighted', [
             'in',
-            'NAME_0',
+            'NAME_1',
             feature.properties.NAME_1
         ]);
          
@@ -1207,7 +1040,7 @@ map.on('style.load', () => {
          
     map.on('mouseleave', 'adm1', () => {
         map.getCanvas().style.cursor = '';
-        popup.remove();
+        // popup.remove();
         map.setFilter('adm1-highlighted', ['in', 'NAME_1', '']);
     });
 
@@ -1226,103 +1059,103 @@ map.on('style.load', () => {
             feature.properties.NAME_2
         ]);
          
-        // Display a popup with the name of the county.
-        var district = e.features[0].properties.NAME_2;
-        var province = e.features[0].properties.NAME_1;
-        var country = e.features[0].properties.NAME_0;
-        var f_0_15 = e.features[0].properties.F_0_15;
-        var f_15_65 = e.features[0].properties.F_15_65;
-        var f_above_65 = e.features[0].properties.F__65;
-        var f_total = f_0_15 + f_15_65 + f_above_65;
-        var m_0_15 = e.features[0].properties.M_0_15;
-        var m_15_65 = e.features[0].properties.M_15_65;
-        var m_above_65 = e.features[0].properties.M__65;    
-        var m_total = m_0_15+m_15_65+m_above_65;
-        var hospitals = e.features[0].properties.Hospitals;
-        var primary = e.features[0].properties.Primary;
-        var secondary = e.features[0].properties.Secondary;
-        var trunks = e.features[0].properties.Trunks;
+        // // Display a popup with the name of the county.
+        // var district = e.features[0].properties.NAME_2;
+        // var province = e.features[0].properties.NAME_1;
+        // var country = e.features[0].properties.NAME_0;
+        // var f_0_15 = e.features[0].properties.F_0_15;
+        // var f_15_65 = e.features[0].properties.F_15_65;
+        // var f_above_65 = e.features[0].properties.F__65;
+        // var f_total = f_0_15 + f_15_65 + f_above_65;
+        // var m_0_15 = e.features[0].properties.M_0_15;
+        // var m_15_65 = e.features[0].properties.M_15_65;
+        // var m_above_65 = e.features[0].properties.M__65;    
+        // var m_total = m_0_15+m_15_65+m_above_65;
+        // var hospitals = e.features[0].properties.Hospitals;
+        // var primary = e.features[0].properties.Primary;
+        // var secondary = e.features[0].properties.Secondary;
+        // var trunks = e.features[0].properties.Trunks;
 
-        popup
-        .setLngLat(e.lngLat)
-        .setHTML('<h6 style="margin-top: 10px; font-weight: bold; margin-bottom: 5px;">'+district+': '+province+', '+country+'</h6>'+
-        '<div class="table-responsive" style="line-height: 0.5">'+
-            '<table class="table">'+
-                '<thead>'+
-                    '<tr>'+
-                        '<th>'+"Population"+'</th>'+
-                        '<th>'+"Female"+'</th>'+
-                        '<th>'+"Male"+'</th>'+
-                    '</tr>'+
-                '</thead>'+
-                '<tbody>' +
-                    '<tr>'+
-                        '<td>'+"Age 0-15"+'</td>'+
-                        '<td>'+f_0_15+'</td>'+
-                        '<td>'+m_0_15+'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>'+"Age 15-65"+'</td>'+
-                        '<td>'+f_15_65+'</td>'+
-                        '<td>'+m_15_65+'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>'+"Age >65"+'</td>'+
-                        '<td>'+f_above_65+'</td>'+
-                        '<td>'+m_above_65+'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<th>'+"Total"+'</th>'+
-                        '<th>'+f_total+'</th>'+
-                        '<th>'+m_total+'</th>'+
-                    '</tr>'+
-                '</tbody>'+
-                // '<thead>'+
-                //     '<tr>'+
-                //         '<th>'+"Health Facilities"+'</th>'+
-                //         '<th>'+"No."+'</th>'+
-                //         '<th>'+""+'</th>'+
-                //     '</tr>'+
-                // '</thead>'+
-                '<tbody>'+
-                    '<tr>'+
-                        '<td>'+ "Hospitals" +'</td>'+
-                        '<td>'+ hospitals +'</td>'+
-                        '<td>'+""+'</td>'+
-                    '</tr>'+
-                '</tbody>'+
-                '<thead>'+
-                    '<tr>'+
-                        '<th>'+"Roads"+'</th>'+
-                        '<th>'+"No."+'</th>'+
-                        '<th>'+""+'</th>'+
-                    '</tr>'+
-                '</thead>'+
-                '<tbody>'+
-                    '<tr>'+
-                        '<td>'+ "Primary" +'</td>'+
-                        '<td>'+ primary +'</td>'+
-                        '<td>'+""+'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>'+ "Secondary" +'</td>'+
-                        '<td>'+ secondary +'</td>'+
-                        '<td>'+""+'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>'+ "Trunks" +'</td>'+
-                        '<td>'+ trunks +'</td>'+
-                        '<td>'+""+'</td>'+
-                    '</tr>'+
-                '</tbody>'+
-            '</table>'+
-        '</div>')
-        .addTo(map);
+        // popup
+        // .setLngLat(e.lngLat)
+        // .setHTML('<h6 style="margin-top: 10px; font-weight: bold; margin-bottom: 5px;">'+district+': '+province+', '+country+'</h6>'+
+        // '<div class="table-responsive" style="line-height: 0.5">'+
+        //     '<table class="table">'+
+        //         '<thead>'+
+        //             '<tr>'+
+        //                 '<th>'+"Population"+'</th>'+
+        //                 '<th>'+"Female"+'</th>'+
+        //                 '<th>'+"Male"+'</th>'+
+        //             '</tr>'+
+        //         '</thead>'+
+        //         '<tbody>' +
+        //             '<tr>'+
+        //                 '<td>'+"Age 0-15"+'</td>'+
+        //                 '<td>'+f_0_15+'</td>'+
+        //                 '<td>'+m_0_15+'</td>'+
+        //             '</tr>'+
+        //             '<tr>'+
+        //                 '<td>'+"Age 15-65"+'</td>'+
+        //                 '<td>'+f_15_65+'</td>'+
+        //                 '<td>'+m_15_65+'</td>'+
+        //             '</tr>'+
+        //             '<tr>'+
+        //                 '<td>'+"Age >65"+'</td>'+
+        //                 '<td>'+f_above_65+'</td>'+
+        //                 '<td>'+m_above_65+'</td>'+
+        //             '</tr>'+
+        //             '<tr>'+
+        //                 '<th>'+"Total"+'</th>'+
+        //                 '<th>'+f_total+'</th>'+
+        //                 '<th>'+m_total+'</th>'+
+        //             '</tr>'+
+        //         '</tbody>'+
+        //         // '<thead>'+
+        //         //     '<tr>'+
+        //         //         '<th>'+"Health Facilities"+'</th>'+
+        //         //         '<th>'+"No."+'</th>'+
+        //         //         '<th>'+""+'</th>'+
+        //         //     '</tr>'+
+        //         // '</thead>'+
+        //         '<tbody>'+
+        //             '<tr>'+
+        //                 '<td>'+ "Hospitals" +'</td>'+
+        //                 '<td>'+ hospitals +'</td>'+
+        //                 '<td>'+""+'</td>'+
+        //             '</tr>'+
+        //         '</tbody>'+
+        //         '<thead>'+
+        //             '<tr>'+
+        //                 '<th>'+"Roads"+'</th>'+
+        //                 '<th>'+"No."+'</th>'+
+        //                 '<th>'+""+'</th>'+
+        //             '</tr>'+
+        //         '</thead>'+
+        //         '<tbody>'+
+        //             '<tr>'+
+        //                 '<td>'+ "Primary" +'</td>'+
+        //                 '<td>'+ primary +'</td>'+
+        //                 '<td>'+""+'</td>'+
+        //             '</tr>'+
+        //             '<tr>'+
+        //                 '<td>'+ "Secondary" +'</td>'+
+        //                 '<td>'+ secondary +'</td>'+
+        //                 '<td>'+""+'</td>'+
+        //             '</tr>'+
+        //             '<tr>'+
+        //                 '<td>'+ "Trunks" +'</td>'+
+        //                 '<td>'+ trunks +'</td>'+
+        //                 '<td>'+""+'</td>'+
+        //             '</tr>'+
+        //         '</tbody>'+
+        //     '</table>'+
+        // '</div>')
+        // .addTo(map);
     });
          
     map.on('mouseleave', 'adm2', () => {
         map.getCanvas().style.cursor = '';
-        popup.remove();
+        // popup.remove();
         map.setFilter('adm2-highlighted', ['in', 'NAME_2', '']);
     });
     // map.on('click', 'adm0', (e) => {
@@ -1496,158 +1329,30 @@ map.on('load', () => {
     legendEl.style.display = 'block';
 });
 
-var fwater_legend = document.getElementById('fwater-legend');
-var swater_legend = document.getElementById('swater-legend');
-var pwater_legend = document.getElementById('pwater-legend');
+// var fwater_legend = document.getElementById('fwater-legend');
+// var swater_legend = document.getElementById('swater-legend');
+// var pwater_legend = document.getElementById('pwater-legend');
 
-$('#floodwaterCB').change(function(){
-    if(this.checked) {
-        fwater_legend.style.display="block";
-    } else {
-        fwater_legend.style.display="none";
-    }
-});
+// $('#floodwaterCB').change(function(){
+//     if(this.checked) {
+//         fwater_legend.style.display="block";
+//     } else {
+//         fwater_legend.style.display="none";
+//     }
+// });
 
-$('#surfacewaterCB').change(function(){
-    if(this.checked) {
-        swater_legend.style.display="block";
-    } else {
-        swater_legend.style.display="none";
-    }
-});
+// $('#surfacewaterCB').change(function(){
+//     if(this.checked) {
+//         swater_legend.style.display="block";
+//     } else {
+//         swater_legend.style.display="none";
+//     }
+// });
 
-$('#permanentwaterCB').change(function(){
-    if(this.checked) {
-        pwater_legend.style.display="block";
-    } else {
-        pwater_legend.style.display="none";
-    }
-});
-
-// //Defining function to update layer 
-// $('#date_selection').change(function(){
-//     //Update precipitation layer
-//     map.removeLayer('precip');
-//     map.removeSource('precip');
-//     var getPrecip;
-//     $.ajax({
-//         url: '/ajax/precipmap/',
-//         type: "GET",
-//         data: {
-//             "selected_date": selected_date,
-//             "cmap": cmap,
-//             "accum": accum
-//         },
-//         dataType: 'json',
-//         success: (precip_data) => {
-//             getPrecip = precip_data;
-//             var dailyPrecip = getPrecip;   
-//             map.addSource('precip', {
-//                 'type': 'raster',
-//                 'tiles': [
-//                     dailyPrecip
-//                 ],
-//                 'tileSize': 256,
-//                 'minzoom': 0,
-//                 'maxzoom': 10
-//             });
-//             map.addLayer({
-//                 'id': 'precip', // Layer ID
-//                 'type': 'raster',
-//                 'source': 'precip', // ID of the tile source created above
-//                 'layout': {
-//                     // Make the layer visible by default.
-//                     'visibility': 'none'
-//                 },
-//             });
-//         },
-//         error: (error) => {
-//             console.log(error);
-//         }
-//     });
-
-//     //Update flood layer
-//     map.removeLayer('surfacewater');
-//     map.removeSource('surfacewater');
-//     var getDailySurWater;
-//     $.ajax({
-//         url: '/ajax/surfacewatermap/',
-//         type: "GET",
-//         data: {
-//             "selected_date": selected_date,
-//         },
-//         dataType: 'json',
-//         async: false,
-//         success: (data) => {
-//             getDailySurWater = data;
-
-//             var dailySurfaceWater = getDailySurWater;
-//             // Add a new vector tile source with ID 'mapillary'.
-//             map.addSource('surfacewater', {
-//                 'type': 'raster',
-//                 'tiles': [
-//                     dailySurfaceWater
-//                 ],
-//                 'tileSize': 256,
-//                 'minzoom': 0,
-//                 'maxzoom': 10
-//             });
-//             map.addLayer({
-//                 'id': 'surfacewater', // Layer ID
-//                 'type': 'raster',
-//                 'source': 'surfacewater', // ID of the tile source created above
-//                 'layout': {
-//                     // Make the layer visible by default.
-//                     'visibility': 'none'
-//                 },
-//             });
-//         },
-//         error: (error) => {
-//             console.log(error);
-//         }
-//     });
-    
-//     //Update permanent water layer
-//     map.removeLayer('permanentwater');
-//     map.removeSource('permanentwater');
-//     var getPermanentWater; 
-//     $.ajax({
-//         url: '/ajax/permanaentwatermap/',
-//         type: "GET",
-//         data: {
-//             'startYear': startYear,
-//             'endYear': endYear,
-//             'startMonth': startMonth,
-//             'endMonth': endMonth,
-//             'method': method,
-//             //wcolor: wcolor,
-//             //geom: geom
-//         },
-//         dataType: 'json',
-//         success: (historical_data) => {
-//             getPermanentWater = historical_data;
-//             var dailyPermanentWater = getPermanentWater;
-//             map.addSource('permanentwater', {
-//                 'type': 'raster',
-//                 'tiles': [
-//                     dailyPermanentWater
-//                 ],
-//                 'tileSize': 256,
-//                 'minzoom': 0,
-//                 'maxzoom': 10
-//             });
-//             map.addLayer({
-//                 'id': 'permanentwater', // Layer ID
-//                 'type': 'raster',
-//                 'source': 'permanentwater', // ID of the tile source created above
-//                 'layout': {
-//                     // Make the layer visible by default.
-//                     'visibility': 'none'
-//                 },
-//             });
-//         },
-//         error: (error) => {
-//         console.log(error);
-//         }
-//     });
+// $('#permanentwaterCB').change(function(){
+//     if(this.checked) {
+//         pwater_legend.style.display="block";
+//     } else {
+//         pwater_legend.style.display="none";
+//     }
 // });
