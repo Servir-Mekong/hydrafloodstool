@@ -120,7 +120,8 @@
                                     data-date-min-view-mode="days"
                                     data-date-multidate="1"
                                     data-date-start-view="decade"
-                                    data-date-today-btn="false">
+                                    data-date-today-btn="false" disabled>
+                                    <span id="error"></span>
                                 </div> 
                             </div>
                             <p class="pt-3">Select Sensor: </p>
@@ -524,7 +525,7 @@
 
 <div class="map-overlay top">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-    <h5 class="pt-2 ps-3">The map data is showing on <span id="mesg-date" class="fw-bold"></span></h5>
+    <h5 class="pt-2 ps-3">The map is updated as of <span id="mesg-date" class="fw-bold"></span></h5>
 </div>
 
 <div class="map-overlay-loader top">

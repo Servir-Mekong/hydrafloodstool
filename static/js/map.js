@@ -12,7 +12,9 @@ var map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/dark-v10', // style URL
     center: [97.9560, 17.9162], // starting position [lng, lat]
-    zoom: 4 // starting zoom
+    zoom: 4, // starting zoom
+    minZoom: 4,
+    maxZoom: 10
 });
 
 // Add the geocoding control to the map.
@@ -115,6 +117,10 @@ var selected_mode = $('#mode_selection').val();
 // var selected_age_type = $('#age_type_selection').val();
 var selected_age_sensor = $('#age_sensor_selection').val();
 
+$('#date_selection_start').change(function() {
+    $("#date_selection_end").prop('disabled', false);
+});
+
 const spinnerEl = document.getElementById('spinner');
 const backgroundEl = document.getElementById('loading-background');
 
@@ -129,8 +135,12 @@ $('#mode_selection').on('change', function() {
     }
 });
 
+var popDate = new Date(latest_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+// console.log(dateobj);
+
+
 var msg_date = document.getElementById('mesg-date');
-    msg_date.innerHTML = latest_date;  
+    msg_date.innerHTML = popDate;  
 
 //Get slider value to add opacity to layer
 $("#precip-opacity").slider();
@@ -173,6 +183,82 @@ var precip_date = d.toISOString().split('T')[0]
 document.getElementById('date_selection').value = precip_date;
 document.getElementById('date_selection_simg').value = latest_date;
 
+var error = document.getElementById("error");
+
+$("#date_selection_end").on("change",function(){
+    selected_start = $('#date_selection_start').val();
+    selected_end = $(this).val();
+
+    s_day = new Date(selected_start)//.toLocaleString('en-us',{ day:'numeric' });
+    e_day = new Date(selected_end)//.toLocaleString('en-us',{ day:'numeric' });
+    var diffDays = parseInt((s_day - e_day) / (1000 * 60 * 60 * 24), 10); 
+    var absDiff = Math.abs(diffDays)
+    var sensor = $('#sensor_selection').val();
+    if (absDiff <= 30 && sensor == "all" ){
+        error.innerText ="* The start date and end date should be 30 days gap for merged sensor.";
+        error.style.color = "red";
+        $("#update-historical-pfw-button").prop('disabled', true);
+    } else if (absDiff < 1 && sensor == "sentinel1" ){
+        error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
+        error.style.color = "red";
+        $("#update-historical-pfw-button").prop('disabled', true);
+    } else if (absDiff <= 7 && sensor == "sentinel2" ){
+        error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
+        error.style.color = "red";
+        $("#update-historical-pfw-button").prop('disabled', true);
+    }  else if (absDiff <= 7 && sensor == "landsat8" ){
+        error.innerText ="* The start date and end date should be at least 30 days gap for landsat 8 sensor.";
+        error.style.color = "red";
+        $("#update-historical-pfw-button").prop('disabled', true);
+    }  else {
+        error.innerText ="";
+        $("#update-historical-pfw-button").prop('disabled', false);
+    }  
+    $("#sensor_selection").on("change",function(){
+        var sensor = $(this).val();
+        var selected_start = $('#date_selection_start').val();
+        var selected_end = $('#date_selection_end').val();
+
+        s_day = new Date(selected_start);
+        e_day = new Date(selected_end);
+
+        var diffDays = parseInt((s_day - e_day) / (1000 * 60 * 60 * 24), 10); 
+        var absDiff = Math.abs(diffDays)
+
+        if (absDiff <= 30 && sensor == "all" ){
+            error.innerText ="* The start date and end date should be 30 days gap for merged sensor.";
+            error.style.color = "red";
+            $("#update-historical-pfw-button").prop('disabled', true);
+        } else if (absDiff < 1 && sensor == "sentinel1" ){
+            error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
+            error.style.color = "red";
+            $("#update-historical-pfw-button").prop('disabled', true);
+        } else if (absDiff <= 7 && sensor == "sentinel2" ){
+            error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
+            error.style.color = "red";
+            $("#update-historical-pfw-button").prop('disabled', true);
+        }  else if (absDiff <= 7 && sensor == "landsat8" ){
+            error.innerText ="* The start date and end date should be at least 30 days gap for sentinel 2 sensor.";
+            error.style.color = "red";
+            $("#update-historical-pfw-button").prop('disabled', true);
+        }  else {
+            error.innerText ="";
+            $("#update-historical-pfw-button").prop('disabled', false);
+        }  
+    });
+    //console.log(absDiff)
+    
+    // if (selected_start == selected_end){
+    //     error.innerText ="* The start date and end date shouldn't be the same.";
+    //     error.style.color = "red";
+    //     $("#update-historical-pfw-button").prop('disabled', true);
+    // } else {
+    //     $("#update-historical-pfw-button").prop('disabled', false);
+    //     error.innerText = "";
+    // }
+});
+
+
 map.on('style.load', () => {
 
     //Get Potential Flood Layer
@@ -183,7 +269,7 @@ map.on('style.load', () => {
         data: {
             "selected_start_date": selected_start_date,
             "selected_end_date": selected_end_date,
-            "selected_adm": selected_adm,
+            //"selected_adm": selected_adm,
             "selected_mode": selected_mode,
             "selected_sensor": pfl_sensor_selection
         },
@@ -199,7 +285,7 @@ map.on('style.load', () => {
                     dailyPotentialFloodWater
                 ],
                 'tileSize': 256,
-                'minzoom': 0,
+                'minzoom': 4,
                 'maxzoom': 10
             });
             map.addLayer({
@@ -608,31 +694,23 @@ function updatePrecipitationData(){
 
 //Defining function to update flood layer
 function updateFloodMapLayer(){
-    var selected_start_date = $('#date_selection_start').val();
-    var selected_end_date = $('#date_selection_end').val();
-    var selected_adm = $('#admin_selection').val();
-    var selected_mode = $('#mode_selection').val();
-    var pfl_sensor_selection = $('#sensor_selection').val();
-    
     // Update flood layer
     map.removeLayer('floodwater');
     map.removeSource('floodwater');
-    //Hide loading bar once tiles from geojson are loaded
-    map.on('data', function (e) {
-        if (e.dataType === 'source' && e.sourceId === 'floodwater') {
-            document.getElementById("loader").style.visibility = "hidden";
-        } else{
-            document.getElementById("loader").style.visibility = "visible";
-        }
-    });
+    var selected_start_date = $('#date_selection_start').val();
+    var selected_end_date = $('#date_selection_end').val();
+    // var selected_adm = $('#admin_selection').val();
+    var selected_mode = $('#mode_selection').val();
+    var pfl_sensor_selection = $('#sensor_selection').val();
     var getPotentialFldWater;
+    document.getElementById("loader").style.visibility = "visible";
     $.ajax({
         url: '/ajax/potentialfloodmap/',
         type: "GET",
         data: {
             "selected_start_date": selected_start_date,
             "selected_end_date": selected_end_date,
-            "selected_adm": selected_adm,
+            //"selected_adm": selected_adm,
             "selected_mode": selected_mode,
             "selected_sensor": pfl_sensor_selection
         },
@@ -647,7 +725,7 @@ function updateFloodMapLayer(){
                     dailyPotentialFloodWater
                 ],
                 'tileSize': 256,
-                'minzoom': 0,
+                'minzoom': 5,
                 'maxzoom': 10
             });
             map.addLayer({
@@ -659,6 +737,15 @@ function updateFloodMapLayer(){
                     'visibility': 'visible'
                 },
             });
+            document.getElementById("loader").style.visibility = "hidden";
+            // //Hide loading bar once tiles from geojson are loaded
+            // map.on('data', function (e) {
+            //     if (e.dataType === 'source' && e.sourceId === 'floodwater') {
+            //         document.getElementById("loader").style.visibility = "hidden";
+            //     } else{
+            //         document.getElementById("loader").style.visibility = "visible";
+            //     }
+            // });
         },
         error: (error) => {
             console.log(error);
@@ -673,13 +760,13 @@ function updateFloodAgeMapLayer(){
     map.removeSource('floodage');
     
     //Hide loading bar once tiles from geojson are loaded
-    map.on('data', function (e) {
-        if (e.dataType === 'source' && e.sourceId === 'floodage') {
-            document.getElementById("loader").style.visibility = "hidden";
-        } else{
-            document.getElementById("loader").style.visibility = "visible";
-        }
-    });
+    // map.on('data', function (e) {
+    //     if (e.dataType === 'source' && e.sourceId === 'floodage') {
+    //         document.getElementById("loader").style.visibility = "hidden";
+    //     } else{
+    //         document.getElementById("loader").style.visibility = "visible";
+    //     }
+    // });
 
     // var selected_age_type = $('#age_type_selection').val();
     var selected_age_sensor = $('#age_sensor_selection').val();
@@ -870,18 +957,18 @@ map.on('style.load', () => {
             'fill-outline-color': 'rgba(200, 230, 201, 1)'
         }
     });
-    map.addLayer({
-        'id': 'adm0-highlighted',
-        'type': 'line',
-        'source': 'adm0-src',
-        'minzoom': 0,
-        'maxzoom': 6,
-        'paint': {
-            'line-color': '#ffc107',
-            'line-width': 1.5
-        },
-        'filter': ['in', 'NAME_0', '']
-    });
+    // map.addLayer({
+    //     'id': 'adm0-highlighted',
+    //     'type': 'line',
+    //     'source': 'adm0-src',
+    //     'minzoom': 0,
+    //     'maxzoom': 6,
+    //     'paint': {
+    //         'line-color': '#ffc107',
+    //         'line-width': 1.5
+    //     },
+    //     'filter': ['in', 'NAME_0', '']
+    // });
 
     // Province layer
     map.addSource('adm1-src', {
@@ -1001,27 +1088,27 @@ map.on('style.load', () => {
         }
     );
 
-    map.on('mousemove', 'adm0', (e) => {
-        // Change the cursor style as a UI indicator.
-        map.getCanvas().style.cursor = 'pointer';
+    // map.on('mousemove', 'adm0', (e) => {
+    //     // Change the cursor style as a UI indicator.
+    //     map.getCanvas().style.cursor = 'pointer';
          
-        // Use the first found feature.
-        const feature = e.features[0];
+    //     // Use the first found feature.
+    //     const feature = e.features[0];
          
-        // Add features with the same county name
-        // to the highlighted layer.
-        map.setFilter('adm0-highlighted', [
-            'in',
-            'NAME_0',
-            feature.properties.NAME_0
-        ]);
+    //     // Add features with the same county name
+    //     // to the highlighted layer.
+    //     map.setFilter('adm0-highlighted', [
+    //         'in',
+    //         'NAME_0',
+    //         feature.properties.NAME_0
+    //     ]);
          
-        // Display a popup with the name of the county.
-        popup
-        .setLngLat(e.lngLat)
-        .setText(feature.properties.NAME_0)
-        .addTo(map);
-    });
+    //     // Display a popup with the name of the county.
+    //     popup
+    //     .setLngLat(e.lngLat)
+    //     .setText(feature.properties.NAME_0)
+    //     .addTo(map);
+    // });
          
     map.on('mouseleave', 'adm0', () => {
         map.getCanvas().style.cursor = '';
