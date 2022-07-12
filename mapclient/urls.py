@@ -5,6 +5,9 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
+    path('demo/', views.MapBoxView.as_view(), name='demo'),
+    path('lmap/', views.LeafletView.as_view(), name='lmap'),
+
     path('map/', views.MapView.as_view(), name='mapviewer'),
     path('usecase/', views.UsecaseView.as_view(), name='usecase'),
     path('usecase/01/', views.Usecase01.as_view(), name='usecase01'),

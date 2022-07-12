@@ -14,6 +14,12 @@ import pandas as pd
 import json
 
 
+class MapBoxView(TemplateView):
+    template_name = "mapbox-demo.html"
+
+class LeafletView(TemplateView):
+    template_name = "lmap.html"
+
 
 class HomeView(TemplateView):
     template_name = "home.html"
