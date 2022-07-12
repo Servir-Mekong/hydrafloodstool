@@ -30,7 +30,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
 
-        var map = L.map('map').setView([17.9162, 97.9560], 10);
+        var map = L.map('map').setView([17.9162, 97.9560], 6);
+
+        map.options.minZoom = 5;
+        map.options.maxZoom = 14;
 
         //Define Earth Engine Flood Layer
         // var flood_layer = L.tileLayer('', {
