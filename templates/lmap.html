@@ -78,7 +78,7 @@
         //     }
         // });
         //http://127.0.0.1:8000/static/data/cog-kh.tif
-        var url_to_geotiff_file = "http://127.0.0.1:8000/static/data/cog-kh-30.tif"; //https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif
+        var url_to_geotiff_file = "https://hydrafloods-servir.adpc.net/static/data/cog-kh-30.tif"; //https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif
 
         parseGeoraster(url_to_geotiff_file).then(georaster => {
         // console.log("georaster:", georaster);
