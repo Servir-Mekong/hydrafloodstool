@@ -20,6 +20,8 @@ class MapBoxView(TemplateView):
 class LeafletView(TemplateView):
     template_name = "lmap.html"
 
+class olView(TemplateView):
+    template_name = "olmap.html"
 
 class HomeView(TemplateView):
     template_name = "home.html"

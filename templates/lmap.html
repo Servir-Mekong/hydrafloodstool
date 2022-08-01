@@ -29,92 +29,105 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     
-    <script src="https://unpkg.com/proj4"></script>
+    <!-- <script src="https://unpkg.com/proj4"></script>
     <script src="https://unpkg.com/georaster"></script>
     <script src="https://unpkg.com/chroma-js"></script>
-    <script src="https://unpkg.com/georaster-layer-for-leaflet"></script>
+    <script src="https://unpkg.com/georaster-layer-for-leaflet"></script> -->
    
    <script>
 
-        var map = L.map('map').setView([17.9162, 97.9560], 6);
+        var map = L.map('map'//, 
+        // {
+        //     crs: L.CRS.EPSG4326
+        // }
+        ).setView([17.9162, 97.9560], 6);
 
-        map.options.minZoom = 2;
-        map.options.maxZoom = 14;
+        map.options.minZoom = 4;
+        // // map.options.maxZoom = 20;
 
-        //Define Earth Engine Flood Layer
-        // var flood_layer = L.tileLayer('', {
-        //     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
-        // }).addTo(map);
+        // //Define Earth Engine Flood Layer
+        // // var flood_layer = L.tileLayer('', {
+        // //     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
+        // // }).addTo(map);
 
-        // var selected_start_date = "2022-07-12";
-        // var selected_end_date = "2022-07-12";
-        // var selected_mode = "operational";
-        // var pfl_sensor_selection = "all";
+        // // var selected_start_date = "2022-07-12";
+        // // var selected_end_date = "2022-07-12";
+        // // var selected_mode = "operational";
+        // // var pfl_sensor_selection = "all";
 
-        // //Get Daily Surface Water Area Layer 
-        // $.ajax({
-        //     url: '/ajax/potentialfloodmap/',
-        //     type: "GET",
-        //     data: {
-        //         "selected_start_date": selected_start_date,
-        //         "selected_end_date": selected_end_date,
-        //         //"selected_adm": selected_adm,
-        //         "selected_mode": selected_mode,
-        //         "selected_sensor": pfl_sensor_selection
-        //     },
-        //     dataType: 'json',
-        //     success: (data) => {
-        //         console.log(data);
-        //         // flood_layer.setUrl(data);
-        //         // flood_layer.setOpacity(0.5);
-        //         // var flood_layer = L.tileLayer(data, {
-        //         //     tileSize: 256,
-        //         //     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
-        //         // }).addTo(map);
+        // // //Get Daily Surface Water Area Layer 
+        // // $.ajax({
+        // //     url: '/ajax/potentialfloodmap/',
+        // //     type: "GET",
+        // //     data: {
+        // //         "selected_start_date": selected_start_date,
+        // //         "selected_end_date": selected_end_date,
+        // //         //"selected_adm": selected_adm,
+        // //         "selected_mode": selected_mode,
+        // //         "selected_sensor": pfl_sensor_selection
+        // //     },
+        // //     dataType: 'json',
+        // //     success: (data) => {
+        // //         console.log(data);
+        // //         // flood_layer.setUrl(data);
+        // //         // flood_layer.setOpacity(0.5);
+        // //         // var flood_layer = L.tileLayer(data, {
+        // //         //     tileSize: 256,
+        // //         //     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
+        // //         // }).addTo(map);
 
-        //     },
-        //     error: (error) => {
-        //         console.log(error);
-        //     }
-        // });
-        //http://127.0.0.1:8000/static/data/cog-kh.tif
-        var url_to_geotiff_file = "https://hydrafloods-servir.adpc.net/static/data/cog-kh-30.tif"; //https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif
+        // //     },
+        // //     error: (error) => {
+        // //         console.log(error);
+        // //     }
+        // // });
+        // //http://127.0.0.1:8000/static/data/cog-kh.tif  https://hydrafloods-servir.adpc.net/static/data/cog-kh-30.tif
+        // var url_to_geotiff_file = "http://127.0.0.1:8000/static/data/ncog.tif"; //https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif
 
-        parseGeoraster(url_to_geotiff_file).then(georaster => {
-        // console.log("georaster:", georaster);
+        // parseGeoraster(url_to_geotiff_file).then(georaster => {
+        // // console.log("georaster:", georaster);
 
-        /*
-            GeoRasterLayer is an extension of GridLayer,
-            which means can use GridLayer options like opacity.
-            Just make sure to include the georaster option!
-            http://leafletjs.com/reference-1.2.0.html#gridlayer
-        */
-        var scale = chroma.scale(['black', 'cyan']).domain([-11022, 0]);
+        // /*
+        //     GeoRasterLayer is an extension of GridLayer,
+        //     which means can use GridLayer options like opacity.
+        //     Just make sure to include the georaster option!
+        //     http://leafletjs.com/reference-1.2.0.html#gridlayer
+        // */
+        // // var scale = chroma.scale(['black', 'cyan']).domain([-11022, 0]);
+        // var scale = chroma.scale('YlGn').gamma(0.5);
 
-        var layer = new GeoRasterLayer({
-            attribution: "Planet",
-            georaster: georaster,
-            pixelValuesToColorFn: function (values) {
-              const elevation = values[0];
-              if (elevation <= 0) return null;
-              if (elevation == 1) return "yellow";
-              if (elevation == 2) return "orange";
-              if (elevation == 3) return "red";
-              if (elevation == 4) return "blue";
-              if (elevation == 5) return "green";
+        // var layer = new GeoRasterLayer({
+        //     attribution: "Planet",
+        //     georaster: georaster,
+        //     pixelValuesToColorFn: function (values) {
+        //       const val = values[0];
+        //       if (val <= 0) return null;
+        //       if (val == 1) return "yellow";
+        //       if (val == 2) return "orange";
+        //       if (val == 3) return "red";
+        //       if (val == 4) return "blue";
+        //       if (val == 5) return "green";
               
-              return scale(elevation).hex();
-            },
-            resolution: 256           
-        });
+        //       return scale(val).hex();
+        //     },
+        //     resolution: 256           
+        // });
 
-        layer.addTo(map);
+        // layer.addTo(map);
 
-        map.fitBounds(layer.getBounds());
-        });
+        // map.fitBounds(layer.getBounds());
+        // });
+
+        
 
         var basemap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var wmsLayer = L.tileLayer.wms('http://localhost:8080/geoserver/raster/wms?', {
+            layers: 'cog-kh-30',
+            'tileSize': 512,
+            'transparent': true
         }).addTo(map);
     </script>
 

@@ -1110,11 +1110,11 @@ map.on('style.load', () => {
     //     .addTo(map);
     // });
          
-    map.on('mouseleave', 'adm0', () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
-        map.setFilter('adm0-highlighted', ['in', 'NAME_0', '']);
-    });
+    // map.on('mouseleave', 'adm0', () => {
+    //     map.getCanvas().style.cursor = '';
+    //     popup.remove();
+    //     map.setFilter('adm0-highlighted', ['in', 'NAME_0', '']);
+    // });
 
     map.on('mousemove', 'adm1', (e) => {
         // Change the cursor style as a UI indicator.
