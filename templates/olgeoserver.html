@@ -29,58 +29,6 @@
    
     <script type="text/javascript">
 
-        // const source = new ol.source.GeoTIFF({
-        //     sources: [{
-        //             // url: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif',
-        //             url: 'http://127.0.0.1:8000/static/data/cog-kh-30.tif'
-        //         },
-        //     ],
-        // });
-
-        // var map = new ol.Map({
-        //   target: 'map',
-        //   layers: [
-        //     new ol.layer.Tile({
-        //       source: new ol.source.OSM()
-        //     }),
-        //     new ol.layer.Tile({
-        //         source: source,
-        //     }),
-        //   ],
-        //   view: new ol.View({
-        //     center: ol.proj.fromLonLat([97.9560, 17.9162]),
-        //     zoom: 4
-        //   })
-        // });
-
-        // fetch('https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/2020/S2A_36QWD_20200701_0_L2A/TCI.tif')
-        // .then((response) => response.blob())
-        // .then((blob) => {
-        //   const source = new ol.source.GeoTIFF({
-        //     sources: [
-        //       {
-        //         blob: blob,
-        //       },
-        //     ],
-        // });
-
-        var ee_data;
-
-        $.ajax({
-            url: '/ajax/elmap/',
-            type: "GET",
-            dataType: 'json',
-            async: false,
-            success: (data) => {
-                ee_data=data;
-            },
-            error: (error) => {
-                console.log(error);
-            }
-        });
-
-        // console.log(ee_data)
-
     const map = new ol.Map({
       target: 'map',
       layers: [
@@ -89,21 +37,14 @@
         }),
 
         new ol.layer.Tile({
-          source: new ol.source.XYZ({
-            url: ee_data,
-            attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
-          })
-        }),
-
-        // new ol.layer.Tile({
-        //   source: new ol.source.TileWMS({
-        //     url: 'https://hydrafloods-servir.adpc.net/geoserver/hydraflood/wms',
-        //     params: {'LAYERS': 'hydraflood:kh_all', 'TILED': true},
-        //     serverType: 'geoserver',
-        //     // Countries have transparency, so do not fade tiles:
-        //     transition: 0,
-        //   }), 
-        // })
+          source: new ol.source.TileWMS({
+            url: 'https://hydrafloods-servir.adpc.net/geoserver/hydraflood/wms',
+            params: {'LAYERS': 'hydraflood:kh_all', 'TILED': true},
+            serverType: 'geoserver',
+            // Countries have transparency, so do not fade tiles:
+            transition: 0,
+          }), 
+        })
       ],
       view: new ol.View({
             center: ol.proj.fromLonLat([104.9910, 12.5657]),

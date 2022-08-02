@@ -14,7 +14,7 @@ var map = new mapboxgl.Map({
     center: [97.9560, 17.9162], // starting position [lng, lat]
     zoom: 4, // starting zoom
     minZoom: 4,
-    maxZoom: 10
+    maxZoom: 20
 });
 
 // Add the geocoding control to the map.
@@ -286,7 +286,7 @@ map.on('style.load', () => {
                 ],
                 'tileSize': 256,
                 'minzoom': 4,
-                'maxzoom': 10
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'floodwater', // Layer ID
@@ -382,7 +382,7 @@ map.on('style.load', () => {
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 10
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'precip', // Layer ID
@@ -479,7 +479,7 @@ map.on('style.load', () => {
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 10
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'permanentwater', // Layer ID
@@ -581,7 +581,7 @@ map.on('style.load', () => {
         ],
         'tileSize': 256,
         'minzoom': 0,
-        'maxzoom': 10,
+        'maxzoom': 20,
         'attribution': '<a href="https://wiki.earthdata.nasa.gov/display/GIBS" target="_">' + 'NASA EOSDIS GIBS</a>;'
     });
     map.addLayer({
@@ -631,7 +631,7 @@ function updateBrowseData() {
         ],
         'tileSize': 256,
         'minzoom': 0,
-        'maxzoom': 10,
+        'maxzoom': 20,
         'attribution': '<a href="https://wiki.earthdata.nasa.gov/display/GIBS" target="_">' + 'NASA EOSDIS GIBS</a>;'
     });
     map.addLayer({
@@ -674,7 +674,7 @@ function updatePrecipitationData(){
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 10
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'precip', // Layer ID
@@ -726,7 +726,7 @@ function updateFloodMapLayer(){
                 ],
                 'tileSize': 256,
                 'minzoom': 5,
-                'maxzoom': 10
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'floodwater', // Layer ID
@@ -792,7 +792,7 @@ function updateFloodAgeMapLayer(){
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 14
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'floodage', // Layer ID
@@ -899,7 +899,7 @@ function updatePermanentWater(){
                 ],
                 'tileSize': 256,
                 'minzoom': 0,
-                'maxzoom': 10
+                'maxzoom': 20
             });
             map.addLayer({
                 'id': 'permanentwater', // Layer ID

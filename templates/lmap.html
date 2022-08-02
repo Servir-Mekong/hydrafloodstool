@@ -118,17 +118,32 @@
         // map.fitBounds(layer.getBounds());
         // });
 
-        
+        // var wmsLayer = L.tileLayer.wms('https://hydrafloods-servir.adpc.net/geoserver/hydraflood/wms?', {
+        //     layers: 'kh_all',
+        //     'tileSize': 512,
+        //     'transparent': true
+        // }).addTo(map);
 
         var basemap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        var wmsLayer = L.tileLayer.wms('http://localhost:8080/geoserver/raster/wms?', {
-            layers: 'cog-kh-30',
-            'tileSize': 512,
-            'transparent': true
+        //Define Earth Engine Precipitation Layer
+        var eel_layer = L.tileLayer('', {
+            attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
         }).addTo(map);
+
+        $.ajax({
+            url: '/ajax/elmap/',
+            type: "GET",
+            dataType: 'json',
+            success: (ee_data) => {
+                eel_layer.setUrl(ee_data);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
     </script>
 
 {% endblock %}

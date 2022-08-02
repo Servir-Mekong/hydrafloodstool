@@ -27,19 +27,52 @@
         center: [97.9560, 17.9162],
         zoom: 4
     });
-    map.on('load', () => {
-        map.addLayer({
-            id: 'raster-layer',
-            type: 'raster',
-            source: {
-            type: 'raster',
-            tiles: [
-                'https://api.mapbox.com/v4/kamalh27.hf-8/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia2FtYWxoMjciLCJhIjoiY2t3b2Roc2M3MDF2bDJ2cDY0ZmppdXl0MCJ9.Gn5rUJgaap_KDcnhyROMzQ'
-            ]
+    map.on('style.load', () => {
+        $.ajax({
+            url: '/ajax/elmap/',
+            type: "GET",
+            dataType: 'json',
+            // async: false,
+            success: (data) => {
+                // console.log(data)
+                var getmbmap = data;       
+                map.addSource('fldwater', {
+                    'type': 'raster',
+                    'tiles': [
+                        getmbmap
+                    ],
+                    'tileSize': 256,
+                    'minzoom': 4,
+                    'maxzoom': 20
+                });
+                map.addLayer({
+                    'id': 'fldwater', // Layer ID
+                    'type': 'raster',
+                    'source': 'fldwater', // ID of the tile source created above
+                    'layout': {
+                        // Make the layer visible by default.
+                        'visibility': 'visible'
+                    },
+                });
             },
-            minzoom: 0,
-            maxzoom: 22
+            error: (error) => {
+                console.log(error);
+            }
         });
     });
+    // map.on('load', () => {
+    //     map.addLayer({
+    //         id: 'raster-layer',
+    //         type: 'raster',
+    //         source: {
+    //         type: 'raster',
+    //         tiles: [
+    //             'https://api.mapbox.com/v4/kamalh27.hf-8/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia2FtYWxoMjciLCJhIjoiY2t3b2Roc2M3MDF2bDJ2cDY0ZmppdXl0MCJ9.Gn5rUJgaap_KDcnhyROMzQ'
+    //         ]
+    //         },
+    //         minzoom: 0,
+    //         maxzoom: 22
+    //     });
+    // });
 </script>
 {% endblock %}

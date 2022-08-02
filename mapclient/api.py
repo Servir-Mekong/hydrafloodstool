@@ -112,3 +112,9 @@ def get_doy_map(request):
         core = MainGEEApi()
         data = core.getDOYMap(start_date, end_date)
     return JsonResponse(data, safe=False)
+
+def get_eel_map(request):
+    if request.is_ajax:
+        core = MainGEEApi()
+        data = core.getEELMap()
+    return JsonResponse(data, safe=False)

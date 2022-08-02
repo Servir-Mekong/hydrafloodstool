@@ -21,6 +21,7 @@ mpl.rcParams.update({'font.size': 14})
 
 
 class MainGEEApi():
+
     # # Get list of available dates
     # def getDateList(self):
     #     pickup_dict = {}
@@ -39,6 +40,12 @@ class MainGEEApi():
         map_id = ee.Image(ee_image_object).getMapId()
         tile_url_template = str(map_id['tile_fetcher'].url_format)
         return tile_url_template
+
+    def getEELMap(self):
+        lmap = ee.Image("users/kamalhosen/kh_all")
+        mkmap = lmap.selfMask()
+        elMap = self.getTileLayerUrl(mkmap.visualize(palette=["yellow", "orange", "red", "blue", "green"], min=1, max=5))
+        return elMap
 
     # Get precipitation map
     def getPrecipMap(self, date, accumulation=1, cmap_name='nipy_spectral'):

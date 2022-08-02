@@ -23,6 +23,9 @@ class LeafletView(TemplateView):
 class olView(TemplateView):
     template_name = "olmap.html"
 
+class olGeoserver(TemplateView):
+    template_name = "olgeoserver.html"
+
 class HomeView(TemplateView):
     template_name = "home.html"
 

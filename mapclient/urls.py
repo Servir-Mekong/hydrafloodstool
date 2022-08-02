@@ -5,9 +5,10 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
-    path('demo/', views.MapBoxView.as_view(), name='demo'),
-    path('lmap/', views.LeafletView.as_view(), name='lmap'),
-    path('olmap/', views.olView.as_view(), name='olmap'),
+    path('mbee/', views.MapBoxView.as_view(), name='mbee'),
+    path('lee/', views.LeafletView.as_view(), name='lee'),
+    path('olmap/', views.olGeoserver.as_view(), name='olmap'),
+    path('olee/', views.olView.as_view(), name='olee'),
 
     path('map/', views.MapView.as_view(), name='mapviewer'),
     path('usecase/', views.UsecaseView.as_view(), name='usecase'),
@@ -52,4 +53,6 @@ urlpatterns = [
     url(r'^ajax/myanmarfloodededucenter/$', views.getMyanmarFloodedEduCenter),
     url(r'^ajax/thailandfloodededucenter/$', views.getThailandFloodedEduCenter),
     url(r'^ajax/vietnamfloodededucenter/$', views.getVietnamFloodedEduCenter),
+    
+    url(r'^ajax/elmap/$', api.get_eel_map),
 ]
