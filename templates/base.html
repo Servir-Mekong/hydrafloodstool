@@ -34,7 +34,11 @@
 
     <!-- MapBox CSS -->
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
-<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+
     <!-- Custom CSS files -->
     <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -49,6 +53,11 @@
     
     {% block container %}{% endblock %}
 
+    <script src="/static/data/adm0.geojson"></script>
+    <script src="/static/data/adm1.geojson"></script>
+    <script src="/static/data/adm2.geojson"></script>
+    <script src="/static/data/hospital.geojson"></script>
+    <script src="/static/data/education.geojson"></script>
     <!-- == Load JS files == -->
 	<!-- jQuery -->
 	<script src="{% static 'vendor/jquery/dist/jquery.min.js' %}"></script>
@@ -69,6 +78,9 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+    
     <!-- Extra JS files -->
     {% block extra_script %}{% endblock %}
 </body>

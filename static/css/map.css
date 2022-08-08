@@ -19,8 +19,7 @@
     z-index: 1;
 }
 #map {
-    /* position: fixed; */
-    position: absolute;
+    position: fixed;
     height: calc(100% - 116px); 
     width: calc(100% - 60px);
     margin-left: 60px;
@@ -218,15 +217,75 @@
 }
 
 .adm2-popup-table {
-    max-width: 350px;
+    max-width: 250px;
     max-height: 250px;
+    background-color: #000;
 }
 .table{
     color: #fff;
 }
-@keyframes fadein {from {opacity: 0;} to {opacity: 1;}}
+/* Leaflet Customization */
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+    border-radius: 0 !important;
+    /* border: 1px solid whitesmoke; */
+    background: #000;
+}
+
+.leaflet-popup-content-wrapper {
+	padding: 5px;
+	border-radius: 0 !important;
+    background: #000;
+    color: #e9ecef;
+    max-width: 300px;
+}
+.leaflet-container a.leaflet-popup-close-button {
+	top: 7px;
+	right: 7px;
+    padding: 4px;
+    width: 25px;
+	height: 25px;
+    font: 20px/18px Tahoma, Verdana, sans-serif;
+} 
+.leaflet-container a.leaflet-popup-close-button:hover {
+	color: #fff;
+    background-color: rgb(243, 49, 49);
+}
+.leaflet-popup-left:before {
+    right: 0;
+    margin-right: -12px;
+    border-left-color: rgba(0, 0, 0, 0.7);
+}
+.leaflet-popup-right:before {
+    left: 0;
+    margin-left: -12px;
+    border-right-color: rgba(0, 0, 0, 0.7);
+}
+.leaflet-popup-tip{
+    background-color: #000;
+}
+/* Tooltip */
+.leaflet-tooltip {
+	background-color: #000;
+	color: #fff;
+    border: 1px solid #000;
+    border-radius: 0;
+}
+.leaflet-tooltip-left:before {
+    right: 0;
+    margin-right: -12px;
+    border-left-color: rgba(0, 0, 0, 0.7);
+}
+.leaflet-tooltip-right:before {
+    left: 0;
+    margin-left: -12px;
+    border-right-color: rgba(0, 0, 0, 0.7);
+}
+/* @keyframes fadein {from {opacity: 0;} to {opacity: 1;}}
 .mapboxgl-popup {animation: fadein 0.2s;}
-.mapboxgl-popup-content {max-width: 250px; min-width: 50px; background: rgba(0, 0, 0, 0.7); color: #fff;} /* border-radius: 0px; padding: 0px 0px; box-shadow: 0 0px 0px rgba(0,0,0,0.4); */
+.mapboxgl-popup-content {max-width: 250px; min-width: 50px; background: rgba(0, 0, 0, 0.7); color: #fff;} 
 .mapboxgl-popup-close-button {font-size: 16px; font-family: Tahoma, Verdana, sans-serif; color: #fff; font-weight: bold;}
 .mapboxgl-popup-close-button:hover {color: rgb(226, 77, 77); background-color: none; border-top-right-radius: 12px;}
 body .mapboxgl-map {line-height: 1.4;}
@@ -253,17 +312,28 @@ body .mapboxgl-map {line-height: 1.4;}
 }
 .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
     border-left-color:rgba(0, 0, 0, 0.7);
-}
+} */
 .map-overlay {
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     position: absolute;
     width: 400px;
-    top: 0;
     left: 450px;
     padding: 10px;
     top: 130px;
     background: #b3e5fc;
     border-radius: 25px 25px 25px 25px;
+    /* border: 1px solid red; */
+}
+.error-overlay {
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    position: absolute;
+    width: 400px;
+    left: 450px;
+    padding: 10px;
+    top: 230px;
+    background: rgb(236, 233, 190);
+    border-left: 7px solid orange;
+    /* border-radius: 25px 25px 25px 25px; */
     /* border: 1px solid red; */
 }
 .closebtn {
@@ -300,11 +370,8 @@ body .mapboxgl-map {line-height: 1.4;}
     left: 49%;
     right: 47%;
     padding: 10px;
-    /* top: 230px; */
     top: calc(100% - 50%);
-    /* background: rgba(247, 245, 245, 0.5); */
     border-radius: 25px 25px 25px 25px;
-    /* border: 1px solid red; */
 }
 .loader {
     border: 3px solid rgba(0, 0, 0, 0.8);
@@ -312,7 +379,7 @@ body .mapboxgl-map {line-height: 1.4;}
     border-top: 3px solid rgb(255, 145, 0);
     width: 30px;
     height: 30px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
+    -webkit-animation: spin 2s linear infinite; 
     animation: spin 1s linear infinite;
 }
 /* Safari */

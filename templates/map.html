@@ -84,7 +84,7 @@
                     <div id="collapseFloodMap" class="accordion-collapse collapse show" aria-labelledby="floodMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="floodwaterCB" type="checkbox" value="floodwater" onchange="switchlayer('floodwater')" checked>
+                                <input class="form-check-input" id="floodwaterCB" type="checkbox" value="floodwater" checked>
                                 <label class="form-check-label" for="floodwaterCB"><b>Potential Floods Water Map</b><br><small>Checked to overlay flood water area estimated from satellite imagery analysis</small></label>
                             </div>
                             <p class="pt-3">Select Mode: </p>
@@ -152,7 +152,7 @@
                     <div id="collapseFloodAgeMap" class="accordion-collapse collapse" aria-labelledby="floodAgeMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="floodageCB" type="checkbox" value="floodage" onchange="switchlayer('floodage')">
+                                <input class="form-check-input" id="floodageCB" type="checkbox" value="floodage">
                                 <label class="form-check-label" for="floodageCB"><b>Flood Age Map</b><br><small>Checked to overlay flood age layer estimated from SAR data analysis</small></label>
                             </div>
                             <!-- <p> Select Age Days:</p>
@@ -227,7 +227,7 @@
                     <div id="collapsePermanentWaterMap" class="accordion-collapse collapse" aria-labelledby="permanentWaterMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="permanentwaterCB" type="checkbox" value="permanentwater" onchange="switchlayer('permanentwater')" checked>
+                                <input class="form-check-input" id="permanentwaterCB" type="checkbox" value="permanentwater">
                                 <label class="form-check-label" for="permanentwaterCB"><b>Permanent Water Layer</b><br><small>Checked to overlay permamnet water area map estimated from Landsat satellite imagery analysis</small></label>
                             </div>
                             <label for="historical-opacity" class="form-label">Opacity:</label><br>
@@ -289,7 +289,7 @@
                     <div id="collapsePrecipMap" class="accordion-collapse collapse" aria-labelledby="precipMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check pb-2">
-                                <input class="form-check-input" id="precipCB" type="checkbox" value="precip" onchange="switchlayer('precip')">
+                                <input class="form-check-input" id="precipCB" type="checkbox" value="precip">
                                 <label class="form-check-label" for="precipCB"><b>Precipitation Map</b><br><small>Checked to overlay precipitation map</small></label>
                             </div>
                             <p class="pt-3"> Select Date (YYYY-MM-DD) to Update Precipitation Map</p>
@@ -350,7 +350,7 @@
                     <div id="collapseSatelliteImagery" class="accordion-collapse collapse" aria-labelledby="satelliteImagery" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="gibsCB" type="checkbox" value="gibs" onchange="switchlayer('gibs')">
+                                <input class="form-check-input" id="gibsCB" type="checkbox" value="gibs">
                                 <label class="form-check-label" for="gibsCB"><b>NRT Browse Imagery</b><br><small>Checked to overlay various types of raw satellite image</small></label>
                             </div>
                             <p class="pt-3"> Select Date (YYYY-MM-DD) to Overlay Raw Satellite Imagery</p>
@@ -387,14 +387,14 @@
             <div class="tab-pane fade" id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">          
                 <div class="layer-header"><button type="button" class="btn btn-layer-close shadow-none" id="close-layer-content" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="right" title="Close Layer Panel"><i class="fas fa-arrow-left fa-lg"></i></button><span class="fw-bold fs-5">Layer Panel</span></div>
                     <div class="card card-body layer-card m-2 border-0">
-                        <div class="form-check form-switch">
+                        <!-- <div class="form-check form-switch">
                             <input class="form-check-input" id="hospitalCB" type="checkbox" value="hospital" onchange="toggleLayer('hospital')" name="hospital" checked>
                             <label class="form-check-label" for="hospitalCB">Hospital</label>
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="educationCB" type="checkbox" value="education" onchange="toggleLayer('education')" name="education" checked>
                             <label class="form-check-label" for="educationCB">Educational Institutions</label>
-                        </div>
+                        </div> -->
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="adm0CB" type="checkbox" value="adm0" onchange="toggleLayer('adm0')" name="adm0" checked>
                             <label class="form-check-label" for="adm0CB">Country Boundary</label>
@@ -458,20 +458,28 @@
                     </div>
                 </div>
             </div> 
+            <div class="card basemap-card m-4" data-layer="mb-galaxy">
+                <div class="d-flex flex-row bd-highlight">
+                    <div class="bd-highlight"><img src="{% static 'images/mb-galaxy.png' %}" class="basemap-img" height="60px" width="60px" alt="MapBox World Outdoors Map"></div>
+                    <div class="bd-highlight pt-3 ps-4">
+                        <h6>Blue Light Map<br><small>MapBox Basic Map</small></h6>    
+                    </div>
+                </div>
+            </div> 
 
             <!-- OSM Basemap -->
-            <!-- <div class="card basemap-card active m-4" data-layer="osm">
+            <div class="card basemap-card m-4" data-layer="osm">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/osm.png" class="basemap-img" height="60px" width="60px" alt="OSM World Streets Map"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/osm.png' %}" class="basemap-img" height="60px" width="60px" alt="OSM World Streets Map"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>OpenStreetMap<br><small>OSM World Streets Map</small></h6>    
                     </div>
                 </div>
-            </div> -->
+            </div>
             <!-- Basemap from Esri -->
-            <!-- <div class="card basemap-card m-4" data-layer="street">
+            <div class="card basemap-card m-4" data-layer="street">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/esri-street.png" class="basemap-img" height="60px" width="60px" alt="Esri World Streets Basemap"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/esri-street.png' %}" class="basemap-img" height="60px" width="60px" alt="Esri World Streets Basemap"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>Esri Streets<br><small>Esri World Streets Basemap</small></h6>    
                     </div>
@@ -479,7 +487,7 @@
             </div>
             <div class="card basemap-card m-4" data-layer="satellite">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/esri-satellite.png" class="basemap-img" height="60px" width="60px" alt="Esri World Satellite Imagery"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/esri-satellite.png' %}" class="basemap-img" height="60px" width="60px" alt="Esri World Satellite Imagery"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>Satellite Map<br><small>Esri World Satellite Imagery</small></h6>    
                     </div>
@@ -487,7 +495,7 @@
             </div>
             <div class="card basemap-card m-4" data-layer="topo">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/esri-topo.png" class="basemap-img" height="60px" width="60px" alt="Esri World Topographic Map"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/esri-topo.png' %}" class="basemap-img" height="60px" width="60px" alt="Esri World Topographic Map"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>Topographic Map<br><small>Esri World Topographic Map</small></h6>    
                     </div>
@@ -495,7 +503,7 @@
             </div>
             <div class="card basemap-card m-4" data-layer="terrain">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/esri-terrain.png" class="basemap-img" height="60px" width="60px" alt="Esri World Terrain Basemap"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/esri-terrain.png' %}" class="basemap-img" height="60px" width="60px" alt="Esri World Terrain Basemap"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>Terrain Map<br><small>Esri World Terrain Basemap</small></h6>    
                     </div>
@@ -503,21 +511,21 @@
             </div>
             <div class="card basemap-card m-4" data-layer="gray">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/esri-gray.png" class="basemap-img" height="60px" width="60px" alt="Esri World Gray Map"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/esri-gray.png' %}" class="basemap-img" height="60px" width="60px" alt="Esri World Gray Map"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>Gray Map<br><small>Esri World Gray Map</small></h6>    
                     </div>
                 </div>
-            </div> -->
+            </div>
             <!-- Basemap from Carto Map -->
-            <!-- <div class="card basemap-card m-4" data-layer="dark">
+            <div class="card basemap-card m-4" data-layer="dark">
                 <div class="d-flex flex-row bd-highlight">
-                    <div class="bd-highlight"><img src="images/carto-dark.png" class="basemap-img" height="60px" width="60px" alt="Carto World Dark Map"></div>
+                    <div class="bd-highlight"><img src="{% static 'images/carto-dark.png' %}" class="basemap-img" height="60px" width="60px" alt="Carto World Dark Map"></div>
                     <div class="bd-highlight pt-3 ps-4">
                         <h6>Dark Map<br><small>Carto World Dark Map</small></h6>    
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>
@@ -526,6 +534,11 @@
 <div class="map-overlay top">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
     <h5 class="pt-2 ps-3">The map is updated as of <span id="mesg-date" class="fw-bold"></span></h5>
+</div>
+
+<div class="error-overlay" id="error-overlay" style="display: none;">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+    <h5 class="pt-2 ps-3" id="error-mesg" class="fw-bold">No data found on this date. Please select another date.</h5>
 </div>
 
 <div class="map-overlay-loader top">
@@ -669,5 +682,4 @@
 <!-- Extra JS files -->
 {% block extra_script %}
 <script src="{% static 'js/map.js' %}"></script>
-
 {% endblock %}

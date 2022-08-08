@@ -11,6 +11,7 @@ mapclient/backup.py
 hydrafloodviewer/static/vendor/*
 static/vendor/*
 static/js/map-backup.js
+static/js/map_mb.js
 static/app/*
 db.sqlite3
 static/data/*
