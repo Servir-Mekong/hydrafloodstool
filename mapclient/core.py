@@ -187,12 +187,13 @@ class MainGEEApi():
 
     # ===================== Potential Flood Map ===================== */
     
-    def getPotentialFloodMap(self, start_date, end_date, adm, mode, sensor):
+    def getPotentialFloodMap(self, start_date, end_date, adm, mode, sensor, ops_date):
         start_date = start_date
         end_date = end_date
         adm = adm
         mode = mode
         sensor = sensor
+        ops_date = ops_date
 
         mekong_region = ee.FeatureCollection('users/kamalhosen/mekong_region')
         aoi = mekong_region.geometry()
@@ -239,7 +240,7 @@ class MainGEEApi():
         # visual parameters
         # names_classes = ['No water','Flooded (1 sensor)','Flooded (2 sensors)','Flooded (all sensors)','Permanent/regular water','Seasonal water'];
         names_classes = ['No water','Flooded (SAR)','Flooded (optical)','Flooded (all)','Permanent/regular water', 'Seasonal water'] 
-        palette_classes = ['white','yellow','orange','red','00008b','green']
+        palette_classes = ['white','yellow','orange','red','00008b','33ccff']
         
         # palette_age = ['white','yellow','orange','red']
         # palette_age = ['feebe2','fbb4b9','f768a1','ae017e']  # pink to purple (to not use same colors as classes)
@@ -309,117 +310,17 @@ class MainGEEApi():
 
         ##### ================ Operational All Merged ================= */
         if mode == "operational" and sensor == "all":
-            HF_S1_tmp = HF_S1.filterBounds(aoi).filterDate(date_time_curr.advance(-10,'day'), date_time_curr.advance(1, 'day')) #.first();
-            HF_S2_tmp = HF_S2.filterBounds(aoi).filterDate(date_time_curr.advance(-12,'day'), date_time_curr.advance(1, 'day')) #.first();
-            HF_L8_tmp = HF_L8.filterBounds(aoi).filterDate(date_time_curr.advance(-14,'day'), date_time_curr.advance(1, 'day')) #.first();
-    
-            # To add DOY in Image
-            def dateMap(img):
-                time = ee.Image(ee.Number.parse(ee.Date(img.get("system:time_start")).format("D"))).toFloat().rename("date")
-                return img.addBands(time)
+            
+            # names_classes = ["No data, Permanent, Seasonal, SAR, Optical, All"] 
+            p_classes = ['white','00008b', '33ccff', 'yellow','orange','red']
+            
+            HM = ee.ImageCollection('projects/servir-mekong/HydrafloodsMerge')
+            
+            filterHM = HM.filterDate(ops_date)
 
-            # Create S1 operational single layer
-            # get land or water observation from  Sentinel1
-            # return 0 = land , 1 = water, mask = nodata
-            # sentinel 1 has information on water and land for every pixel, so we only unmask.
-            def s1Map(img):
-                geomGRD = img.geometry().buffer(-1500)
-                mask = ee.Image(S1.filter(ee.Filter.eq("system:index",img.get("system:index"))).first()).select(0).mask()
-                water = ee.Image(img.gt(60).unmask(0)).toInt()
-                img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD)
-                return img
-
-            HF_S1_tmp = HF_S1_tmp.map(s1Map)
-            HF_S1_col = HF_S1_tmp.sort("system:time_start",False)
-            
-            # Mask with slope & HAND
-            HF_S1_tmp = HF_S1_col.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
-            HF_S1_tmp = HF_S1_tmp.updateMask(HAND.eq(0)).unmask(0).rename("water")
-            
-            # Create DOY
-            s1_dateCol = HF_S1_col.map(dateMap)
-            s1_doy = s1_dateCol.select('date').reduce(ee.Reducer.firstNonNull()).rename("DOY")
-            HF_S1_tmp = HF_S1_tmp.addBands(s1_doy).toInt().clip(aoi)
-
-            # Create S2 operational single layer
-            def s2Map(img):
-                geomGRD = img.geometry().buffer(-1500)
-                water = img.select("qa").eq(3).unmask(0).toInt()
-                img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD)
-                return img
-            
-            HF_S2_tmp = HF_S2_tmp.map(s2Map)
-            HF_S2_col = HF_S2_tmp.sort("system:time_start",False)
-            
-            # Mask with slope & HAND
-            HF_S2_tmp = HF_S2_col.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
-            HF_S2_tmp = HF_S2_tmp.updateMask(HAND.eq(0)).unmask(0).rename("water")
-            
-            # Create DOY
-            s2_dateCol = HF_S2_col.map(dateMap)
-            s2_doy = s2_dateCol.select('date').reduce(ee.Reducer.firstNonNull()).rename("DOY")
-            HF_S2_tmp = HF_S2_tmp.addBands(s2_doy).toInt().clip(aoi)
-
-            # Create L8 operational single layer
-            # Helper function to extract the values from specific bits
-            # The input parameter can be a ee.Number() or ee.Image()
-            # Code adapted from https://gis.stackexchange.com/a/349401/5160
-            def bitwiseExtract(input, fromBit, toBit):
-                maskSize = ee.Number(1).add(toBit).subtract(fromBit)
-                mask = ee.Number(1).leftShift(maskSize).subtract(1)
-                return input.rightShift(fromBit).bitwiseAnd(mask)
-
-            # sort the collection
-            HF_L8_col = HF_L8_tmp.sort("system:time_start",False)
-            qa = HF_L8_col.select("QA_PIXEL").reduce(ee.Reducer.firstNonNull()).clip(aoi)
-            HF_L8_tmp = bitwiseExtract(qa, 7, 7).eq(1)
-            
-            # Mask with slope & HAND
-            HF_L8_tmp = HF_L8_tmp.updateMask(slope.eq(0))
-            HF_L8_tmp = HF_L8_tmp.updateMask(HAND.eq(0)).unmask(0).selfMask().rename("water")
-
-            #Create DoY
-            l8_dateCol = HF_L8_col.map(dateMap)
-            l8_doy = l8_dateCol.select('date').reduce(ee.Reducer.firstNonNull()).rename("DOY")
-            HF_L8_tmp = HF_L8_tmp.addBands(l8_doy).toInt().clip(aoi)
-
-            # get seasonal and reference water
-            ref_water_all = getRefereceWater()
-            
-            # merge HYDRAFloods maps
-            HF = HF_S1_tmp.select('water')    
-            HF = HF.unmask(0, False).where(HF_S2_tmp.select('water').unmask(0).Or(HF_L8_tmp.select('water').unmask(0)), 2)
-            HF = HF.unmask(0, False).where(HF_S1_tmp.select('water').unmask(0).And(HF_S2_tmp.select('water').unmask(0).Or(HF_L8_tmp.select('water').unmask(0))), 3)
-            HF = HF.unmask(0, False).where(ref_water_all.select('seasonal_water').unmask(), 5)
-            HF = HF.unmask(0, False).where(ref_water_all.select('permanent_water').unmask(), 4)
-            
-            
-            # get doy-of-year (DOY) of latest (flood) pixels
-            all_date = HF_S1_tmp.select('DOY').max(HF_S2_tmp.select('DOY')).max(HF_L8_tmp.select('DOY'))
-            flood_date_S1 = HF_S1_tmp.select('DOY').multiply(HF_S1_tmp.select('water').updateMask(ref_water_all.select('reference_water_mask').Not()))
-            flood_date_S1 = flood_date_S1.updateMask(flood_date_S1)
-            flood_date_S2 = HF_S2_tmp.select('DOY').multiply(HF_S2_tmp.select('water').updateMask(ref_water_all.select('reference_water_mask').Not()))
-            flood_date_S2 = flood_date_S2.updateMask(flood_date_S2)
-            flood_date_L8 = HF_L8_tmp.select('DOY').multiply(HF_L8_tmp.select('water').updateMask(ref_water_all.select('reference_water_mask').Not()))
-            flood_date_L8 = flood_date_L8.updateMask(flood_date_L8)
-            flood_date = flood_date_S1.unmask().max(flood_date_S2.unmask()).max(flood_date_L8.unmask())
-            flood_date = flood_date.updateMask(flood_date)
-            # get age of (flood) pixels
-            doy_img = flood_date.unmask(1).divide(flood_date.unmask(1)).multiply(date_time_curr.getRelative('day', 'year'))
-            flood_age = doy_img.subtract(flood_date).rename('flood_age_days')
-            all_age = doy_img.subtract(all_date).rename('age_days')
-            # merge all bands into a single image
-            HF = HF.addBands(flood_date).addBands(flood_age).addBands(all_age).addBands(HF_S1_tmp.select('water').selfMask().rename('S1_water')).addBands(HF_S2_tmp.select('water').selfMask().rename('S2_water')).addBands(HF_L8_tmp.select('water').selfMask().rename('L8_water')).addBands(HF_S1_tmp.select('DOY').updateMask(HF_S1_tmp.select('water')).rename('S1_DOY')).addBands(HF_S2_tmp.select('DOY').updateMask(HF_S2_tmp.select('water')).rename('S2_DOY')).addBands(HF_L8_tmp.select('DOY').updateMask(HF_L8_tmp.select('water')).rename('L8_DOY')).addBands(doy_img.subtract(HF_S1_tmp.select('DOY')).updateMask(HF_S1_tmp.select('water')).rename('S1_age')).addBands(doy_img.subtract(HF_S2_tmp.select('DOY')).updateMask(HF_S2_tmp.select('water')).rename('S2_age')).addBands(doy_img.subtract(HF_L8_tmp.select('DOY')).updateMask(HF_L8_tmp.select('water')).rename('L8_age')).addBands(ref_water_all).clip(aoi)
-                    # .addBands(ref_water.selfMask().rename('reference_water'))
-                    # .addBands(ref_water_mask.selfMask().rename('reference_water_mask'))
-                    # .addBands(seasonal_water.selfMask().rename('seasonal_water'))
-                    # .addBands(perm_water.selfMask().rename('permanent_water'))
-                    #.addBands(ref_water_all).clip(aoi)
-            #return HF
-
-            potentialFloodMap = HF.selfMask().clip(aoi)
+            potentialFloodMap = filterHM.first().selfMask()
             potentialFloodMap = self.getTileLayerUrl(
-                potentialFloodMap.visualize(bands='water', min=0, max=5, palette=palette_classes))
+                potentialFloodMap.visualize(bands='water', min=0, max=5, palette=p_classes))
             return potentialFloodMap
 
         ##### ================ Historical All Merged ================= */

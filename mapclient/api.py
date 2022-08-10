@@ -34,9 +34,10 @@ def get_potential_flood_map(request):
         end_date = request.GET.get('selected_end_date') 
         adm =  request.GET.get('selected_adm') 
         sensor =  request.GET.get('selected_sensor')  
-        mode =  request.GET.get('selected_mode')   
+        mode =  request.GET.get('selected_mode')  
+        ops_date = request.GET.get('ops_date')
         core = MainGEEApi()
-        data = core.getPotentialFloodMap(start_date, end_date, adm, mode, sensor)
+        data = core.getPotentialFloodMap(start_date, end_date, adm, mode, sensor, ops_date)
         return JsonResponse(data, safe=False)
 
 # Get daily surface water map

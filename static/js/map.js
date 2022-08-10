@@ -152,12 +152,22 @@ $('#date_selection_start').change(function() {
 $('#mode_selection').on('change', function() {
     if($(this).val() === 'historical') {
         $('#update_historical_pfwl').show();
+        $('#ops_date').hide();
+        $('#date_selection_ops').hide();
     } else {
         $('#update_historical_pfwl').hide();
+        $('#ops_date').show();
+        $('#date_selection_ops').show();
     }
 });
 
-var popDate = new Date(latest_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+const today = new Date();
+today.setDate(today.getDate() - 2)
+const ops_date = today.toISOString().split('T')[0]
+
+document.getElementById('date_selection_ops').value = ops_date;
+
+var popDate = new Date(ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
 // console.log(dateobj);
 
 
@@ -273,7 +283,8 @@ $.ajax({
         "selected_end_date": selected_end_date,
         //"selected_adm": selected_adm,
         "selected_mode": selected_mode,
-        "selected_sensor": pfl_sensor_selection
+        "selected_sensor": pfl_sensor_selection,
+        "ops_date": ops_date
     },
     dataType: 'json',
     //async: false,
@@ -309,6 +320,11 @@ $("#update-historical-pfw-button").on("click",function(){
     updateFloodMapLayer();
 }); 
 
+// Defining function to update layer 
+$('#date_selection_ops').change(function(){
+    updateFloodMapLayer();
+});
+
 // Defining function to update flood layer
 function updateFloodMapLayer(){
     $("#loader").show();
@@ -317,6 +333,7 @@ function updateFloodMapLayer(){
     // var selected_adm = $('#admin_selection').val();
     var selected_mode = $('#mode_selection').val();
     var pfl_sensor_selection = $('#sensor_selection').val();
+    var selected_ops_date = $('#date_selection_ops').val();
     $.ajax({
         url: '/ajax/potentialfloodmap/',
         type: "GET",
@@ -325,7 +342,8 @@ function updateFloodMapLayer(){
             "selected_end_date": selected_end_date,
             //"selected_adm": selected_adm,
             "selected_mode": selected_mode,
-            "selected_sensor": pfl_sensor_selection
+            "selected_sensor": pfl_sensor_selection,
+            "ops_date": selected_ops_date
         },
         dataType: 'json',
         // async: false,
@@ -333,6 +351,7 @@ function updateFloodMapLayer(){
             fld_layer.setUrl(fld_data); 
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
+            $("#error-overlay").css({ display: "none" });
         },
         error: (error) => {
             console.log(error);
@@ -444,6 +463,7 @@ function updatePrecipitationData(){
         },
         error: (error) => {
             console.log(error);
+            $("#error-overlay").css({ display: "block" });
             $("#loader").hide();
         }
     });

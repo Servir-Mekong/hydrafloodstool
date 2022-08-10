@@ -131,6 +131,20 @@
                                 <option value="sentinel2">Sentinel 2</option>
                                 <option value="landsat8">Landsat 8</option>
                             </select>
+                            <p class="pt-3" id="ops_date"> Select Date (YYYY-MM-DD) </p>
+                            <div class="form-group ">
+                                <input class = "form-control" id="date_selection_ops"
+                                name="date_selection_ops"
+                                type="text"
+                                value="2022-06-01"
+                                data-provide="datepicker"                          
+                                data-date-autoclose="true"
+                                data-date-format="yyyy-mm-dd"
+                                data-date-min-view-mode="days"
+                                data-date-multidate="1"
+                                data-date-start-view="decade"
+                                data-date-today-btn="false">
+                            </div> 
                             <div class="center_obj mt-4" id="update_his_pfwl_button" style="display: block;">
                                 <button type="submit" id="update-historical-pfw-button" name="update-historical-pfw-button" class="btn btn-primary text-white text-center" style="width: 100%;"><i class="fa fa-refresh"></i> Update Floods Layer</button>
                             </div>
