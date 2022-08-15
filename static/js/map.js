@@ -308,12 +308,14 @@ $.ajax({
     }
 });
 
-// Check add or remove precipitation layer to overlay on map
+// Check add or remove flood layer to overlay on map
 $("#floodwaterCB").on("click", function(){
     if(this.checked) {
-        map.addLayer(fld_layer);                 
+        map.addLayer(fld_layer); 
+        $('#map-overlay').show()                
     } else {
         map.removeLayer(fld_layer);
+        $('#map-overlay').hide()
     }
 });  
 
@@ -332,6 +334,19 @@ $("#update-historical-pfw-button").on("click",function(){
 $('#date_selection_ops').change(function(){
     updateFloodMapLayer();
 });
+
+// Show/hide overlay message box
+
+$('#mode_selection').change(function(){
+    var mode = $(this).val();
+    console.log(mode)
+    if (mode == "historical"){
+        $('#map-overlay').hide()
+    } else {
+        $('#map-overlay').show()
+    }
+});
+
 
 // Defining function to update flood layer
 function updateFloodMapLayer(){
