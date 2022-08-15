@@ -850,7 +850,7 @@ class MainGEEApi():
                          hand_thresh=30,
                          cloud_thresh=10,
                          algorithm='SWT',
-                         wcolor='#00008b',):
+                         wcolor='0000FF',):
 
         # def spatialSelect(feature):
         #     test = ee.Algorithms.If(geom.contains(feature.geometry()),feature,None)

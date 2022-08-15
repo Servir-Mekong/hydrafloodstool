@@ -64,7 +64,7 @@ var MapOtions = {
     zoom: 5,
     zoomControl: false,
     minZoom: 5,
-    maxZoom: 14
+    // maxZoom: 14
 }
 // Create a map
 var map = L.map('map', MapOtions);
@@ -635,7 +635,7 @@ $("#permanentwaterCB").on("click",function(){
             success: (historical_data) => {
                 historical_layer.setUrl(historical_data);
                 $("#loader").hide();
-                setTimeout(function() { $("#loader").hide(); }, 8000);
+                setTimeout(function() { $("#loader").hide(); }, 20000);
             },
             error: (error) => {
                 console.log(error);
@@ -669,10 +669,10 @@ $("#permanentwaterCB").on("click",function(){
 $("#permanentwaterCB").on("click",function(){
     if(this.checked) {
         map.addLayer(historical_layer); 
-        historical_layer.setOpacity(0.5);                
+        // historical_layer.setOpacity(1);                
     } else {
         map.removeLayer(historical_layer); 
-        historical_layer.setOpacity(0);
+        // historical_layer.setOpacity(0);
     }
 });  
 
@@ -717,7 +717,7 @@ function updatePermanentWater(){
         success: (historical_data) => {
             historical_layer.setUrl(historical_data);
             $("#loader").hide();
-            setTimeout(function() { $("#loader").hide(); }, 8000);
+            setTimeout(function() { $("#loader").hide(); }, 20000);
         },
         error: (error) => {
             console.log(error);
