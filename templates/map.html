@@ -127,9 +127,12 @@
                             <p class="pt-3">Select Sensor: </p>
                             <select class="form-select" id="sensor_selection">
                                 <option value="all">All Merged</option>
-                                <option value="sentinel1">Sentinel 1 (SAR)</option>
+                                <!-- <option value="sentinel1">Sentinel 1 (SAR)</option>
                                 <option value="sentinel2">Sentinel 2</option>
-                                <option value="landsat8">Landsat 8</option>
+                                <option value="landsat8">Landsat 8</option> -->
+                                <option value="sar">SAR (Sentinel1)</option>
+                                <option value="optical">Optical (Sentinel2 and Landsat 8)</option>
+                                <option value="sar-optical">SAR and Optical (Intersected)</option> 
                             </select>
                             <p class="pt-3" id="ops_date"> Select Date (YYYY-MM-DD) </p>
                             <div class="form-group ">
@@ -174,12 +177,28 @@
                                 <option value="age_days">All Merged Age</option>
                                 <option value="flood_age_days">All Merged Flood Age</option>
                             </select> -->
+                            <p class="pt-3" id="age_date"> Select Date (YYYY-MM-DD) </p>
+                            <div class="form-group ">
+                                <input class = "form-control" id="date_selection_age"
+                                name="date_selection_age"
+                                type="text"
+                                value="2022-06-01"
+                                data-provide="datepicker"                          
+                                data-date-autoclose="true"
+                                data-date-format="yyyy-mm-dd"
+                                data-date-min-view-mode="days"
+                                data-date-multidate="1"
+                                data-date-start-view="decade"
+                                data-date-today-btn="false">
+                            </div> 
                             <p class="mt-3">Select Sensor:</p>
                             <select class="form-select" id="age_sensor_selection">
                                 <option value="all">All Merged</option>
-                                <option value="sentinel1">Sentinel 1 (SAR)</option>
+                                <!-- <option value="sentinel1">Sentinel 1 (SAR)</option>
                                 <option value="sentinel2">Sentinel 2</option>
-                                <option value="landsat8">Landsat 8</option>
+                                <option value="landsat8">Landsat 8</option> -->
+                                <option value="sar">SAR (Sentinel1)</option>
+                                <option value="optical">Optical (Sentinel12 and Landsat8)</option>
                             </select>
                             <label for="fwater-opacity" class="form-label pt-3">Opacity:</label><br>
                             <input id="fage-opacity" data-slider-id='fage-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
@@ -547,12 +566,12 @@
 
 <div class="map-overlay top">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-    <h5 class="pt-2 ps-3">The map is updated as of <span id="mesg-date" class="fw-bold"></span></h5>
+    <h6 class="pt-2 ps-3">The map is updated as of <span id="mesg-date" class="fw-bold"></span></h6>
 </div>
 
 <div class="error-overlay" id="error-overlay" style="display: none;">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-    <h5 class="pt-2 ps-3" id="error-mesg" class="fw-bold">No data found on this date. Please select another date.</h5>
+    <h6 class="pt-2 ps-3" id="error-mesg" class="fw-bold">No data found on this date. Please select another date.</h6>
 </div>
 
 <div class="map-overlay-loader top">
@@ -590,7 +609,7 @@
                                                     <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: yellow; width:18px; height: 18px;"></div></span> Flooded Water (SAR)</div>
                                                     <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: orange; width:18px; height: 18px;"></div></span> Flooded Water (Optical)</div>
                                                     <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: red; width:18px; height: 18px;"></div></span> Flooded Water All (Merged)</div>
-                                                    <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: green; width:18px; height: 18px;"></div></span> Seasonal</div>
+                                                    <div id="fwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #33ccff; width:18px; height: 18px;"></div></span> Seasonal</div>
                                                     <div id="swater-legend" style="display: none; padding-bottom: 5px;"><span><div style="background-color: #2389da; width:18px; height: 18px;"></div></span> Daily Surface Water</div>
                                                     <div id="pwater-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #00008b; width:18px; height: 18px;"></div></span> Permament/regular Water</div>
                                                 </div>

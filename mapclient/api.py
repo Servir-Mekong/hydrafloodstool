@@ -32,12 +32,12 @@ def get_potential_flood_map(request):
     if request.is_ajax and request.method == "GET":
         start_date = request.GET.get('selected_start_date')
         end_date = request.GET.get('selected_end_date') 
-        adm =  request.GET.get('selected_adm') 
+        #adm =  request.GET.get('selected_adm') 
         sensor =  request.GET.get('selected_sensor')  
         mode =  request.GET.get('selected_mode')  
         ops_date = request.GET.get('ops_date')
         core = MainGEEApi()
-        data = core.getPotentialFloodMap(start_date, end_date, adm, mode, sensor, ops_date)
+        data = core.getPotentialFloodMap(start_date, end_date, mode, sensor, ops_date) #adm,
         return JsonResponse(data, safe=False)
 
 # Get daily surface water map
@@ -54,11 +54,11 @@ def get_dailysurface_water_map(request):
 @csrf_exempt
 def get_flood_age_map(request):
     if request.is_ajax and request.method == "GET":
-        # date = request.GET.get('selected_date')  
+        age_date = request.GET.get('age_date')  
         # age_type =  request.GET.get('selected_age_type') 
         age_sensor =  request.GET.get('selected_age_sensor')   
         core = MainGEEApi()
-        data = core.getFloodAgeMap(age_sensor)
+        data = core.getFloodAgeMap(age_date, age_sensor)
         return JsonResponse(data, safe=False)
 
 # Get flood duration map

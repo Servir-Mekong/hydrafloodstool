@@ -70,7 +70,8 @@ var MapOtions = {
 var map = L.map('map', MapOtions);
 
 // Set default basemap
-var basemap_layer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia2FtYWxoMjciLCJhIjoiY2t3b2Roc2M3MDF2bDJ2cDY0ZmppdXl0MCJ9.Gn5rUJgaap_KDcnhyROMzQ', {
+var basemap_layer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia2FtYWxoMjciLCJhIjoiY2t3b2Roc2M3MDF2bDJ2cDY0ZmppdXl0MCJ9.Gn5rUJgaap_KDcnhyROMzQ', {
+    tileSize: 256,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
@@ -142,6 +143,7 @@ var pfl_sensor_selection = $('#sensor_selection').val();
 var swl_sensor_selection = $('#sensor_selection_swater').val();
 var selected_mode = $('#mode_selection').val();
 // var selected_age_type = $('#age_type_selection').val();
+var selected_age_date = $('#date_selection_age').val();
 var selected_age_sensor = $('#age_sensor_selection').val();
 
 $('#date_selection_start').change(function() {
@@ -162,7 +164,7 @@ $('#mode_selection').on('change', function() {
 });
 
 const today = new Date();
-today.setDate(today.getDate() - 2)
+today.setDate(today.getDate() - 1)
 const ops_date = today.toISOString().split('T')[0]
 
 document.getElementById('date_selection_ops').value = ops_date;
@@ -187,84 +189,90 @@ $("#doy-opacity").slider();
 var d = new Date();
 d.setDate(d.getDate() - 1);
 var precip_date = d.toISOString().split('T')[0]
+var age_date = d.toISOString().split('T')[0]
 
+document.getElementById('date_selection_age').value = age_date;
 document.getElementById('date_selection').value = precip_date;
 document.getElementById('date_selection_simg').value = latest_date;
 
-// var error = document.getElementById("error");
+var error = document.getElementById("error");
 
-// $("#date_selection_end").on("change",function(){
-//     selected_start = $('#date_selection_start').val();
-//     selected_end = $(this).val();
+$("#date_selection_end").on("change",function(){
+    selected_start = $('#date_selection_start').val();
+    selected_end = $(this).val();
 
-//     s_day = new Date(selected_start)//.toLocaleString('en-us',{ day:'numeric' });
-//     e_day = new Date(selected_end)//.toLocaleString('en-us',{ day:'numeric' });
-//     var diffDays = parseInt((s_day - e_day) / (1000 * 60 * 60 * 24), 10); 
-//     var absDiff = Math.abs(diffDays)
-//     var sensor = $('#sensor_selection').val();
-//     if (absDiff <= 30 && sensor == "all" ){
-//         error.innerText ="* The start date and end date should be 30 days gap for merged sensor.";
-//         error.style.color = "red";
-//         $("#update-historical-pfw-button").prop('disabled', true);
-//     } else if (absDiff < 1 && sensor == "sentinel1" ){
-//         error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
-//         error.style.color = "red";
-//         $("#update-historical-pfw-button").prop('disabled', true);
-//     } else if (absDiff <= 7 && sensor == "sentinel2" ){
-//         error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
-//         error.style.color = "red";
-//         $("#update-historical-pfw-button").prop('disabled', true);
-//     }  else if (absDiff <= 7 && sensor == "landsat8" ){
-//         error.innerText ="* The start date and end date should be at least 30 days gap for landsat 8 sensor.";
-//         error.style.color = "red";
-//         $("#update-historical-pfw-button").prop('disabled', true);
-//     }  else {
-//         error.innerText ="";
-//         $("#update-historical-pfw-button").prop('disabled', false);
-//     }  
-//     $("#sensor_selection").on("change",function(){
-//         var sensor = $(this).val();
-//         var selected_start = $('#date_selection_start').val();
-//         var selected_end = $('#date_selection_end').val();
+    s_day = new Date(selected_start)//.toLocaleString('en-us',{ day:'numeric' });
+    e_day = new Date(selected_end)//.toLocaleString('en-us',{ day:'numeric' });
+    var diffDays = parseInt((s_day - e_day) / (1000 * 60 * 60 * 24), 10); 
+    var absDiff = Math.abs(diffDays)
+    var sensor = $('#sensor_selection').val();
+    if (absDiff <= 0 && sensor == "all" ){
+        error.innerText ="* The start date and end date shouldn't be the same. At least 1 day gap between start and end date.";
+        error.style.color = "red";
+        $("#update-historical-pfw-button").prop('disabled', true);
+    } 
+    // else if (absDiff < 1 && sensor == "sentinel1" ){
+    //     error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
+    //     error.style.color = "red";
+    //     $("#update-historical-pfw-button").prop('disabled', true);
+    // } else if (absDiff <= 7 && sensor == "sentinel2" ){
+    //     error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
+    //     error.style.color = "red";
+    //     $("#update-historical-pfw-button").prop('disabled', true);
+    // }  else if (absDiff <= 7 && sensor == "landsat8" ){
+    //     error.innerText ="* The start date and end date should be at least 30 days gap for landsat 8 sensor.";
+    //     error.style.color = "red";
+    //     $("#update-historical-pfw-button").prop('disabled', true);
+    // }  
+    else {
+        error.innerText ="";
+        $("#update-historical-pfw-button").prop('disabled', false);
+    }  
+    $("#sensor_selection").on("change",function(){
+        var sensor = $(this).val();
+        var selected_start = $('#date_selection_start').val();
+        var selected_end = $('#date_selection_end').val();
 
-//         s_day = new Date(selected_start);
-//         e_day = new Date(selected_end);
+        s_day = new Date(selected_start);
+        e_day = new Date(selected_end);
 
-//         var diffDays = parseInt((s_day - e_day) / (1000 * 60 * 60 * 24), 10); 
-//         var absDiff = Math.abs(diffDays)
+        var diffDays = parseInt((s_day - e_day) / (1000 * 60 * 60 * 24), 10); 
+        var absDiff = Math.abs(diffDays)
 
-//         if (absDiff <= 30 && sensor == "all" ){
-//             error.innerText ="* The start date and end date should be 30 days gap for merged sensor.";
-//             error.style.color = "red";
-//             $("#update-historical-pfw-button").prop('disabled', true);
-//         } else if (absDiff < 1 && sensor == "sentinel1" ){
-//             error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
-//             error.style.color = "red";
-//             $("#update-historical-pfw-button").prop('disabled', true);
-//         } else if (absDiff <= 7 && sensor == "sentinel2" ){
-//             error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
-//             error.style.color = "red";
-//             $("#update-historical-pfw-button").prop('disabled', true);
-//         }  else if (absDiff <= 7 && sensor == "landsat8" ){
-//             error.innerText ="* The start date and end date should be at least 30 days gap for sentinel 2 sensor.";
-//             error.style.color = "red";
-//             $("#update-historical-pfw-button").prop('disabled', true);
-//         }  else {
-//             error.innerText ="";
-//             $("#update-historical-pfw-button").prop('disabled', false);
-//         }  
-//     });
-//     //console.log(absDiff)
+        if (absDiff <= 1 && sensor == "all" ){
+            error.innerText ="* The start date and end date shouldn't be the same. At least 1 day gap between start and end date.";
+            error.style.color = "red";
+            $("#update-historical-pfw-button").prop('disabled', true);
+        } 
+        // else if (absDiff < 1 && sensor == "sentinel1" ){
+        //     error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
+        //     error.style.color = "red";
+        //     $("#update-historical-pfw-button").prop('disabled', true);
+        // } else if (absDiff <= 7 && sensor == "sentinel2" ){
+        //     error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
+        //     error.style.color = "red";
+        //     $("#update-historical-pfw-button").prop('disabled', true);
+        // }  else if (absDiff <= 7 && sensor == "landsat8" ){
+        //     error.innerText ="* The start date and end date should be at least 30 days gap for sentinel 2 sensor.";
+        //     error.style.color = "red";
+        //     $("#update-historical-pfw-button").prop('disabled', true);
+        // }  
+        else {
+            error.innerText ="";
+            $("#update-historical-pfw-button").prop('disabled', false);
+        }  
+    });
+    //console.log(absDiff)
     
-//     // if (selected_start == selected_end){
-//     //     error.innerText ="* The start date and end date shouldn't be the same.";
-//     //     error.style.color = "red";
-//     //     $("#update-historical-pfw-button").prop('disabled', true);
-//     // } else {
-//     //     $("#update-historical-pfw-button").prop('disabled', false);
-//     //     error.innerText = "";
-//     // }
-// });
+    // if (selected_start == selected_end){
+    //     error.innerText ="* The start date and end date shouldn't be the same. At least 1 day gap between start and end date.";
+    //     error.style.color = "red";
+    //     $("#update-historical-pfw-button").prop('disabled', true);
+    // } else {
+    //     $("#update-historical-pfw-button").prop('disabled', false);
+    //     error.innerText = "";
+    // }
+});
 
 /* ================ Flood Layer ========================= */
 
@@ -350,7 +358,7 @@ function updateFloodMapLayer(){
         success: (fld_data) => {
             fld_layer.setUrl(fld_data); 
             $("#loader").hide();
-            setTimeout(function() { $("#loader").hide(); }, 8000);
+            setTimeout(function() { $("#loader").hide(); }, 10000);
             $("#error-overlay").css({ display: "none" });
         },
         error: (error) => {
@@ -481,11 +489,12 @@ var fage_layer = L.tileLayer('', {
 $("#floodageCB").on("click", function(){
     if(this.checked) {
         $("#loader").show();
+        var selected_age_date = $('#date_selection_age').val();
         $.ajax({
             url: '/ajax/floodagemap/',
             type: "GET",
             data: {
-                //"selected_date": latest_date,
+                "age_date": selected_age_date,
                 // "selected_age_type": selected_age_type,
                 "selected_age_sensor": selected_age_sensor
             },
@@ -539,6 +548,9 @@ $("#fage-opacity").on("slide", function(slideEvt) {
 // $('#age_type_selection').change(function(){
 //     updateFloodAgeMapLayer();
 // });
+$('#date_selection_age').change(function(){
+    updateFloodAgeMapLayer();
+});
 $('#age_sensor_selection').change(function(){
     updateFloodAgeMapLayer();
 });
@@ -547,12 +559,14 @@ $('#age_sensor_selection').change(function(){
 function updateFloodAgeMapLayer(){
     $("#loader").show();
     // var selected_age_type = $('#age_type_selection').val();
+    var selected_age_date = $('#date_selection_age').val();
     var selected_age_sensor = $('#age_sensor_selection').val();
     $.ajax({
         url: '/ajax/floodagemap/',
         type: "GET",
         data: {
             // "selected_age_type": selected_age_type,
+            "age_date": selected_age_date,
             "selected_age_sensor": selected_age_sensor
         },
         dataType: 'json',

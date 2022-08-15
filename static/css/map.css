@@ -314,11 +314,11 @@ body .mapboxgl-map {line-height: 1.4;}
     border-left-color:rgba(0, 0, 0, 0.7);
 } */
 .map-overlay {
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font: 12px/14px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     position: absolute;
-    width: 400px;
+    width: 325px;
     left: 450px;
-    padding: 10px;
+    padding: 3px;
     top: 130px;
     background: #b3e5fc;
     border-radius: 25px 25px 25px 25px;
@@ -342,7 +342,7 @@ body .mapboxgl-map {line-height: 1.4;}
     color: #000;
     font-weight: bold;
     float: right;
-    font-size: 22px;
+    font-size: 16px;
     line-height: 30px;
     cursor: pointer;
     transition: 0.3s;
