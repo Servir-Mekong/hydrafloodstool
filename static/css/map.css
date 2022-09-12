@@ -215,7 +215,12 @@
 #doy-opacity .slider-handle {
 	background: #7676e6;
 }
-
+#fdepth-opacity .slider-selection {
+	background: #7676e6;
+}
+#fdepth-opacity .slider-handle {
+	background: #7676e6;
+}
 .adm2-popup-table {
     max-width: 250px;
     max-height: 250px;
@@ -316,7 +321,7 @@ body .mapboxgl-map {line-height: 1.4;}
 .map-overlay {
     font: 12px/14px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     position: absolute;
-    width: 325px;
+    width: 350px;
     left: 450px;
     padding: 3px;
     top: 130px;

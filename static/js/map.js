@@ -185,6 +185,7 @@ $("#fduration-opacity").slider();
 $("#browse-opacity").slider();
 $("#historical-opacity").slider();
 $("#doy-opacity").slider();
+$("#fdepth-opacity").slider();
 
 var d = new Date();
 d.setDate(d.getDate() - 1);
@@ -385,6 +386,46 @@ function updateFloodMapLayer(){
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+/* ============================== Flood Depth Map ============================= */
+// Define Earth Engine Flood Layer in Leaflet
+var depth_layer = L.tileLayer('', {
+    attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
+});
+// Get Flood Layer
+$.ajax({
+    url: '/ajax/depthmap/',
+    type: "GET",
+    dataType: 'json',
+    //async: false,
+    success: (depth_data) => {
+        depth_layer.setUrl(depth_data);  
+        $("#loader").hide();
+        setTimeout(function() { $("#loader").hide(); }, 8000);
+    },
+    error: (error) => {
+        console.log(error);
+        $("#error-overlay").css({ display: "block" });
+        $("#loader").hide();
+    }
+});
+
+// Check add or remove precipitation layer to overlay on map
+$("#flooddepthCB").on("click", function(){
+    if(this.checked) {
+        map.addLayer(depth_layer);                 
+    } else {
+        map.removeLayer(depth_layer);
+    }
+});  
+
+// Get precipitation slider value
+$("#fdepth-opacity").on("slide", function(slideEvt) {
+    var opac = slideEvt.value
+    depth_layer.setOpacity(opac);
+});
+
+//////////////////////////////////////////////////////////////////////////////////////
 
 /* ============================== Precipitation Layer ============================= */
 

@@ -206,24 +206,24 @@
                     </div>
                 </div>    
                 
-                <!-- Flood Duration card
+                <!-- Flood Depth card -->
                 <div class="accordion-item mb-2">
-                    <h2 class="accordion-header" id="floodDurationMap">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodDurationMap" aria-expanded="false" aria-controls="collapseFloodDurationMap">
-                            <i class="fas fa-calendar-times pe-2"></i> Flood Duration Map
+                    <h2 class="accordion-header" id="floodDepthMap">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodDepthMap" aria-expanded="false" aria-controls="collapseFloodDepthMap">
+                            <i class="fa-solid fa-turn-down pe-2"></i> Flood Depth Map
                         </button>
                     </h2>
-                    <div id="collapseFloodDurationMap" class="accordion-collapse collapse" aria-labelledby="floodDurationMap" data-bs-parent="#accordionExample">
+                    <div id="collapseFloodDepthMap" class="accordion-collapse collapse" aria-labelledby="floodDepthMap" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="form-check">
-                                <input class="form-check-input" id="flooddurationCB" type="checkbox" value="floodduration" onchange="switchlayer('floodduration')">
-                                <label class="form-check-label" for="flooddurationCB"><b>Flood Duration Map</b><br><small>Checked to overlay flood duration map estimated from Sentinel 1 satellite imagery analysis</small></label>
+                                <input class="form-check-input" id="flooddepthCB" type="checkbox" value="flooddepth" onchange="switchlayer('flooddepth')">
+                                <label class="form-check-label" for="flooddepthCB"><b>Flood Depth Map</b><br><small>Checked to overlay flood depth map estimated from Sentinel 1 satellite imagery analysis</small></label>
                             </div>
-                            <label for="fduration-opacity" class="form-label">Opacity:</label><br>
-                            <input id="fduration-opacity" data-slider-id='fduration-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
+                            <label for="fdepth-opacity" class="form-label">Opacity:</label><br>
+                            <input id="fdepth-opacity" data-slider-id='fdepth-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                         </div>
                     </div>
-                </div>      -->
+                </div>     
                 
                 <!-- Daily surface water card -->
                 <!-- <div class="accordion-item mb-2">
@@ -564,9 +564,9 @@
 </div>
 <div class="map" id="map"></div>
 
-<div class="map-overlay top" id="map-overlay">
+<div class="map-overlay top text-center" id="map-overlay">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-    <h6 class="pt-2 ps-3">The map is updated as of <span id="mesg-date" class="fw-bold"></span></h6>
+    <h6 class="pt-2 ps-3 text-center">The map is updated as of <span id="mesg-date" class="fw-bold"></span></h6>
 </div>
 
 <div class="error-overlay" id="error-overlay" style="display: none;">
@@ -658,15 +658,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="accordion-item" style="display: none;">
+                                        <div class="accordion-item">
                                             <h2 class="accordion-header" id="panelsStayOpen-headingFive">
                                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
-                                                    Flood Duration Layer
+                                                    Flood Depth Layer
                                                 </button>
                                             </h2>
                                             <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
                                                 <div class="accordion-body">
-                                                    <div id="flduration-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_duration_legend.png" style="width: 200px; height: 50px;" alt="Flood Duration Legend"></div>
+                                                    <!-- <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_depth_legend.png" style="width: 200px; height: 50px;" alt="Flood Depth Legend"></div> -->
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #4169E1; width:18px; height: 18px;"></div></span> 5</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #6787E7; width:18px; height: 18px;"></div></span> 4</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #8DA5ED; width:18px; height: 18px;"></div></span> 3</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #B3C3F3; width:18px; height: 18px;"></div></span> 2</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ECF0FC; width:18px; height: 18px;"></div></span> 1</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #FFFFFF; width:18px; height: 18px;"></div></span> 0</div>
                                                 </div>
                                             </div>
                                         </div>

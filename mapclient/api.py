@@ -119,3 +119,10 @@ def get_eel_map(request):
         core = MainGEEApi()
         data = core.getEELMap()
     return JsonResponse(data, safe=False)
+
+def get_flood_depth_map(request):
+    if request.is_ajax:
+        core = MainGEEApi()
+        data = core.getFloodDepthMap()
+    return JsonResponse(data, safe=False)
+

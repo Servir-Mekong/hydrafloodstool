@@ -1,3 +1,4 @@
+import hydrafloods as hf
 from sqlite3 import Date
 import time
 import os
@@ -44,7 +45,8 @@ class MainGEEApi():
     def getEELMap(self):
         lmap = ee.Image("users/kamalhosen/kh_all")
         mkmap = lmap.selfMask()
-        elMap = self.getTileLayerUrl(mkmap.visualize(palette=["yellow", "orange", "red", "blue", "green"], min=1, max=5))
+        elMap = self.getTileLayerUrl(mkmap.visualize(
+            palette=["yellow", "orange", "red", "blue", "green"], min=1, max=5))
         return elMap
 
     # Get precipitation map
@@ -87,13 +89,13 @@ class MainGEEApi():
         return precipMap
 
     # ===================== Surface Water Map ===================== */
-    
-    def getSurfaceWaterMap(self, date, sensor): 
+
+    def getSurfaceWaterMap(self, date, sensor):
         sdate = ee.Date(date)
         sensor = sensor
         mekong_region = ee.FeatureCollection('users/kamalhosen/mekong_region')
         aoi = mekong_region.geometry()
-        
+
         # calculate slope as surface water does usually not occur on slopes
         dem = ee.ImageCollection('JAXA/ALOS/AW3D30/V3_2')
         elevation = dem.select('DSM')
@@ -104,7 +106,8 @@ class MainGEEApi():
         slope = ee.Terrain.slope(elevation.mosaic().setDefaultProjection(proj))
 
         # only include location with historical record of surface water
-        jrc = ee.Image("JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
+        jrc = ee.Image(
+            "JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
         jrc = jrc.updateMask(jrc.eq(0))
 
         slope = slope.updateMask(jrc.eq(0))
@@ -116,54 +119,65 @@ class MainGEEApi():
 
         if sensor == "sentinel1":
             # Sentinel 1 image collection
-            s1Col = ee.ImageCollection("projects/servir-mekong/hydrafloodsSen1").filterBounds(aoi).filterDate(sdate.advance(-10,'day'), sdate.advance(1, 'day'))
+            s1Col = ee.ImageCollection("projects/servir-mekong/hydrafloodsSen1").filterBounds(
+                aoi).filterDate(sdate.advance(-10, 'day'), sdate.advance(1, 'day'))
             s1 = ee.ImageCollection("COPERNICUS/S1_GRD")
-            
+
             # get land or water observation from  Sentinel1
             # return 0 = land , 1 = water, mask = nodata
             # sentinel 1 has information on water and land for every pixel, so we only unmask.
 
             def s1Map(img):
                 geomGRD = img.geometry().buffer(-1500)
-                mask = ee.Image(s1.filter(ee.Filter.eq("system:index",img.get("system:index"))).first()).select(0).mask()
+                mask = ee.Image(s1.filter(ee.Filter.eq(
+                    "system:index", img.get("system:index"))).first()).select(0).mask()
                 water = ee.Image(img.gt(th).unmask(0)).toInt()
-                img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD).rename("water")
+                img = water.set("system:time_start", img.get(
+                    "system:time_start")).clip(geomGRD).rename("water")
                 return img
 
             s1Col = s1Col.map(s1Map)
 
             # sort the collection
-            collection = s1Col.sort("system:time_start",False) 
+            collection = s1Col.sort("system:time_start", False)
 
-            dailywater = collection.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
+            dailywater = collection.reduce(
+                ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
             HAND = HAND.updateMask(HAND.gt(40)).gt(0).mask()
             dailywater = dailywater.updateMask(HAND.eq(0)).unmask(0)
 
-            permanentWater = ee.Image("JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").gt(th)
-            dailywater = dailywater.selfMask().unmask(permanentWater).rename("water").clip(aoi)
+            permanentWater = ee.Image(
+                "JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").gt(th)
+            dailywater = dailywater.selfMask().unmask(
+                permanentWater).rename("water").clip(aoi)
 
         elif sensor == "sentinel2":
             # sentinel 2 image collection
-            HF_S2 = ee.ImageCollection("projects/servir-mekong/sentinel2QA").filterBounds(aoi).filterDate(sdate.advance(-12,'day'), sdate.advance(1, 'day'))
-            
+            HF_S2 = ee.ImageCollection("projects/servir-mekong/sentinel2QA").filterBounds(
+                aoi).filterDate(sdate.advance(-12, 'day'), sdate.advance(1, 'day'))
+
             # Create S2 operational single layer
             def s2Map(img):
                 geomGRD = img.geometry().buffer(-1500)
                 water = img.select("qa").eq(3).unmask(0).toInt()
-                img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD)
+                img = water.set("system:time_start", img.get(
+                    "system:time_start")).clip(geomGRD)
                 return img
-            
+
             HF_S2_tmp = HF_S2.map(s2Map)
-            HF_S2_col = HF_S2_tmp.sort("system:time_start",False)
-            
+            HF_S2_col = HF_S2_tmp.sort("system:time_start", False)
+
             # Mask with slope & HAND
-            HF_S2_tmp = HF_S2_col.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
-            dailywater = HF_S2_tmp.updateMask(HAND.eq(0)).unmask(0).selfMask().rename("water").clip(aoi)
+            HF_S2_tmp = HF_S2_col.reduce(
+                ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
+            dailywater = HF_S2_tmp.updateMask(HAND.eq(0)).unmask(
+                0).selfMask().rename("water").clip(aoi)
 
         elif sensor == "landsat8":
             # Landsat 8 image collection
-            l8Col = ee.ImageCollection("LANDSAT/LC08/C02/T1_RT").filterBounds(aoi).filterDate(sdate.advance(-14,'day'), sdate.advance(1, 'day'))
-            
+            l8Col = ee.ImageCollection("LANDSAT/LC08/C02/T1_RT").filterBounds(
+                aoi).filterDate(sdate.advance(-14, 'day'), sdate.advance(1, 'day'))
+
             # Helper function to extract the values from specific bits
             # The input parameter can be a ee.Number() or ee.Image()
             # Code adapted from https://gis.stackexchange.com/a/349401/5160
@@ -171,23 +185,24 @@ class MainGEEApi():
                 maskSize = ee.Number(1).add(toBit).subtract(fromBit)
                 mask = ee.Number(1).leftShift(maskSize).subtract(1)
                 return input.rightShift(fromBit).bitwiseAnd(mask)
-            
+
             # sort the collection
-            collection = l8Col.sort("system:time_start",False) 
-            qa = collection.select("QA_PIXEL").reduce(ee.Reducer.firstNonNull()).clip(aoi)
+            collection = l8Col.sort("system:time_start", False)
+            qa = collection.select("QA_PIXEL").reduce(
+                ee.Reducer.firstNonNull()).clip(aoi)
             dailywater = bitwiseExtract(qa, 7, 7).eq(1)
 
             dailywater = dailywater.updateMask(slope.eq(0))
             HAND = HAND.updateMask(HAND.gt(50)).gt(0).mask()
             dailywater = dailywater.updateMask(HAND.eq(0)).unmask(0).selfMask()
 
-        surfaceWaterMap = self.getTileLayerUrl(dailywater.visualize(palette="#2389da", min=0, max=1))
+        surfaceWaterMap = self.getTileLayerUrl(
+            dailywater.visualize(palette="#2389da", min=0, max=1))
         return surfaceWaterMap
 
-
     # ===================== Potential Flood Map ===================== */
-    
-    def getPotentialFloodMap(self, start_date, end_date, mode, sensor, ops_date): #adm,
+
+    def getPotentialFloodMap(self, start_date, end_date, mode, sensor, ops_date):  # adm,
         start_date = start_date
         end_date = end_date
         # adm = adm
@@ -199,14 +214,14 @@ class MainGEEApi():
         ops_end_date = ee.Date(today)
 
         # Exported image collection
-        HM = ee.ImageCollection('projects/servir-mekong/HydrafloodsMerge') 
+        HM = ee.ImageCollection('projects/servir-mekong/HydrafloodsMerge')
         filterHM = ee.Image(HM.filterDate(ops_date, ops_end_date).first())
-        
-        # Define pallete color
-        p_classes = ['white','00008b', '33ccff', 'yellow','orange','red']
-        # names_classes = ["No data, Permanent, Seasonal, SAR, Optical, All"] 
 
-        ##### ================ Operational Mode ================= */
+        # Define pallete color
+        p_classes = ['white', '00008b', '33ccff', 'yellow', 'orange', 'red']
+        # names_classes = ["No data, Permanent, Seasonal, SAR, Optical, All"]
+
+        # ================ Operational Mode ================= */
         # All Merged
         if mode == "operational" and sensor == "all":
             potentialFloodMap = filterHM.selfMask()
@@ -216,7 +231,8 @@ class MainGEEApi():
 
         # SAR
         elif mode == "operational" and sensor == "sar":
-            filterHMSAR = ee.Image(HM.filterDate(ops_date, ops_end_date).first().eq(3))
+            filterHMSAR = ee.Image(HM.filterDate(
+                ops_date, ops_end_date).first().eq(3))
             potentialFloodMap = filterHMSAR.selfMask()
             potentialFloodMap = self.getTileLayerUrl(
                 potentialFloodMap.visualize(bands='water', min=0, max=1, palette="yellow"))
@@ -224,24 +240,27 @@ class MainGEEApi():
 
         # Optical
         elif mode == "operational" and sensor == "optical":
-            filterHMOptical = ee.Image(HM.filterDate(ops_date, ops_end_date).first().eq(4))
+            filterHMOptical = ee.Image(HM.filterDate(
+                ops_date, ops_end_date).first().eq(4))
             potentialFloodMap = filterHMOptical.selfMask()
             potentialFloodMap = self.getTileLayerUrl(
                 potentialFloodMap.visualize(bands='water', min=0, max=1, palette="orange"))
             return potentialFloodMap
 
-        # SAR + Optical 
+        # SAR + Optical
         elif mode == "operational" and sensor == "sar-optical":
-            filterHMSAROptical = ee.Image(HM.filterDate(ops_date, ops_end_date).first().eq(5))
+            filterHMSAROptical = ee.Image(HM.filterDate(
+                ops_date, ops_end_date).first().eq(5))
             potentialFloodMap = filterHMSAROptical.selfMask()
             potentialFloodMap = self.getTileLayerUrl(
                 potentialFloodMap.visualize(bands='water', min=0, max=1, palette="red"))
             return potentialFloodMap
-        
-        ##### ================ Historical Mode ================= */
+
+        # ================ Historical Mode ================= */
 
         # Import study area of LMB
-        aoi = ee.FeatureCollection('projects/servir-mekong/Boundary/mekong_region').geometry()
+        aoi = ee.FeatureCollection(
+            'projects/servir-mekong/Boundary/mekong_region').geometry()
 
         # Import all image ccollection
         HF_S1 = ee.ImageCollection("projects/servir-mekong/hydrafloodsSen1")
@@ -254,30 +273,34 @@ class MainGEEApi():
         # get current date
         cdate = date.today()
         date_time_curr = ee.Date(cdate.strftime("%Y-%m-%d"))
-        date_curr = ee.Date.fromYMD(date_time_curr.get('year'), date_time_curr.get('month'), date_time_curr.get('day'))
+        date_curr = ee.Date.fromYMD(date_time_curr.get(
+            'year'), date_time_curr.get('month'), date_time_curr.get('day'))
 
         # initial date before today
         days_before = 1  # usually 1 before works, sometimes 2 is needed
 
         # Sentinel-1
-        S1_prob_thresh = 40  # S1 historical imagery is in [0-100] probability of water
+        # S1 historical imagery is in [0-100] probability of water
+        S1_prob_thresh = 40
 
         # Sentinel-2 / Landsat 8
-        QA_class_values = [0,1,2,3,4]
-        QA_class_names  = ['cloud','shadow','snow','water','land']
-        QA_water_val    = 3
+        QA_class_values = [0, 1, 2, 3, 4]
+        QA_class_names = ['cloud', 'shadow', 'snow', 'water', 'land']
+        QA_water_val = 3
 
         # permanent/seasonal water
-        JRC_perm_thresh   = 80 # threshold for permanent water from overall JRC occurrence
-        JRC_months_spread = 1   # nr of months before and after flood map to use for seasonal water
-        JRC_years_before  = 10  # nr of years before current flood map to use for seasonal water
-        JRC_seas_thresh   = 0.75 # threshold for seasonal water from mean of seasonal images
+        JRC_perm_thresh = 80  # threshold for permanent water from overall JRC occurrence
+        # nr of months before and after flood map to use for seasonal water
+        JRC_months_spread = 1
+        JRC_years_before = 10  # nr of years before current flood map to use for seasonal water
+        JRC_seas_thresh = 0.75  # threshold for seasonal water from mean of seasonal images
 
         # get permanent water
-        perm_water = JRC_water.select('occurrence').gte(JRC_perm_thresh) 
+        perm_water = JRC_water.select('occurrence').gte(JRC_perm_thresh)
 
         # only include location with historical record of surface water
-        jrc = ee.Image("JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
+        jrc = ee.Image(
+            "JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
         jrc = jrc.updateMask(jrc.eq(0))
 
         # Get slope to mask surface water does usually not occur on slopes
@@ -296,7 +319,7 @@ class MainGEEApi():
         HAND = HAND.updateMask(HAND.gt(50)).gt(0).mask()
 
         # raw imagery
-        S1 = S1.filterBounds(aoi).filterDate(start_date,date_curr)
+        S1 = S1.filterBounds(aoi).filterDate(start_date, date_curr)
 
         # JRC permanent water mask to seperate flooded water from surface water for individual sensor
         waterOcc = JRC_water.select('occurrence')
@@ -311,26 +334,27 @@ class MainGEEApi():
         # seasonal water
         def getSeasonal(date):
             JRC_seasonal = JRC_monthly.filter(ee.Filter.gte('month', date_curr.get('month').subtract(JRC_months_spread)))\
-                                        .filter(ee.Filter.lte('month', date_curr.get('month').add(JRC_months_spread)))\
-                                        .filter(ee.Filter.lte('year', date_curr.get('year')))\
-                                        .filter(ee.Filter.gte('year', date_curr.get('year').subtract(JRC_years_before)))\
+                .filter(ee.Filter.lte('month', date_curr.get('month').add(JRC_months_spread)))\
+                .filter(ee.Filter.lte('year', date_curr.get('year')))\
+                .filter(ee.Filter.gte('year', date_curr.get('year').subtract(JRC_years_before)))\
 
-            
+
             def jrcSeasonalMap(img):
-                return img.updateMask(img).remap([1,2],[0,1])
-            
+                return img.updateMask(img).remap([1, 2], [0, 1])
+
             JRC_seasonal = JRC_seasonal.map(jrcSeasonalMap)
             seasonal_water = JRC_seasonal.mean().gte(JRC_seas_thresh)
             return seasonal_water
 
         def getRefereceWater(date):
             seasonal_water = getSeasonal(date)
-            ref_water = seasonal_water.selfMask().add(1).unmask().where(perm_water.unmask(), 1)
+            ref_water = seasonal_water.selfMask().add(
+                1).unmask().where(perm_water.unmask(), 1)
             ref_water_mask = perm_water.unmask().Or(seasonal_water.unmask())
             return seasonal_water.rename('seasonal_water')\
-                                .addBands(perm_water.rename('permanent_water'))\
-                                .addBands(ref_water.rename('reference_water'))\
-                                .addBands(ref_water_mask.rename('reference_water_mask'))
+                .addBands(perm_water.rename('permanent_water'))\
+                .addBands(ref_water.rename('reference_water'))\
+                .addBands(ref_water_mask.rename('reference_water_mask'))
 
         HF_S1_tmp = HF_S1.filterBounds(aoi).filterDate(start_date, end_date)
         HF_S2_tmp = HF_S2.filterBounds(aoi).filterDate(start_date, end_date)
@@ -338,7 +362,8 @@ class MainGEEApi():
 
         # To add DOY in Image
         def dateMap(img):
-            time = ee.Image(ee.Number.parse(ee.Date(img.get("system:time_start")).format("D"))).toFloat().rename("date")
+            time = ee.Image(ee.Number.parse(
+                ee.Date(img.get("system:time_start")).format("D"))).toFloat().rename("date")
             return img.addBands(time)
 
         # Create S1 operational single layer
@@ -347,40 +372,47 @@ class MainGEEApi():
         # sentinel 1 has information on water and land for every pixel, so we only unmask.
         def s1Map(img):
             geomGRD = img.geometry().buffer(-1500)
-            mask = ee.Image(S1.filter(ee.Filter.eq("system:index",img.get("system:index"))).first()).select(0).mask()
+            mask = ee.Image(S1.filter(ee.Filter.eq(
+                "system:index", img.get("system:index"))).first()).select(0).mask()
             water = ee.Image(img.gt(60).unmask(0)).toInt()
-            img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD)
+            img = water.set("system:time_start", img.get(
+                "system:time_start")).clip(geomGRD)
             return img
 
         HF_S1_tmp = HF_S1_tmp.map(s1Map)
         HF_S1_col = HF_S1_tmp.sort("system:time_start", False)
 
         # Mask with slope & HAND
-        HF_S1_tmp = HF_S1_col.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
+        HF_S1_tmp = HF_S1_col.reduce(
+            ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
         HF_S1_tmp = HF_S1_tmp.updateMask(HAND.eq(0)).unmask(0).rename("water")
 
         # Create DOY
         s1_dateCol = HF_S1_col.map(dateMap)
-        s1_doy = s1_dateCol.select('date').reduce(ee.Reducer.firstNonNull()).rename("DOY")
+        s1_doy = s1_dateCol.select('date').reduce(
+            ee.Reducer.firstNonNull()).rename("DOY")
         HF_S1_tmp = HF_S1_tmp.addBands(s1_doy).toInt().clip(aoi)
 
         # Create S2 operational single layer
         def s2Map(img):
             geomGRD = img.geometry().buffer(-1500)
             water = img.select("qa").eq(3).unmask(0).toInt()
-            img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD)
+            img = water.set("system:time_start", img.get(
+                "system:time_start")).clip(geomGRD)
             return img
 
         HF_S2_tmp = HF_S2_tmp.map(s2Map)
-        HF_S2_col = HF_S2_tmp.sort("system:time_start",False)
+        HF_S2_col = HF_S2_tmp.sort("system:time_start", False)
 
         # Mask with slope & HAND
-        HF_S2_tmp = HF_S2_col.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
+        HF_S2_tmp = HF_S2_col.reduce(
+            ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
         HF_S2_tmp = HF_S2_tmp.updateMask(HAND.eq(0)).unmask(0).rename("water")
 
         # Create DOY
         s2_dateCol = HF_S2_col.map(dateMap)
-        s2_doy = s2_dateCol.select('date').reduce(ee.Reducer.firstNonNull()).rename("DOY")
+        s2_doy = s2_dateCol.select('date').reduce(
+            ee.Reducer.firstNonNull()).rename("DOY")
         HF_S2_tmp = HF_S2_tmp.addBands(s2_doy).toInt().clip(aoi)
 
         # Create L8 operational single layer
@@ -393,28 +425,35 @@ class MainGEEApi():
             return input.rightShift(fromBit).bitwiseAnd(mask)
 
         # sort the collection
-        HF_L8_col = HF_L8_tmp.sort("system:time_start",False)
-        qa = HF_L8_col.select("QA_PIXEL").reduce(ee.Reducer.firstNonNull()).clip(aoi)
+        HF_L8_col = HF_L8_tmp.sort("system:time_start", False)
+        qa = HF_L8_col.select("QA_PIXEL").reduce(
+            ee.Reducer.firstNonNull()).clip(aoi)
         HF_L8_tmp = bitwiseExtract(qa, 7, 7).eq(1)
 
         # Mask with slope & HAND
         HF_L8_tmp = HF_L8_tmp.updateMask(slope.eq(0))
-        HF_L8_tmp = HF_L8_tmp.updateMask(HAND.eq(0)).unmask(0).selfMask().rename("water")
+        HF_L8_tmp = HF_L8_tmp.updateMask(
+            HAND.eq(0)).unmask(0).selfMask().rename("water")
 
-        #Create DoY
+        # Create DoY
         l8_dateCol = HF_L8_col.map(dateMap)
-        l8_doy = l8_dateCol.select('date').reduce(ee.Reducer.firstNonNull()).rename("DOY")
+        l8_doy = l8_dateCol.select('date').reduce(
+            ee.Reducer.firstNonNull()).rename("DOY")
         HF_L8_tmp = HF_L8_tmp.addBands(l8_doy).toInt().clip(aoi)
 
         # get seasonal and reference water
         ref_water_all = getRefereceWater(date_curr)
 
         # merge HYDRAFloods maps
-        HF = HF_S1_tmp.select('water').multiply(3)    
-        HF = HF.unmask(0, False).where(HF_S2_tmp.select('water').unmask(0).Or(HF_L8_tmp.select('water').unmask(0)), 4)
-        HF = HF.unmask(0, False).where(HF_S1_tmp.select('water').unmask(0).And(HF_S2_tmp.select('water').unmask(0).Or(HF_L8_tmp.select('water').unmask(0))), 5)
-        HF = HF.unmask(0, False).where(ref_water_all.select('seasonal_water').unmask(), 2)
-        HF = HF.unmask(0, False).where(ref_water_all.select('permanent_water').unmask(), 1).clip(aoi)
+        HF = HF_S1_tmp.select('water').multiply(3)
+        HF = HF.unmask(0, False).where(HF_S2_tmp.select('water').unmask(
+            0).Or(HF_L8_tmp.select('water').unmask(0)), 4)
+        HF = HF.unmask(0, False).where(HF_S1_tmp.select('water').unmask(0).And(
+            HF_S2_tmp.select('water').unmask(0).Or(HF_L8_tmp.select('water').unmask(0))), 5)
+        HF = HF.unmask(0, False).where(
+            ref_water_all.select('seasonal_water').unmask(), 2)
+        HF = HF.unmask(0, False).where(ref_water_all.select(
+            'permanent_water').unmask(), 1).clip(aoi)
 
         # All Merged
         if mode == "historical" and sensor == "all":
@@ -444,10 +483,9 @@ class MainGEEApi():
                 potentialFloodMap.visualize(bands='water',  min=0, max=1, palette="red"))
             return potentialFloodMap
 
-
     # ===================== Flood Age Map ===================== */
-    
-    def getFloodAgeMap(self, age_date, age_sensor): #age_type, 
+
+    def getFloodAgeMap(self, age_date, age_sensor):  # age_type,
         # age_type = age_type
         age_date = age_date
         age_sensor = age_sensor
@@ -455,24 +493,33 @@ class MainGEEApi():
         age_end_date = ee.Date(today)
 
         # Exported image collection
-        HM = ee.ImageCollection('projects/servir-mekong/HydrafloodsMerge') 
-        
-        palette_age = ['ae017e','f768a1','fbb4b9','feebe2']
+        HM = ee.ImageCollection('projects/servir-mekong/HydrafloodsMerge')
+
+        palette_age = ['ae017e', 'f768a1', 'fbb4b9', 'feebe2']
 
         if age_sensor == "all":
-            filterHM = ee.Image(HM.filterDate(age_date, age_end_date).first().select(1))
-            floodAgeMap = self.getTileLayerUrl(filterHM.visualize(min=0, max=7, palette=palette_age))  # ['ae017e','f768a1','fbb4b9','feebe2']['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']
+            filterHM = ee.Image(HM.filterDate(
+                age_date, age_end_date).first().select(1))
+            # ['ae017e','f768a1','fbb4b9','feebe2']['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']
+            floodAgeMap = self.getTileLayerUrl(
+                filterHM.visualize(min=0, max=7, palette=palette_age))
             return floodAgeMap
         elif age_sensor == "sar":
-            filterHM = ee.Image(HM.filterDate(age_date, age_end_date).first().select(1).eq(3))
-            floodAgeMap = self.getTileLayerUrl(filterHM.visualize(min=0, max=7, palette=palette_age))  # ['ae017e','f768a1','fbb4b9','feebe2']['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']
+            filterHM = ee.Image(HM.filterDate(
+                age_date, age_end_date).first().select(1).eq(3))
+            # ['ae017e','f768a1','fbb4b9','feebe2']['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']
+            floodAgeMap = self.getTileLayerUrl(
+                filterHM.visualize(min=0, max=7, palette=palette_age))
             return floodAgeMap
         elif age_sensor == "optical":
-            filterHM = ee.Image(HM.filterDate(age_date, age_end_date).first().select(1).eq(4))
-            floodAgeMap = self.getTileLayerUrl(filterHM.visualize(min=0, max=7, palette=palette_age))  # ['ae017e','f768a1','fbb4b9','feebe2']['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']
+            filterHM = ee.Image(HM.filterDate(
+                age_date, age_end_date).first().select(1).eq(4))
+            # ['ae017e','f768a1','fbb4b9','feebe2']['#f1eef6','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d']
+            floodAgeMap = self.getTileLayerUrl(
+                filterHM.visualize(min=0, max=7, palette=palette_age))
             return floodAgeMap
 
-    # ===================== Flood Duration Map ===================== */ 
+    # ===================== Flood Duration Map ===================== */
     # Get flood duration map
     def getFloodDurationMap(self):
         #  import data
@@ -511,19 +558,20 @@ class MainGEEApi():
 
         image = HF_S1_daily_duration_latest.select('duration_days').selfMask()
         floodDurationMap = self.getTileLayerUrl(
-            image.visualize(min=0, max=10, palette=['white', 'black'])) #'white', 'black'
+            image.visualize(min=0, max=10, palette=['white', 'black']))  # 'white', 'black'
         return floodDurationMap
 
     def getDOYMap(self, start_date, end_date):
-        start_date = start_date #datetime.now()#"2022-01-01"
+        start_date = start_date  # datetime.now()#"2022-01-01"
         end_date = end_date
         mekong_region = ee.FeatureCollection('users/kamalhosen/mekong_region')
         aoi = mekong_region.geometry()
 
-        #import image 
-        s1Col = ee.ImageCollection("projects/servir-mekong/hydrafloodsSen1").filterDate(start_date, end_date)
+        #import image
+        s1Col = ee.ImageCollection(
+            "projects/servir-mekong/hydrafloodsSen1").filterDate(start_date, end_date)
         s1 = ee.ImageCollection("COPERNICUS/S1_GRD")
-            
+
         # calculate slope as surface water does usually not occur on slopes
         dem = ee.ImageCollection('JAXA/ALOS/AW3D30/V3_2')
         elevation = dem.select('DSM')
@@ -534,7 +582,8 @@ class MainGEEApi():
         slope = ee.Terrain.slope(elevation.mosaic().setDefaultProjection(proj))
 
         # only include location with historical record of surface water
-        jrc = ee.Image("JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
+        jrc = ee.Image(
+            "JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
         jrc = jrc.updateMask(jrc.eq(0))
 
         slope = slope.updateMask(jrc.eq(0))
@@ -550,15 +599,17 @@ class MainGEEApi():
 
         def s1Map(img):
             geomGRD = img.geometry().buffer(-1500)
-            mask = ee.Image(s1.filter(ee.Filter.eq("system:index",img.get("system:index"))).first()).select(0).mask()
+            mask = ee.Image(s1.filter(ee.Filter.eq(
+                "system:index", img.get("system:index"))).first()).select(0).mask()
             water = ee.Image(img.gt(th).unmask(0)).toInt()
-            img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD).rename("water")
+            img = water.set("system:time_start", img.get(
+                "system:time_start")).clip(geomGRD).rename("water")
             return img
 
         s1Col = s1Col.map(s1Map)
 
         # sort the collection
-        collection = s1Col.sort("system:time_start", False) 
+        collection = s1Col.sort("system:time_start", False)
 
         dailywater = collection.reduce(
             ee.Reducer.firstNonNull()).updateMask(slope.eq(0)).unmask(0)
@@ -937,8 +988,8 @@ class MainGEEApi():
     def getDownloadURL(self, date, adm):  # , shape
         return_obj = {}
         try:
-            
-            now = date #datetime.now()#"2022-01-01"
+
+            now = date  # datetime.now()#"2022-01-01"
             # mekong_region = ee.FeatureCollection('users/kamalhosen/mekong_region')
             # aoi = mekong_region.geometry()
 
@@ -952,10 +1003,11 @@ class MainGEEApi():
             else:
                 aoi = lsib.filter(ee.Filter.eq('COUNTRY_NA', adm))
 
-            #import image 
-            s1Col = ee.ImageCollection("projects/servir-mekong/hydrafloodsSen1").filterDate("2021-10-05",now)
+            #import image
+            s1Col = ee.ImageCollection(
+                "projects/servir-mekong/hydrafloodsSen1").filterDate("2021-10-05", now)
             s1 = ee.ImageCollection("COPERNICUS/S1_GRD")
-                
+
             # calculate slope as surface water does usually not occur on slopes
             dem = ee.ImageCollection('JAXA/ALOS/AW3D30/V3_2')
             elevation = dem.select('DSM')
@@ -963,10 +1015,12 @@ class MainGEEApi():
             # Reproject an image mosaic using a projection from one of the image tiles,
             # rather than using the default projection returned by .mosaic().
             proj = elevation.first().select(0).projection()
-            slope = ee.Terrain.slope(elevation.mosaic().setDefaultProjection(proj))
+            slope = ee.Terrain.slope(
+                elevation.mosaic().setDefaultProjection(proj))
 
             # only include location with historical record of surface water
-            jrc = ee.Image("JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
+            jrc = ee.Image(
+                "JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").mask()
             jrc = jrc.updateMask(jrc.eq(0))
 
             slope = slope.updateMask(jrc.eq(0))
@@ -982,28 +1036,35 @@ class MainGEEApi():
 
             def s1Map(img):
                 geomGRD = img.geometry().buffer(-1500)
-                mask = ee.Image(s1.filter(ee.Filter.eq("system:index",img.get("system:index"))).first()).select(0).mask()
+                mask = ee.Image(s1.filter(ee.Filter.eq(
+                    "system:index", img.get("system:index"))).first()).select(0).mask()
                 water = ee.Image(img.gt(th).unmask(0)).toInt()
-                img =  water.set("system:time_start",img.get("system:time_start")).clip(geomGRD).rename("water")
+                img = water.set("system:time_start", img.get(
+                    "system:time_start")).clip(geomGRD).rename("water")
                 return img
 
             s1Col = s1Col.map(s1Map)
 
             # sort the collection
-            collection = s1Col.sort("system:time_start",False) 
+            collection = s1Col.sort("system:time_start", False)
 
-            dailywater = collection.reduce(ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
+            dailywater = collection.reduce(
+                ee.Reducer.firstNonNull()).updateMask(slope.eq(0))
             HAND = HAND.updateMask(HAND.gt(40)).gt(0).mask()
             dailywater = dailywater.updateMask(HAND.eq(0)).unmask(0)
 
-            permanentWater = ee.Image("JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").gt(th)
-            dailywater = dailywater.selfMask().unmask(permanentWater).rename("water").clip(aoi)
+            permanentWater = ee.Image(
+                "JRC/GSW1_3/GlobalSurfaceWater").select("occurrence").gt(th)
+            dailywater = dailywater.selfMask().unmask(
+                permanentWater).rename("water").clip(aoi)
 
             # print(dailywater.getInfo())
 
             # Get potential flood water
-            waterOcc = ee.Image('JRC/GSW1_3/GlobalSurfaceWater').select('occurrence')
-            jrc_data0 = ee.Image("JRC/GSW1_3/Metadata").select('total_obs').lte(0)
+            waterOcc = ee.Image(
+                'JRC/GSW1_3/GlobalSurfaceWater').select('occurrence')
+            jrc_data0 = ee.Image(
+                "JRC/GSW1_3/Metadata").select('total_obs').lte(0)
             waterOccFilled = waterOcc.unmask(0).max(jrc_data0)
             waterMask = waterOccFilled.lt(40)
 
@@ -1069,3 +1130,79 @@ class MainGEEApi():
         JRCPermanentMap = self.getTileLayerUrl(waterOcc.visualize(
             palette=['ffffff', 'ffbbbb', '0000ff'], min=0.0, max=100.0))
         return JRCPermanentMap
+
+    def getFloodDepthMap(self):
+        today = datetime.now().strftime('%Y-%m-%d')
+        today_str = datetime.strptime(today, '%Y-%m-%d')
+        previous_day = today_str - timedelta(days=1)
+        ops_date = previous_day.strftime('%Y%m%d')
+        floodmap_collection = ee.ImageCollection(
+            "projects/servir-mekong/HydrafloodsMerge")
+        filter_floodmap = floodmap_collection.filter(
+            ee.Filter.eq('system:index', ops_date)).first()
+        curr_floodmap = filter_floodmap.select('water').selfMask()
+        # def FwDET(flood, keep_extent, remove_outliers, dem, area):
+        #     #  default value(s)
+        #     if (type(keep_extent)) == 'undefined':
+        #         keep_extent = True
+        #     if (type(remove_outliers)) == 'undefined':
+        #         remove_outliers = False
+        #     if (type(dem)) == 'undefined':
+        #         dem = ee.Image("MERIT/DEM/v1_0_3")
+        #     if (type(area)) == 'undefined':
+        #         area = flood.geometry().bounds()
+        #     # prep data
+        #     dem = dem.clip(area)
+        #     projection = dem.projection()
+        #     flood_image = flood.multiply(0)
+        #     if not keep_extent:
+        #         flood_image = flood_image.reproject(projection)
+        #     # run the outlier filtering process if selected
+        #     fill = dem
+        #     if remove_outliers:
+        #         # outlier detection and filling on complete DEM using the modified z-score and a median filter [2]
+        #         kernel = ee.Kernel.fixed(3,3,[[1,1,1],[1,1,1],[1,1,1]])
+        #         kernel_weighted = ee.Kernel.fixed(3,3,[[1,1,1],[1,0,1],[1,1,1]])
+        #         median = dem.focal_median({kernel:kernel}).reproject(projection)
+        #         median_weighted = dem.focal_median({kernel:kernel_weighted}).reproject(projection)
+        #         diff = dem.subtract(median)
+        #         mzscore = diff.multiply(0.6745).divide(diff.abs().focal_median({kernel:kernel}).reproject(projection))
+        #         fillDEM = dem.where(mzscore.gt(3.5),median_weighted)
+        #         # outlier detection and filling on the flood extent border pixels
+        #         expand = flood_image.focal_max({kernel: ee.Kernel.square(
+        #         radius = projection.nominalScale(),
+        #         units = 'meters'
+        #         )}).reproject(projection)
+        #         demMask = fillDEM.updateMask(flood_image.mask().eq(0))
+        #         boundary = demMask.add(expand)
+        #         medianBoundary = boundary.focal_median({kernel:kernel}).reproject(projection)
+        #         medianWeightedBoundary = boundary.focal_median({kernel:kernel_weighted}).reproject(projection)
+        #         diffBoundary = boundary.subtract(medianBoundary)
+        #         mzscoreBoundary = diffBoundary.multiply(0.6745).divide(diffBoundary.abs().focal_median({kernel:kernel}).reproject(projection))
+        #         fill = fillDEM.where(mzscoreBoundary.gt(3.5),medianWeightedBoundary)
+        #     # cumulativeCost floodwater surface elevation model (adaptation of the cost allocation method from FwDETv2.0)
+        #     mod = fill.updateMask(flood_image.mask().eq(0))
+        #     source = mod.mask()
+        #     val = 10000
+        #     push = 5000
+        #     cost0 = ee.Image(val).where(source,0).cumulativeCost(source,push)
+        #     cost1 = ee.Image(val).where(source,1).cumulativeCost(source,push)
+        #     cost2 = mod.unmask(val).cumulativeCost(source,push)
+        #     costFill = cost2.subtract(cost0).divide(cost1.subtract(cost0))
+        #     costSurface = mod.unmask(0).add(costFill)
+        #     # kernel size for low-pass filter
+        #     boxcar = ee.Kernel.square(
+        #         radius = 3,
+        #         units = 'pixels',
+        #         normalize = True
+        #     )
+        #     # floodwater depth calculation and smoothing using a low-pass filter
+        #     costDepth = costSurface.subtract(fill).rename('FwDET_GEE').convolve(boxcar).reproject(projection).updateMask(flood_image.eq(0))
+        #     costDepthFilter = costDepth.where(costDepth.lt(0),0)
+        #     return costDepthFilter
+        # flood_depths = FwDET(curr_floodmap.gte(1)).updateMask(curr_floodmap.gte(3))
+        flood_depths = hf.depths.fwdet(curr_floodmap.gte(1).updateMask(
+            curr_floodmap.gte(3)), ee.Image("MERIT/DEM/v1_0_3"))
+        fldDepthMap = self.getTileLayerUrl(flood_depths.visualize(
+            palette=['FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'], min=0.0, max=5.0))
+        return fldDepthMap
