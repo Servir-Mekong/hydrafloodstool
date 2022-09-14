@@ -1141,68 +1141,8 @@ class MainGEEApi():
         filter_floodmap = floodmap_collection.filter(
             ee.Filter.eq('system:index', ops_date)).first()
         curr_floodmap = filter_floodmap.select('water').selfMask()
-        # def FwDET(flood, keep_extent, remove_outliers, dem, area):
-        #     #  default value(s)
-        #     if (type(keep_extent)) == 'undefined':
-        #         keep_extent = True
-        #     if (type(remove_outliers)) == 'undefined':
-        #         remove_outliers = False
-        #     if (type(dem)) == 'undefined':
-        #         dem = ee.Image("MERIT/DEM/v1_0_3")
-        #     if (type(area)) == 'undefined':
-        #         area = flood.geometry().bounds()
-        #     # prep data
-        #     dem = dem.clip(area)
-        #     projection = dem.projection()
-        #     flood_image = flood.multiply(0)
-        #     if not keep_extent:
-        #         flood_image = flood_image.reproject(projection)
-        #     # run the outlier filtering process if selected
-        #     fill = dem
-        #     if remove_outliers:
-        #         # outlier detection and filling on complete DEM using the modified z-score and a median filter [2]
-        #         kernel = ee.Kernel.fixed(3,3,[[1,1,1],[1,1,1],[1,1,1]])
-        #         kernel_weighted = ee.Kernel.fixed(3,3,[[1,1,1],[1,0,1],[1,1,1]])
-        #         median = dem.focal_median({kernel:kernel}).reproject(projection)
-        #         median_weighted = dem.focal_median({kernel:kernel_weighted}).reproject(projection)
-        #         diff = dem.subtract(median)
-        #         mzscore = diff.multiply(0.6745).divide(diff.abs().focal_median({kernel:kernel}).reproject(projection))
-        #         fillDEM = dem.where(mzscore.gt(3.5),median_weighted)
-        #         # outlier detection and filling on the flood extent border pixels
-        #         expand = flood_image.focal_max({kernel: ee.Kernel.square(
-        #         radius = projection.nominalScale(),
-        #         units = 'meters'
-        #         )}).reproject(projection)
-        #         demMask = fillDEM.updateMask(flood_image.mask().eq(0))
-        #         boundary = demMask.add(expand)
-        #         medianBoundary = boundary.focal_median({kernel:kernel}).reproject(projection)
-        #         medianWeightedBoundary = boundary.focal_median({kernel:kernel_weighted}).reproject(projection)
-        #         diffBoundary = boundary.subtract(medianBoundary)
-        #         mzscoreBoundary = diffBoundary.multiply(0.6745).divide(diffBoundary.abs().focal_median({kernel:kernel}).reproject(projection))
-        #         fill = fillDEM.where(mzscoreBoundary.gt(3.5),medianWeightedBoundary)
-        #     # cumulativeCost floodwater surface elevation model (adaptation of the cost allocation method from FwDETv2.0)
-        #     mod = fill.updateMask(flood_image.mask().eq(0))
-        #     source = mod.mask()
-        #     val = 10000
-        #     push = 5000
-        #     cost0 = ee.Image(val).where(source,0).cumulativeCost(source,push)
-        #     cost1 = ee.Image(val).where(source,1).cumulativeCost(source,push)
-        #     cost2 = mod.unmask(val).cumulativeCost(source,push)
-        #     costFill = cost2.subtract(cost0).divide(cost1.subtract(cost0))
-        #     costSurface = mod.unmask(0).add(costFill)
-        #     # kernel size for low-pass filter
-        #     boxcar = ee.Kernel.square(
-        #         radius = 3,
-        #         units = 'pixels',
-        #         normalize = True
-        #     )
-        #     # floodwater depth calculation and smoothing using a low-pass filter
-        #     costDepth = costSurface.subtract(fill).rename('FwDET_GEE').convolve(boxcar).reproject(projection).updateMask(flood_image.eq(0))
-        #     costDepthFilter = costDepth.where(costDepth.lt(0),0)
-        #     return costDepthFilter
-        # flood_depths = FwDET(curr_floodmap.gte(1)).updateMask(curr_floodmap.gte(3))
-        flood_depths = hf.depths.fwdet(curr_floodmap.gte(1).updateMask(
-            curr_floodmap.gte(3)), ee.Image("MERIT/DEM/v1_0_3"))
-        fldDepthMap = self.getTileLayerUrl(flood_depths.visualize(
+        flood_depths_calc = hf.depths.fwdet(curr_floodmap.gte(1), ee.Image("MERIT/DEM/v1_0_3")) #.updateMask(curr_floodmap.gte(3))
+        depthMap = flood_depths_calc.updateMask(curr_floodmap.gte(3))
+        fldDepthMap = self.getTileLayerUrl(depthMap.visualize(
             palette=['FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'], min=0.0, max=5.0))
         return fldDepthMap
