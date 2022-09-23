@@ -8,7 +8,10 @@
 .partner .partner-deltares {
     width: 130px !important;
 }
-
+.partner .partner-wfp {
+    margin-top: -5px;
+    width: 120px !important;
+}
 /*
 @media(max-width:767px){} --> extra small devices
 @media(min-width:768px){} --> small devices
