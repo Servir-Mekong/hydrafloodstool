@@ -137,6 +137,7 @@ var prod = $('#product_selection').val();
 var cmap = $('#cmap_selection').val();
 var accum = prod.split('|')[0];
 var selected_date = $('#date_selection').val();
+var selected_date_depth = $('#date_selection_depth').val();
 var selected_start_date = $('#date_selection_start').val();
 var selected_end_date = $('#date_selection_end').val();
 var pfl_sensor_selection = $('#sensor_selection').val();
@@ -168,6 +169,7 @@ today.setDate(today.getDate() - 1)
 const ops_date = today.toISOString().split('T')[0]
 
 document.getElementById('date_selection_ops').value = ops_date;
+document.getElementById('date_selection_depth').value = ops_date;
 
 var popDate = new Date(ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
 // console.log(dateobj);
@@ -396,6 +398,9 @@ var depth_layer = L.tileLayer('', {
 $.ajax({
     url: '/ajax/depthmap/',
     type: "GET",
+    data: {
+        "selected_date_depth": selected_date_depth
+    },
     dataType: 'json',
     //async: false,
     success: (depth_data) => {
@@ -425,6 +430,35 @@ $("#fdepth-opacity").on("slide", function(slideEvt) {
     depth_layer.setOpacity(opac);
 });
 
+// Defining function to update layer 
+$('#date_selection_depth').change(function(){
+    updateFloodDepthMapLayer();
+});
+
+// Defining function to update flood layer
+function updateFloodDepthMapLayer(){
+    $("#loader").show();
+    var selected_date_depth = $('#date_selection_depth').val();
+    $.ajax({
+        url: '/ajax/depthmap/',
+        type: "GET",
+        data: {
+            "selected_date_depth": selected_date_depth
+        },
+        dataType: 'json',
+        // async: false,
+        success: (depth_data) => {
+            depth_layer.setUrl(depth_data);  
+            $("#loader").hide();
+            setTimeout(function() { $("#loader").hide(); }, 8000);
+        },
+        error: (error) => {
+            console.log(error);
+            $("#error-overlay").css({ display: "block" });
+            $("#loader").hide();
+        }
+    });
+}
 //////////////////////////////////////////////////////////////////////////////////////
 
 /* ============================== Precipitation Layer ============================= */

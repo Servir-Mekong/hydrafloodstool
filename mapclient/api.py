@@ -121,8 +121,9 @@ def get_eel_map(request):
     return JsonResponse(data, safe=False)
 
 def get_flood_depth_map(request):
-    if request.is_ajax:
+    if request.is_ajax and request.method == "GET":
+        date = request.GET.get('selected_date_depth')
         core = MainGEEApi()
-        data = core.getFloodDepthMap()
+        data = core.getFloodDepthMap(date)
     return JsonResponse(data, safe=False)
 

@@ -219,7 +219,21 @@
                                 <input class="form-check-input" id="flooddepthCB" type="checkbox" value="flooddepth" onchange="switchlayer('flooddepth')">
                                 <label class="form-check-label" for="flooddepthCB"><b>Flood Depth Map</b><br><small>Checked to overlay flood depth map estimated from Sentinel 1 satellite imagery analysis</small></label>
                             </div>
-                            <label for="fdepth-opacity" class="form-label">Opacity:</label><br>
+                            <p class="pt-3"> Select Date (YYYY-MM-DD) </p>
+                            <div class="form-group ">
+                                <input class = "form-control" id="date_selection_depth"
+                                name="date_selection_depth"
+                                type="text"
+                                value="2022-07-01"
+                                data-provide="datepicker"                          
+                                data-date-autoclose="true"
+                                data-date-format="yyyy-mm-dd"
+                                data-date-min-view-mode="days"
+                                data-date-multidate="1"
+                                data-date-start-view="decade"
+                                data-date-today-btn="false">
+                            </div> 
+                            <label for="fdepth-opacity" class="form-label pt-3">Opacity:</label><br>
                             <input id="fdepth-opacity" data-slider-id='fdepth-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                         </div>
                     </div>

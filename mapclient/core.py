@@ -1131,18 +1131,27 @@ class MainGEEApi():
             palette=['ffffff', 'ffbbbb', '0000ff'], min=0.0, max=100.0))
         return JRCPermanentMap
 
-    def getFloodDepthMap(self):
-        today = datetime.now().strftime('%Y-%m-%d')
-        today_str = datetime.strptime(today, '%Y-%m-%d')
-        previous_day = today_str - timedelta(days=1)
-        ops_date = previous_day.strftime('%Y%m%d')
-        floodmap_collection = ee.ImageCollection(
-            "projects/servir-mekong/HydrafloodsMerge")
-        filter_floodmap = floodmap_collection.filter(
-            ee.Filter.eq('system:index', ops_date)).first()
-        curr_floodmap = filter_floodmap.select('water').selfMask()
-        flood_depths_calc = hf.depths.fwdet(curr_floodmap.gte(1), ee.Image("MERIT/DEM/v1_0_3")) #.updateMask(curr_floodmap.gte(3))
-        depthMap = flood_depths_calc.updateMask(curr_floodmap.gte(3))
+    def getFloodDepthMap(self, date):
+        # date = ee.Date(date)
+        date = date
+        depth_ic = ee.ImageCollection("projects/servir-mekong/HydrafloodsDepth")
+        filterHD = ee.Image(depth_ic.filterDate(date).first())
+        # print(filterHD.getInfo())
+        if filterHD.getInfo() == None:
+            # today = datetime.now().strftime('%Y-%m-%d')
+            # today_str = datetime.strptime(today, '%Y-%m-%d')
+            # previous_day = today_str - timedelta(days=1)
+            # ops_date = previous_day.strftime('%Y%m%d')
+            floodmap_collection = ee.ImageCollection(
+                "projects/servir-mekong/HydrafloodsMerge")
+            filter_floodmap = floodmap_collection.filter(
+                ee.Filter.eq('system:index', date)).first()
+            curr_floodmap = filter_floodmap.select('water').selfMask()
+            flood_depths_calc = hf.depths.fwdet(curr_floodmap.gte(1), ee.Image("MERIT/DEM/v1_0_3")) #.updateMask(curr_floodmap.gte(3))
+            depthMap = flood_depths_calc.updateMask(curr_floodmap.gte(3))
+        else:
+            depthMap = filterHD
+
         fldDepthMap = self.getTileLayerUrl(depthMap.visualize(
             palette=['FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'], min=0.0, max=5.0))
         return fldDepthMap
