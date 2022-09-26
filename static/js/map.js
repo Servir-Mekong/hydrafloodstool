@@ -394,26 +394,51 @@ function updateFloodMapLayer(){
 var depth_layer = L.tileLayer('', {
     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
 });
-// Get Flood Layer
-$.ajax({
-    url: '/ajax/depthmap/',
-    type: "GET",
-    data: {
-        "selected_date_depth": selected_date_depth
-    },
-    dataType: 'json',
-    //async: false,
-    success: (depth_data) => {
-        depth_layer.setUrl(depth_data);  
-        $("#loader").hide();
-        setTimeout(function() { $("#loader").hide(); }, 8000);
-    },
-    error: (error) => {
-        console.log(error);
-        $("#error-overlay").css({ display: "block" });
-        $("#loader").hide();
-    }
-});
+
+$("#flooddepthCB").on("click", function(){
+    if(this.checked) {
+        var selected_date_depth = $('#date_selection_depth').val();
+        $.ajax({
+            url: '/ajax/depthmap/',
+            type: "GET",
+            data: {
+                "selected_date_depth": selected_date_depth
+            },
+            dataType: 'json',
+            //async: false,
+            success: (depth_data) => {
+                depth_layer.setUrl(depth_data);  
+                $("#loader").hide();
+                setTimeout(function() { $("#loader").hide(); }, 8000);
+            },
+            error: (error) => {
+                console.log(error);
+                $("#error-overlay").css({ display: "block" });
+                $("#loader").hide();
+            }
+        });           
+    } 
+});  
+// // Get Flood Layer
+// $.ajax({
+//     url: '/ajax/depthmap/',
+//     type: "GET",
+//     data: {
+//         "selected_date_depth": selected_date_depth
+//     },
+//     dataType: 'json',
+//     //async: false,
+//     success: (depth_data) => {
+//         depth_layer.setUrl(depth_data);  
+//         $("#loader").hide();
+//         setTimeout(function() { $("#loader").hide(); }, 8000);
+//     },
+//     error: (error) => {
+//         console.log(error);
+//         $("#error-overlay").css({ display: "block" });
+//         $("#loader").hide();
+//     }
+// });
 
 // Check add or remove precipitation layer to overlay on map
 $("#flooddepthCB").on("click", function(){

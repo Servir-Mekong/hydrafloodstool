@@ -55,5 +55,5 @@ urlpatterns = [
     url(r'^ajax/vietnamfloodededucenter/$', views.getVietnamFloodedEduCenter),
     
     url(r'^ajax/elmap/$', api.get_eel_map),
-     url(r'^ajax/depthmap/$', api.get_flood_depth_map),
+    url(r'^ajax/depthmap/$', api.get_flood_depth_map),
 ]
