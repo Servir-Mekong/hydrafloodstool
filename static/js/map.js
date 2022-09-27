@@ -74,7 +74,7 @@ var basemap_layer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v1
     tileSize: 256,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-
+// basemap_layer.bringToBack();
 // Change zoom control postion to right
 L.control.zoom({
     position: 'topright'
@@ -132,19 +132,19 @@ $('#nav-basemap div').on('click', function(e) {
 
 var latest_date = new Date().toISOString().split('T')[0];
 // Get adm, precipitation, sensor, mode and date values
-var selected_adm = $('#admin_selection').val();
+// var selected_adm = $('#admin_selection').val();
 var prod = $('#product_selection').val();
 var cmap = $('#cmap_selection').val();
 var accum = prod.split('|')[0];
-var selected_date = $('#date_selection').val();
-var selected_date_depth = $('#date_selection_depth').val();
+// var selected_date = $('#date_selection').val();
+// var selected_date_depth = $('#date_selection_depth').val();
 var selected_start_date = $('#date_selection_start').val();
 var selected_end_date = $('#date_selection_end').val();
 var pfl_sensor_selection = $('#sensor_selection').val();
 var swl_sensor_selection = $('#sensor_selection_swater').val();
 var selected_mode = $('#mode_selection').val();
 // var selected_age_type = $('#age_type_selection').val();
-var selected_age_date = $('#date_selection_age').val();
+// var selected_age_date = $('#date_selection_age').val();
 var selected_age_sensor = $('#age_sensor_selection').val();
 
 $('#date_selection_start').change(function() {
@@ -170,13 +170,19 @@ const ops_date = today.toISOString().split('T')[0]
 
 document.getElementById('date_selection_ops').value = ops_date;
 document.getElementById('date_selection_depth').value = ops_date;
+document.getElementById('date_selection_age').value = ops_date;
+document.getElementById('date_selection_simg').value = ops_date;
 
 var popDate = new Date(ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
 // console.log(dateobj);
 
-
 var msg_date = document.getElementById('mesg-date');
     msg_date.innerHTML = popDate;  
+
+var d = new Date();
+d.setDate(d.getDate() - 1);
+var precip_date = d.toISOString().split('T')[0]
+document.getElementById('date_selection').value = precip_date;
 
 //Get slider value to add opacity to layer
 $("#precip-opacity").slider();
@@ -188,15 +194,6 @@ $("#browse-opacity").slider();
 $("#historical-opacity").slider();
 $("#doy-opacity").slider();
 $("#fdepth-opacity").slider();
-
-var d = new Date();
-d.setDate(d.getDate() - 1);
-var precip_date = d.toISOString().split('T')[0]
-var age_date = d.toISOString().split('T')[0]
-
-document.getElementById('date_selection_age').value = age_date;
-document.getElementById('date_selection').value = precip_date;
-document.getElementById('date_selection_simg').value = latest_date;
 
 var error = document.getElementById("error");
 
@@ -214,19 +211,6 @@ $("#date_selection_end").on("change",function(){
         error.style.color = "red";
         $("#update-historical-pfw-button").prop('disabled', true);
     } 
-    // else if (absDiff < 1 && sensor == "sentinel1" ){
-    //     error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
-    //     error.style.color = "red";
-    //     $("#update-historical-pfw-button").prop('disabled', true);
-    // } else if (absDiff <= 7 && sensor == "sentinel2" ){
-    //     error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
-    //     error.style.color = "red";
-    //     $("#update-historical-pfw-button").prop('disabled', true);
-    // }  else if (absDiff <= 7 && sensor == "landsat8" ){
-    //     error.innerText ="* The start date and end date should be at least 30 days gap for landsat 8 sensor.";
-    //     error.style.color = "red";
-    //     $("#update-historical-pfw-button").prop('disabled', true);
-    // }  
     else {
         error.innerText ="";
         $("#update-historical-pfw-button").prop('disabled', false);
@@ -247,34 +231,11 @@ $("#date_selection_end").on("change",function(){
             error.style.color = "red";
             $("#update-historical-pfw-button").prop('disabled', true);
         } 
-        // else if (absDiff < 1 && sensor == "sentinel1" ){
-        //     error.innerText ="* The start date and end date should be at least 1 days gap for sentinel 1 sensor.";
-        //     error.style.color = "red";
-        //     $("#update-historical-pfw-button").prop('disabled', true);
-        // } else if (absDiff <= 7 && sensor == "sentinel2" ){
-        //     error.innerText ="* The start date and end date should be at least 7 days gap for sentinel 2 sensor.";
-        //     error.style.color = "red";
-        //     $("#update-historical-pfw-button").prop('disabled', true);
-        // }  else if (absDiff <= 7 && sensor == "landsat8" ){
-        //     error.innerText ="* The start date and end date should be at least 30 days gap for sentinel 2 sensor.";
-        //     error.style.color = "red";
-        //     $("#update-historical-pfw-button").prop('disabled', true);
-        // }  
         else {
             error.innerText ="";
             $("#update-historical-pfw-button").prop('disabled', false);
         }  
     });
-    //console.log(absDiff)
-    
-    // if (selected_start == selected_end){
-    //     error.innerText ="* The start date and end date shouldn't be the same. At least 1 day gap between start and end date.";
-    //     error.style.color = "red";
-    //     $("#update-historical-pfw-button").prop('disabled', true);
-    // } else {
-    //     $("#update-historical-pfw-button").prop('disabled', false);
-    //     error.innerText = "";
-    // }
 });
 
 /* ================ Flood Layer ========================= */
@@ -314,11 +275,15 @@ $.ajax({
 // Check add or remove flood layer to overlay on map
 $("#floodwaterCB").on("click", function(){
     if(this.checked) {
-        map.addLayer(fld_layer); 
-        $('#map-overlay').show()                
+        updateFloodMapLayer();
+        // $('#map-overlay').show(); 
+        var selected_ops_date = $('#date_selection_ops').val(); 
+        var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+        var msg_date = document.getElementById('mesg-date');
+            msg_date.innerHTML = popDate;                 
     } else {
         map.removeLayer(fld_layer);
-        $('#map-overlay').hide()
+        // $('#map-overlay').hide()
     }
 });  
 
@@ -336,13 +301,22 @@ $("#update-historical-pfw-button").on("click",function(){
 // Defining function to update layer 
 $('#date_selection_ops').change(function(){
     updateFloodMapLayer();
+    var selected_ops_date = $('#date_selection_ops').val(); 
+    document.getElementById('date_selection_depth').value = selected_ops_date;
+    document.getElementById('date_selection_age').value = selected_ops_date;
+    document.getElementById('date_selection_simg').value = selected_ops_date;
+    document.getElementById('date_selection').value = selected_ops_date;
+     
+    var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+    var msg_date = document.getElementById('mesg-date');
+        msg_date.innerHTML = popDate;   
 });
 
 // Show/hide overlay message box
 
 $('#mode_selection').change(function(){
     var mode = $(this).val();
-    console.log(mode)
+    // console.log(mode)
     if (mode == "historical"){
         $('#map-overlay').hide()
     } else {
@@ -353,6 +327,7 @@ $('#mode_selection').change(function(){
 
 // Defining function to update flood layer
 function updateFloodMapLayer(){
+    $("#floodwaterCB").prop("checked", true);
     $("#loader").show();
     var selected_start_date = $('#date_selection_start').val();
     var selected_end_date = $('#date_selection_end').val();
@@ -375,6 +350,7 @@ function updateFloodMapLayer(){
         // async: false,
         success: (fld_data) => {
             fld_layer.setUrl(fld_data); 
+            map.addLayer(fld_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 10000);
             $("#error-overlay").css({ display: "none" });
@@ -397,59 +373,14 @@ var depth_layer = L.tileLayer('', {
 
 $("#flooddepthCB").on("click", function(){
     if(this.checked) {
-        var selected_date_depth = $('#date_selection_depth').val();
-        $.ajax({
-            url: '/ajax/depthmap/',
-            type: "GET",
-            data: {
-                "selected_date_depth": selected_date_depth
-            },
-            dataType: 'json',
-            //async: false,
-            success: (depth_data) => {
-                depth_layer.setUrl(depth_data);  
-                $("#loader").hide();
-                setTimeout(function() { $("#loader").hide(); }, 8000);
-            },
-            error: (error) => {
-                console.log(error);
-                $("#error-overlay").css({ display: "block" });
-                $("#loader").hide();
-            }
-        });           
+        updateFloodDepthMapLayer();       
     } 
-});  
-// // Get Flood Layer
-// $.ajax({
-//     url: '/ajax/depthmap/',
-//     type: "GET",
-//     data: {
-//         "selected_date_depth": selected_date_depth
-//     },
-//     dataType: 'json',
-//     //async: false,
-//     success: (depth_data) => {
-//         depth_layer.setUrl(depth_data);  
-//         $("#loader").hide();
-//         setTimeout(function() { $("#loader").hide(); }, 8000);
-//     },
-//     error: (error) => {
-//         console.log(error);
-//         $("#error-overlay").css({ display: "block" });
-//         $("#loader").hide();
-//     }
-// });
-
-// Check add or remove precipitation layer to overlay on map
-$("#flooddepthCB").on("click", function(){
-    if(this.checked) {
-        map.addLayer(depth_layer);                 
-    } else {
+    else {
         map.removeLayer(depth_layer);
     }
 });  
 
-// Get precipitation slider value
+// Get depth slider value
 $("#fdepth-opacity").on("slide", function(slideEvt) {
     var opac = slideEvt.value
     depth_layer.setOpacity(opac);
@@ -458,10 +389,21 @@ $("#fdepth-opacity").on("slide", function(slideEvt) {
 // Defining function to update layer 
 $('#date_selection_depth').change(function(){
     updateFloodDepthMapLayer();
+    var selected_date_depth = $('#date_selection_depth').val();
+    document.getElementById('date_selection_ops').value = selected_date_depth;
+    document.getElementById('date_selection_age').value = selected_date_depth;
+    document.getElementById('date_selection_simg').value = selected_date_depth;
+    document.getElementById('date_selection').value = selected_date_depth;
+
+    var selected_ops_date = $('#date_selection_ops').val(); 
+    var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+    var msg_date = document.getElementById('mesg-date');
+        msg_date.innerHTML = popDate;   
 });
 
 // Defining function to update flood layer
 function updateFloodDepthMapLayer(){
+    $("#flooddepthCB").prop("checked", true);
     $("#loader").show();
     var selected_date_depth = $('#date_selection_depth').val();
     $.ajax({
@@ -474,6 +416,7 @@ function updateFloodDepthMapLayer(){
         // async: false,
         success: (depth_data) => {
             depth_layer.setUrl(depth_data);  
+            map.addLayer(depth_layer); 
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
         },
@@ -496,51 +439,9 @@ var precip_layer = L.tileLayer('', {
 // Get Precipitation Layer 
 $("#precipCB").on("click", function(){
     if(this.checked) {
-        $("#loader").show();
-        $.ajax({
-            url: '/ajax/precipmap/',
-            type: "GET",
-            data: {
-                "selected_date": selected_date,
-                "cmap": cmap,
-                "accum": accum
-            },
-            dataType: 'json',
-            success: (precip_data) => {
-                precip_layer.setUrl(precip_data);  
-                $("#loader").hide();
-                setTimeout(function() { $("#loader").hide(); }, 8000);  
-            },
-            error: (error) => {
-                console.log(error);
-                $("#error-overlay").css({ display: "block" });
-                $("#loader").hide();
-            }
-        });         
+        updatePrecipitationData();
     }
-});  
-// $.ajax({
-//     url: '/ajax/precipmap/',
-//     type: "GET",
-//     data: {
-//         "selected_date": selected_date,
-//         "cmap": cmap,
-//         "accum": accum
-//     },
-//     dataType: 'json',
-//     success: (precip_data) => {
-//         precip_layer.setUrl(precip_data);    
-//     },
-//     error: (error) => {
-//         console.log(error);
-//     }
-// });
-
-// Check add or remove precipitation layer to overlay on map
-$("#precipCB").on("click", function(){
-    if(this.checked) {
-        map.addLayer(precip_layer);                 
-    } else {
+    else{
         map.removeLayer(precip_layer);
     }
 });  
@@ -554,6 +455,16 @@ $("#precip-opacity").on("slide", function(slideEvt) {
 // Defining function to update layer 
 $('#date_selection').change(function(){
     updatePrecipitationData();
+    var selected_date_preip = $('#date_selection').val();
+    document.getElementById('date_selection_ops').value = selected_date_preip;
+    document.getElementById('date_selection_depth').value = selected_date_preip;
+    document.getElementById('date_selection_age').value = selected_date_preip;
+    document.getElementById('date_selection_simg').value = selected_date_preip;
+
+    var selected_ops_date = $('#date_selection_ops').val(); 
+    var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+    var msg_date = document.getElementById('mesg-date');
+        msg_date.innerHTML = popDate;   
 });
 $('#cmap_selection').change(function(){
     updatePrecipitationData();
@@ -564,6 +475,7 @@ $('#product_selection').change(function(){
 
 // Defining function to update precipitation map
 function updatePrecipitationData(){
+    $("#precipCB").prop("checked", true);
     $("#loader").show();
     var prod = $('#product_selection').val();
     var cmap = $('#cmap_selection').val();
@@ -581,6 +493,7 @@ function updatePrecipitationData(){
         success: (precip_data) => {
             //console.log(precip_data);
             precip_layer.setUrl(precip_data);  
+            map.addLayer(precip_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
         },
@@ -603,53 +516,9 @@ var fage_layer = L.tileLayer('', {
 // Get Flood Age Layer
 $("#floodageCB").on("click", function(){
     if(this.checked) {
-        $("#loader").show();
-        var selected_age_date = $('#date_selection_age').val();
-        $.ajax({
-            url: '/ajax/floodagemap/',
-            type: "GET",
-            data: {
-                "age_date": selected_age_date,
-                // "selected_age_type": selected_age_type,
-                "selected_age_sensor": selected_age_sensor
-            },
-            dataType: 'json',
-            //async: false,
-            success: (fage_data) => {
-                fage_layer.setUrl(fage_data); 
-                $("#loader").hide();
-                setTimeout(function() { $("#loader").hide(); }, 8000);
-            },
-            error: (error) => {
-                console.log(error);
-                $("#loader").hide();
-            }
-        });       
+        updateFloodAgeMapLayer();    
     }
-});  
-// $.ajax({
-//     url: '/ajax/floodagemap/',
-//     type: "GET",
-//     data: {
-//         //"selected_date": latest_date,
-//         // "selected_age_type": selected_age_type,
-//         "selected_age_sensor": selected_age_sensor
-//     },
-//     dataType: 'json',
-//     //async: false,
-//     success: (fage_data) => {
-//         fage_layer.setUrl(fage_data); 
-//     },
-//     error: (error) => {
-//         console.log(error);
-//     }
-// });
-
-// Check add or remove flood age layer to overlay on map
-$("#floodageCB").on("click", function(){
-    if(this.checked) {
-        map.addLayer(fage_layer);                 
-    } else {
+    else {
         map.removeLayer(fage_layer);
     }
 });  
@@ -665,6 +534,16 @@ $("#fage-opacity").on("slide", function(slideEvt) {
 // });
 $('#date_selection_age').change(function(){
     updateFloodAgeMapLayer();
+    var selected_age_date = $('#date_selection_age').val();
+    document.getElementById('date_selection_ops').value = selected_age_date;
+    document.getElementById('date_selection_depth').value = selected_age_date;
+    document.getElementById('date_selection_simg').value = selected_age_date;
+    document.getElementById('date_selection').value = selected_age_date;
+
+    var selected_ops_date = $('#date_selection_ops').val(); 
+    var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+    var msg_date = document.getElementById('mesg-date');
+        msg_date.innerHTML = popDate;   
 });
 $('#age_sensor_selection').change(function(){
     updateFloodAgeMapLayer();
@@ -672,6 +551,7 @@ $('#age_sensor_selection').change(function(){
 
 // Defining function to update flood age layer
 function updateFloodAgeMapLayer(){
+    $("#floodageCB").prop("checked", true);
     $("#loader").show();
     // var selected_age_type = $('#age_type_selection').val();
     var selected_age_date = $('#date_selection_age').val();
@@ -688,6 +568,7 @@ function updateFloodAgeMapLayer(){
         // async: false,
         success: (fage_data) => {
             fage_layer.setUrl(fage_data); 
+            map.addLayer(fage_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
         },
@@ -730,64 +611,14 @@ var historical_layer = L.tileLayer('', {
     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
 });
 
-// Get Permanent Water Area Layer 
-$("#permanentwaterCB").on("click",function(){
-    if(this.checked) {
-        $("#loader").show();
-        $.ajax({
-            url: '/ajax/permanaentwatermap/',
-            type: "GET",
-            data: {
-                'startYear': startYear,
-                'endYear': endYear,
-                'startMonth': startMonth,
-                'endMonth': endMonth,
-                'method': method,
-                //wcolor: wcolor,
-                //geom: geom
-            },
-            dataType: 'json',
-            success: (historical_data) => {
-                historical_layer.setUrl(historical_data);
-                $("#loader").hide();
-                setTimeout(function() { $("#loader").hide(); }, 20000);
-            },
-            error: (error) => {
-                console.log(error);
-                $("#loader").hide();
-            }
-        });         
-    }
-});  
-// $.ajax({
-//     url: '/ajax/permanaentwatermap/',
-//     type: "GET",
-//     data: {
-//         'startYear': startYear,
-//         'endYear': endYear,
-//         'startMonth': startMonth,
-//         'endMonth': endMonth,
-//         'method': method,
-//         //wcolor: wcolor,
-//         //geom: geom
-//     },
-//     dataType: 'json',
-//     success: (historical_data) => {
-//         historical_layer.setUrl(historical_data);
-//     },
-//     error: (error) => {
-//         console.log(error);
-//     }
-// });
-
 // Check add or remove historical layer to overlay on map 
 $("#permanentwaterCB").on("click",function(){
     if(this.checked) {
-        map.addLayer(historical_layer); 
-        // historical_layer.setOpacity(1);                
+        updatePermanentWater(); 
+        $('#map-overlay').hide()              
     } else {
         map.removeLayer(historical_layer); 
-        // historical_layer.setOpacity(0);
+        $('#map-overlay').show()
     }
 });  
 
@@ -803,6 +634,7 @@ $("#update-button").on("click",function(){
 
 // Defining function to update permanent water layer
 function updatePermanentWater(){
+    $("#permanentwaterCB").prop("checked", true);
     $("#loader").show();
     // Get values
     var startYear = $('#start_year_selection_historical').val();
@@ -831,6 +663,7 @@ function updatePermanentWater(){
         dataType: 'json',
         success: (historical_data) => {
             historical_layer.setUrl(historical_data);
+            map.addLayer(historical_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 20000);
         },
@@ -844,15 +677,33 @@ function updatePermanentWater(){
 /////////////////////////////////////////////////////////////////////////////////////
 
 /* ================== Raw Sattelite Imagery Layer =================== */
-// Get values related to raw satellite imagery
-var selected_date = $('#date_selection').val();
-var viirs_product = "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1";
-var browse_layer = addGibsLayer(browse_layer,viirs_product,selected_date);
 
+// var selected_date = $('#date_selection').val();
+// var viirs_product = "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1";
+// var browse_layer = addGibsLayer(browse_layer);//,viirs_product,selected_date
 // Check add or remove selected raw satellite imagery to overlay on map 
+var browse_layer = L.tileLayer('', {
+    // layer: id,
+    tileMatrixSet: 'GoogleMapsCompatible_Level9',
+    maxZoom: 14,
+    // time: selected_date,
+    tileSize: 256,
+    subdomains: 'abc',
+    noWrap: true,
+    continuousWorld: true,
+    // Prevent Leaflet from retrieving non-existent tiles on the
+    // borders.
+    bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+    ],
+    attribution: '&copy; <a href="https://wiki.earthdata.nasa.gov/display/GIBS" target="_">' +
+    'NASA EOSDIS GIBS | Google Earth Engine</a>;'
+});
+
 $("#gibsCB").on("click",function(){
     if(this.checked){
-        map.addLayer(browse_layer);
+        updateBrowseData();
     }
     else{
         map.removeLayer(browse_layer);
@@ -860,7 +711,7 @@ $("#gibsCB").on("click",function(){
 });
 
 /**
-* Change NRT Browse Imagery opacity
+    * Change NRT Browse Imagery opacity
 */
 
 $("#browse-opacity").on("slide", function(slideEvt) {
@@ -869,63 +720,52 @@ $("#browse-opacity").on("slide", function(slideEvt) {
 });
 
 /**
-* Change NRT Browse Imagery
+    * Change NRT Browse Imagery
 */
 $('#browse_selection').change(function(){
-    var selected_date = $('#date_selection').val();
-    var prod = $('#browse_selection').val();
-    var id = prod.split('|')[1];
-    var template =
-    '//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
-    id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
-    browse_layer.setUrl(template);
+    updateBrowseData();
 });
 
 $('#date_selection_simg').change(function(){
     updateBrowseData();
+    var selected_date_simg = $('#date_selection_simg').val();
+    document.getElementById('date_selection_ops').value = selected_date_simg;
+    document.getElementById('date_selection_depth').value = selected_date_simg;
+    document.getElementById('date_selection_age').value = selected_date_simg;
+    document.getElementById('date_selection').value = selected_date_simg;
+
+    var selected_ops_date = $('#date_selection_ops').val(); 
+    var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
+    var msg_date = document.getElementById('mesg-date');
+        msg_date.innerHTML = popDate;   
 });
 
 // Update satellite imagery data by changing date
 function updateBrowseData() {
+    // if(map.hasLayer(browse_layer)){
+    //     map.removeLayer(browse_layer);
+    // }
+    $("#loader").show();
+    $("#gibsCB").prop("checked", true);
     var selected_date = $('#date_selection_simg').val();
-    console.log(selected_date)
+    // console.log(selected_date)
     var prod = $('#browse_selection').val();
     var id = prod.split('|')[1];
     var template =
     '//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
     id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
     browse_layer.setUrl(template);
+    map.addLayer(browse_layer);
+    // browse_layer.bringToBack();
+    $("#loader").hide();
+    setTimeout(function() { $("#loader").hide(); }, 20000);
 }
-
-function addGibsLayer(layer,product,date){
-    var template =
-    '//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
-    '{layer}/default/{time}/{tileMatrixSet}/{z}/{y}/{x}.jpg';
-    layer = L.tileLayer(template, {
-        layer: product,
-        tileMatrixSet: 'GoogleMapsCompatible_Level9',
-        maxZoom: 9,
-        time: date,
-        tileSize: 256,
-        subdomains: 'abc',
-        noWrap: true,
-        continuousWorld: true,
-        // Prevent Leaflet from retrieving non-existent tiles on the
-        // borders.
-        bounds: [
-            [-85.0511287776, -179.999999975],
-            [85.0511287776, 179.999999975]
-        ],
-        attribution:
-        '<a href="https://wiki.earthdata.nasa.gov/display/GIBS" target="_">' +
-        'NASA EOSDIS GIBS</a>;'
-    });
-    // map.addLayer(layer);
-    return layer;
-}
-
 ///////////////////////////////////////////////////////
-
+browse_layer.setZIndex(1);
+precip_layer.setZIndex(2);
+fage_layer.setZIndex(3);
+depth_layer.setZIndex(4);
+fld_layer.setZIndex(5);
 /* ================= Feature Layer ========================== */
 var adm0Style = {
     color: 'rgba(200, 230, 201, 1)',
