@@ -1151,5 +1151,5 @@ class MainGEEApi():
             depthMap = filterHD
 
         fldDepthMap = self.getTileLayerUrl(depthMap.visualize(
-            palette=['FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'], min=0.0, max=5.0))
+            palette=['ECF0FC', '8DA5ED', '4169E1'], min=0.0, max=5.0)) #'FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'
         return fldDepthMap

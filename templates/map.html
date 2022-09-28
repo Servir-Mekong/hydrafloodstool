@@ -159,6 +159,38 @@
                     </div>
                 </div>  
 
+                 <!-- Flood Depth card -->
+                 <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="floodDepthMap">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodDepthMap" aria-expanded="false" aria-controls="collapseFloodDepthMap">
+                            <i class="fa-solid fa-turn-down pe-2"></i> Flood Depth Map
+                        </button>
+                    </h2>
+                    <div id="collapseFloodDepthMap" class="accordion-collapse collapse" aria-labelledby="floodDepthMap" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="form-check">
+                                <input class="form-check-input" id="flooddepthCB" type="checkbox" value="flooddepth">
+                                <label class="form-check-label" for="flooddepthCB"><b>Flood Depth Map</b><br><small>Checked to overlay flood depth map estimated from Sentinel 1 satellite imagery analysis</small></label>
+                            </div>
+                            <p class="pt-3"> Select Date (YYYY-MM-DD) </p>
+                            <div class="form-group ">
+                                <input class = "form-control" id="date_selection_depth"
+                                name="date_selection_depth"
+                                type="text"
+                                value="2022-07-01"
+                                data-provide="datepicker"                          
+                                data-date-autoclose="true"
+                                data-date-format="yyyy-mm-dd"
+                                data-date-min-view-mode="days"
+                                data-date-multidate="1"
+                                data-date-start-view="decade"
+                                data-date-today-btn="false">
+                            </div> 
+                            <label for="fdepth-opacity" class="form-label pt-3">Opacity:</label><br>
+                            <input id="fdepth-opacity" data-slider-id='fdepth-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
+                        </div>
+                    </div>
+                </div>  
                 <!-- Flood age card -->
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="floodAgeMap">
@@ -204,40 +236,7 @@
                             <input id="fage-opacity" data-slider-id='fage-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
                         </div>
                     </div>
-                </div>    
-                
-                <!-- Flood Depth card -->
-                <div class="accordion-item mb-2">
-                    <h2 class="accordion-header" id="floodDepthMap">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFloodDepthMap" aria-expanded="false" aria-controls="collapseFloodDepthMap">
-                            <i class="fa-solid fa-turn-down pe-2"></i> Flood Depth Map
-                        </button>
-                    </h2>
-                    <div id="collapseFloodDepthMap" class="accordion-collapse collapse" aria-labelledby="floodDepthMap" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <div class="form-check">
-                                <input class="form-check-input" id="flooddepthCB" type="checkbox" value="flooddepth">
-                                <label class="form-check-label" for="flooddepthCB"><b>Flood Depth Map</b><br><small>Checked to overlay flood depth map estimated from Sentinel 1 satellite imagery analysis</small></label>
-                            </div>
-                            <p class="pt-3"> Select Date (YYYY-MM-DD) </p>
-                            <div class="form-group ">
-                                <input class = "form-control" id="date_selection_depth"
-                                name="date_selection_depth"
-                                type="text"
-                                value="2022-07-01"
-                                data-provide="datepicker"                          
-                                data-date-autoclose="true"
-                                data-date-format="yyyy-mm-dd"
-                                data-date-min-view-mode="days"
-                                data-date-multidate="1"
-                                data-date-start-view="decade"
-                                data-date-today-btn="false">
-                            </div> 
-                            <label for="fdepth-opacity" class="form-label pt-3">Opacity:</label><br>
-                            <input id="fdepth-opacity" data-slider-id='fdepth-opacity' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.1" data-slider-value="1"/>
-                        </div>
-                    </div>
-                </div>     
+                </div>       
                 
                 <!-- Daily surface water card -->
                 <!-- <div class="accordion-item mb-2">
@@ -630,6 +629,55 @@
                                             </div>
                                         </div>
                                         <div class="accordion-item">
+                                            <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
+                                                    Flood Depth Layer
+                                                </button>
+                                            </h2>
+                                            <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
+                                                <div class="accordion-body">
+                                                    <!-- <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_depth_legend.png" style="width: 200px; height: 50px;" alt="Flood Depth Legend"></div> -->
+                                                    <!-- <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #4169E1; width:18px; height: 18px;"></div></span> 5</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #6787E7; width:18px; height: 18px;"></div></span> 4</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #8DA5ED; width:18px; height: 18px;"></div></span> 3</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #B3C3F3; width:18px; height: 18px;"></div></span> 2</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ECF0FC; width:18px; height: 18px;"></div></span> 1</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #FFFFFF; width:18px; height: 18px;"></div></span> 0</div> -->
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #4169E1; width:18px; height: 18px;"></div></span> High (>5m)</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #8DA5ED; width:18px; height: 18px;"></div></span> Medium (between 2 and 5m)</div>
+                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ECF0FC; width:18px; height: 18px;"></div></span> Low (<2m)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
+                                                    Flood Age Layer
+                                                </button>
+                                            </h2>
+                                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
+                                                <div class="accordion-body">
+                                                    <!-- <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_age_legend.png" style="width: 200px; height: 50px;" alt="Flood Age Legend"></div> -->
+                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ae017e; width:18px; height: 18px;"></div></span> 0-1</div>
+                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #f768a1; width:18px; height: 18px;"></div></span> 2-3</div>
+                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #fbb4b9; width:18px; height: 18px;"></div></span> 4-5</div>
+                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #feebe2; width:18px; height: 18px;"></div></span> 6+</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="true" aria-controls="panelsStayOpen-collapseSix">
+                                                    Precipitation Layer
+                                                </button>
+                                            </h2>
+                                            <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                                                <div class="accordion-body">
+                                                    <div id="precip-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/precip_colorbar.png" style="width:200px; height: 70px;" alt="Precipitation Legend"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
                                             <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
                                                     Administrative Layers
@@ -653,52 +701,6 @@
                                                 <div class="accordion-body">
                                                     <div id="edu-legend" style="display: block; padding-bottom: 5px;"><span><div><img src="/static/images/education.png" style="width:18px; height: 18px;" alt="Educational Institutions"></div></span> Educational Institutions</div>
                                                     <div id="health-legend" style="display: block; padding-bottom: 5px;"><span><div><img src="/static/images/hospital.png" style="width:18px; height: 18px;" alt="Educational Institutions"></div></span> Health Care Facilities</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="panelsStayOpen-headingFour">
-                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
-                                                    Flood Age Layer
-                                                </button>
-                                            </h2>
-                                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
-                                                <div class="accordion-body">
-                                                    <!-- <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_age_legend.png" style="width: 200px; height: 50px;" alt="Flood Age Legend"></div> -->
-                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ae017e; width:18px; height: 18px;"></div></span> 0-1</div>
-                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #f768a1; width:18px; height: 18px;"></div></span> 2-3</div>
-                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #fbb4b9; width:18px; height: 18px;"></div></span> 4-5</div>
-                                                    <div id="fldage-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #feebe2; width:18px; height: 18px;"></div></span> 6+</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="panelsStayOpen-headingFive">
-                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
-                                                    Flood Depth Layer
-                                                </button>
-                                            </h2>
-                                            <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
-                                                <div class="accordion-body">
-                                                    <!-- <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/flood_depth_legend.png" style="width: 200px; height: 50px;" alt="Flood Depth Legend"></div> -->
-                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #4169E1; width:18px; height: 18px;"></div></span> 5</div>
-                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #6787E7; width:18px; height: 18px;"></div></span> 4</div>
-                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #8DA5ED; width:18px; height: 18px;"></div></span> 3</div>
-                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #B3C3F3; width:18px; height: 18px;"></div></span> 2</div>
-                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #ECF0FC; width:18px; height: 18px;"></div></span> 1</div>
-                                                    <div id="fldepth-legend" style="display: block; padding-bottom: 5px;"><span><div style="background-color: #FFFFFF; width:18px; height: 18px;"></div></span> 0</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="panelsStayOpen-headingSix">
-                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="true" aria-controls="panelsStayOpen-collapseSix">
-                                                    Precipitation Layer
-                                                </button>
-                                            </h2>
-                                            <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
-                                                <div class="accordion-body">
-                                                    <div id="precip-legend" style="display: block; padding-bottom: 5px;"><img src="/static/images/precip_colorbar.png" style="width:200px; height: 70px;" alt="Precipitation Legend"></div>
                                                 </div>
                                             </div>
                                         </div>
