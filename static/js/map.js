@@ -245,7 +245,7 @@ $("#loader").show();
 // Define Earth Engine Flood Layer in Leaflet
 var fld_layer = L.tileLayer('', {
     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
-}).addTo(map);
+});
 // Get Flood Layer
 $.ajax({
     url: '/ajax/potentialfloodmap/',
@@ -262,6 +262,7 @@ $.ajax({
     //async: false,
     success: (fld_data) => {
         fld_layer.setUrl(fld_data);  
+        map.addLayer(fld_layer);
         $("#loader").hide();
         setTimeout(function() { $("#loader").hide(); }, 8000);
     },
@@ -275,12 +276,8 @@ $.ajax({
 // Check add or remove flood layer to overlay on map
 $("#floodwaterCB").on("click", function(){
     if(this.checked) {
-        updateFloodMapLayer();
-        // $('#map-overlay').show(); 
-        var selected_ops_date = $('#date_selection_ops').val(); 
-        var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
-        var msg_date = document.getElementById('mesg-date');
-            msg_date.innerHTML = popDate;                 
+        map.addLayer(fld_layer);
+        // $('#map-overlay').show();                
     } else {
         map.removeLayer(fld_layer);
         // $('#map-overlay').hide()
@@ -300,7 +297,6 @@ $("#update-historical-pfw-button").on("click",function(){
 
 // Defining function to update layer 
 $('#date_selection_ops').change(function(){
-    updateFloodMapLayer();
     var selected_ops_date = $('#date_selection_ops').val(); 
     document.getElementById('date_selection_depth').value = selected_ops_date;
     document.getElementById('date_selection_age').value = selected_ops_date;
@@ -309,7 +305,12 @@ $('#date_selection_ops').change(function(){
      
     var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
     var msg_date = document.getElementById('mesg-date');
-        msg_date.innerHTML = popDate;   
+        msg_date.innerHTML = popDate;  
+    updateFloodMapLayer();
+    updatePrecipitationData();    
+    updateFloodDepthMapLayer();
+    updateFloodAgeMapLayer();
+    updateBrowseData(); 
 });
 
 // Show/hide overlay message box
@@ -327,7 +328,6 @@ $('#mode_selection').change(function(){
 
 // Defining function to update flood layer
 function updateFloodMapLayer(){
-    $("#floodwaterCB").prop("checked", true);
     $("#loader").show();
     var selected_start_date = $('#date_selection_start').val();
     var selected_end_date = $('#date_selection_end').val();
@@ -350,7 +350,6 @@ function updateFloodMapLayer(){
         // async: false,
         success: (fld_data) => {
             fld_layer.setUrl(fld_data); 
-            map.addLayer(fld_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 10000);
             $("#error-overlay").css({ display: "none" });
@@ -370,15 +369,44 @@ function updateFloodMapLayer(){
 var depth_layer = L.tileLayer('', {
     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
 });
-
 $("#flooddepthCB").on("click", function(){
     if(this.checked) {
-        updateFloodDepthMapLayer();       
+        $("#loader").show();
+        var selected_date_depth = $('#date_selection_depth').val();
+        $.ajax({
+            url: '/ajax/depthmap/',
+            type: "GET",
+            data: {
+                "selected_date_depth": selected_date_depth
+            },
+            dataType: 'json',
+            //async: false,
+            success: (depth_data) => {
+                depth_layer.setUrl(depth_data);  
+                map.addLayer(depth_layer);
+                $("#loader").hide();
+                setTimeout(function() { $("#loader").hide(); }, 8000);
+            },
+            error: (error) => {
+                console.log(error);
+                $("#error-overlay").css({ display: "block" });
+                $("#loader").hide();
+            }
+        });    
     } 
     else {
         map.removeLayer(depth_layer);
     }
-});  
+}); 
+
+// $("#flooddepthCB").on("click", function(){
+//     if(this.checked) { 
+//         map.addLayer(depth_layer);      
+//     } 
+//     else {
+//         map.removeLayer(depth_layer);
+//     }
+// });  
 
 // Get depth slider value
 $("#fdepth-opacity").on("slide", function(slideEvt) {
@@ -387,8 +415,7 @@ $("#fdepth-opacity").on("slide", function(slideEvt) {
 });
 
 // Defining function to update layer 
-$('#date_selection_depth').change(function(){
-    updateFloodDepthMapLayer();
+$('#date_selection_depth').change(function(){ 
     var selected_date_depth = $('#date_selection_depth').val();
     document.getElementById('date_selection_ops').value = selected_date_depth;
     document.getElementById('date_selection_age').value = selected_date_depth;
@@ -399,11 +426,15 @@ $('#date_selection_depth').change(function(){
     var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
     var msg_date = document.getElementById('mesg-date');
         msg_date.innerHTML = popDate;   
+    updateFloodMapLayer();
+    updatePrecipitationData();    
+    updateFloodDepthMapLayer();
+    updateFloodAgeMapLayer();
+    updateBrowseData();
 });
 
 // Defining function to update flood layer
 function updateFloodDepthMapLayer(){
-    $("#flooddepthCB").prop("checked", true);
     $("#loader").show();
     var selected_date_depth = $('#date_selection_depth').val();
     $.ajax({
@@ -416,7 +447,6 @@ function updateFloodDepthMapLayer(){
         // async: false,
         success: (depth_data) => {
             depth_layer.setUrl(depth_data);  
-            map.addLayer(depth_layer); 
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
         },
@@ -439,12 +469,42 @@ var precip_layer = L.tileLayer('', {
 // Get Precipitation Layer 
 $("#precipCB").on("click", function(){
     if(this.checked) {
-        updatePrecipitationData();
+        $("#loader").show();
+        var selected_date = $('#date_selection').val();
+        $.ajax({
+            url: '/ajax/precipmap/',
+            type: "GET",
+            data: {
+                "selected_date": selected_date,
+                "cmap": cmap,
+                "accum": accum
+            },
+            dataType: 'json',
+            success: (precip_data) => {
+                precip_layer.setUrl(precip_data);  
+                map.addLayer(precip_layer);
+                $("#loader").hide();
+                setTimeout(function() { $("#loader").hide(); }, 8000);  
+            },
+            error: (error) => {
+                console.log(error);
+                $("#error-overlay").css({ display: "block" });
+                $("#loader").hide();
+            }
+        });         
     }
     else{
         map.removeLayer(precip_layer);
     }
 });  
+// $("#precipCB").on("click", function(){
+//     if(this.checked) {
+//         map.addLayer(precip_layer);
+//     }
+//     else{
+//         map.removeLayer(precip_layer);
+//     }
+// });  
 
 // Get precipitation slider value
 $("#precip-opacity").on("slide", function(slideEvt) {
@@ -454,7 +514,6 @@ $("#precip-opacity").on("slide", function(slideEvt) {
 
 // Defining function to update layer 
 $('#date_selection').change(function(){
-    updatePrecipitationData();
     var selected_date_preip = $('#date_selection').val();
     document.getElementById('date_selection_ops').value = selected_date_preip;
     document.getElementById('date_selection_depth').value = selected_date_preip;
@@ -465,6 +524,11 @@ $('#date_selection').change(function(){
     var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
     var msg_date = document.getElementById('mesg-date');
         msg_date.innerHTML = popDate;   
+    updateFloodMapLayer();
+    updatePrecipitationData();    
+    updateFloodDepthMapLayer();
+    updateFloodAgeMapLayer();
+    updateBrowseData();
 });
 $('#cmap_selection').change(function(){
     updatePrecipitationData();
@@ -475,7 +539,6 @@ $('#product_selection').change(function(){
 
 // Defining function to update precipitation map
 function updatePrecipitationData(){
-    $("#precipCB").prop("checked", true);
     $("#loader").show();
     var prod = $('#product_selection').val();
     var cmap = $('#cmap_selection').val();
@@ -493,7 +556,6 @@ function updatePrecipitationData(){
         success: (precip_data) => {
             //console.log(precip_data);
             precip_layer.setUrl(precip_data);  
-            map.addLayer(precip_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
         },
@@ -516,12 +578,34 @@ var fage_layer = L.tileLayer('', {
 // Get Flood Age Layer
 $("#floodageCB").on("click", function(){
     if(this.checked) {
-        updateFloodAgeMapLayer();    
+        $("#loader").show();
+        var selected_age_date = $('#date_selection_age').val();
+        $.ajax({
+            url: '/ajax/floodagemap/',
+            type: "GET",
+            data: {
+                "age_date": selected_age_date,
+                // "selected_age_type": selected_age_type,
+                "selected_age_sensor": selected_age_sensor
+            },
+            dataType: 'json',
+            //async: false,
+            success: (fage_data) => {
+                fage_layer.setUrl(fage_data); 
+                map.addLayer(fage_layer); 
+                $("#loader").hide();
+                setTimeout(function() { $("#loader").hide(); }, 8000);
+            },
+            error: (error) => {
+                console.log(error);
+                $("#loader").hide();
+            }
+        });       
     }
     else {
         map.removeLayer(fage_layer);
     }
-});  
+}); 
 
 $("#fage-opacity").on("slide", function(slideEvt) {
     var opac = slideEvt.value
@@ -533,7 +617,6 @@ $("#fage-opacity").on("slide", function(slideEvt) {
 //     updateFloodAgeMapLayer();
 // });
 $('#date_selection_age').change(function(){
-    updateFloodAgeMapLayer();
     var selected_age_date = $('#date_selection_age').val();
     document.getElementById('date_selection_ops').value = selected_age_date;
     document.getElementById('date_selection_depth').value = selected_age_date;
@@ -543,7 +626,12 @@ $('#date_selection_age').change(function(){
     var selected_ops_date = $('#date_selection_ops').val(); 
     var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
     var msg_date = document.getElementById('mesg-date');
-        msg_date.innerHTML = popDate;   
+        msg_date.innerHTML = popDate;  
+    updateFloodMapLayer();
+    updatePrecipitationData();    
+    updateFloodDepthMapLayer();
+    updateFloodAgeMapLayer();
+    updateBrowseData();
 });
 $('#age_sensor_selection').change(function(){
     updateFloodAgeMapLayer();
@@ -551,7 +639,6 @@ $('#age_sensor_selection').change(function(){
 
 // Defining function to update flood age layer
 function updateFloodAgeMapLayer(){
-    $("#floodageCB").prop("checked", true);
     $("#loader").show();
     // var selected_age_type = $('#age_type_selection').val();
     var selected_age_date = $('#date_selection_age').val();
@@ -568,7 +655,6 @@ function updateFloodAgeMapLayer(){
         // async: false,
         success: (fage_data) => {
             fage_layer.setUrl(fage_data); 
-            map.addLayer(fage_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 8000);
         },
@@ -610,17 +696,51 @@ if (startMonth === endMonth) { endMonth += 1; }
 var historical_layer = L.tileLayer('', {
     attribution: '&copy; <a href="https://earthengine.google.com" target="_blank">Google Earth Engine</a> contributors'
 });
-
-// Check add or remove historical layer to overlay on map 
+// Get Permanent Water Area Layer 
 $("#permanentwaterCB").on("click",function(){
     if(this.checked) {
-        updatePermanentWater(); 
-        $('#map-overlay').hide()              
+        $("#loader").show();
+        $('#map-overlay').hide()
+        $.ajax({
+            url: '/ajax/permanaentwatermap/',
+            type: "GET",
+            data: {
+                'startYear': startYear,
+                'endYear': endYear,
+                'startMonth': startMonth,
+                'endMonth': endMonth,
+                'method': method,
+                //wcolor: wcolor,
+                //geom: geom
+            },
+            dataType: 'json',
+            success: (historical_data) => {
+                historical_layer.setUrl(historical_data);
+                map.addLayer(historical_layer);
+                $("#loader").hide();
+                setTimeout(function() { $("#loader").hide(); }, 20000);
+            },
+            error: (error) => {
+                console.log(error);
+                $("#loader").hide();
+            }
+        });         
     } else {
-        map.removeLayer(historical_layer); 
-        $('#map-overlay').show()
+        map.removeLayer(historical_layer);
+        $('#map-overlay').show();
     }
 });  
+
+// Check add or remove historical layer to overlay on map 
+// $("#permanentwaterCB").on("click",function(){
+//     if(this.checked) {
+//         map.addLayer(historical_layer) 
+//         $('#map-overlay').hide()              
+//     } else {
+//         map.removeLayer(historical_layer); 
+//         $('#map-overlay').show()
+//     }
+// });  
 
 $("#historical-opacity").on("slide", function(slideEvt) {
     var opac = slideEvt.value
@@ -634,7 +754,6 @@ $("#update-button").on("click",function(){
 
 // Defining function to update permanent water layer
 function updatePermanentWater(){
-    $("#permanentwaterCB").prop("checked", true);
     $("#loader").show();
     // Get values
     var startYear = $('#start_year_selection_historical').val();
@@ -663,7 +782,6 @@ function updatePermanentWater(){
         dataType: 'json',
         success: (historical_data) => {
             historical_layer.setUrl(historical_data);
-            map.addLayer(historical_layer);
             $("#loader").hide();
             setTimeout(function() { $("#loader").hide(); }, 20000);
         },
@@ -703,7 +821,19 @@ var browse_layer = L.tileLayer('', {
 
 $("#gibsCB").on("click",function(){
     if(this.checked){
-        updateBrowseData();
+        $("#loader").show();
+        var selected_date = $('#date_selection_simg').val();
+        // console.log(selected_date)
+        var prod = $('#browse_selection').val();
+        var id = prod.split('|')[1];
+        var template =
+        '//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
+        id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
+        browse_layer.setUrl(template);
+        map.addLayer(browse_layer);
+        // browse_layer.bringToBack();
+        $("#loader").hide();
+        setTimeout(function() { $("#loader").hide(); }, 20000);
     }
     else{
         map.removeLayer(browse_layer);
@@ -727,7 +857,6 @@ $('#browse_selection').change(function(){
 });
 
 $('#date_selection_simg').change(function(){
-    updateBrowseData();
     var selected_date_simg = $('#date_selection_simg').val();
     document.getElementById('date_selection_ops').value = selected_date_simg;
     document.getElementById('date_selection_depth').value = selected_date_simg;
@@ -737,16 +866,17 @@ $('#date_selection_simg').change(function(){
     var selected_ops_date = $('#date_selection_ops').val(); 
     var popDate = new Date(selected_ops_date).toLocaleString('en-us',{month:'long', day:'numeric', year:'numeric'});
     var msg_date = document.getElementById('mesg-date');
-        msg_date.innerHTML = popDate;   
+        msg_date.innerHTML = popDate;  
+    updateFloodMapLayer();
+    updatePrecipitationData();    
+    updateFloodDepthMapLayer();
+    updateFloodAgeMapLayer();
+    updateBrowseData();
 });
 
 // Update satellite imagery data by changing date
 function updateBrowseData() {
-    // if(map.hasLayer(browse_layer)){
-    //     map.removeLayer(browse_layer);
-    // }
     $("#loader").show();
-    $("#gibsCB").prop("checked", true);
     var selected_date = $('#date_selection_simg').val();
     // console.log(selected_date)
     var prod = $('#browse_selection').val();
@@ -755,8 +885,6 @@ function updateBrowseData() {
     '//gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/' +
     id + '/default/' + selected_date + '/{tileMatrixSet}/{z}/{y}/{x}.jpg';
     browse_layer.setUrl(template);
-    map.addLayer(browse_layer);
-    // browse_layer.bringToBack();
     $("#loader").hide();
     setTimeout(function() { $("#loader").hide(); }, 20000);
 }

@@ -1142,10 +1142,8 @@ class MainGEEApi():
             # today_str = datetime.strptime(today, '%Y-%m-%d')
             # previous_day = today_str - timedelta(days=1)
             # ops_date = previous_day.strftime('%Y%m%d')
-            floodmap_collection = ee.ImageCollection(
-                "projects/servir-mekong/HydrafloodsMerge")
-            filter_floodmap = floodmap_collection.filter(
-                ee.Filter.eq('system:index', date)).first()
+            floodmap_collection = ee.ImageCollection("projects/servir-mekong/HydrafloodsMerge")
+            filter_floodmap = floodmap_collection.filterDate(date).first()
             curr_floodmap = filter_floodmap.select('water').selfMask()
             flood_depths_calc = hf.depths.fwdet(curr_floodmap.gte(1), ee.Image("MERIT/DEM/v1_0_3")) #.updateMask(curr_floodmap.gte(3))
             depthMap = flood_depths_calc.updateMask(curr_floodmap.gte(3))
