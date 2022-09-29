@@ -1132,6 +1132,15 @@ class MainGEEApi():
         return JRCPermanentMap
 
     def getFloodDepthMap(self, date):
+
+        visParams = '\
+            <RasterSymbolizer>\
+                <ColorMap type="intervals" extended="true" >\
+                    <ColorMapEntry color="#BAC9F4" quantity="1.99" label="low"/>\
+                    <ColorMapEntry color="#8DA5ED" quantity="4.99" label="medium"/>\
+                    <ColorMapEntry color="#4169E1" quantity="254.0" label="high"/>\
+                </ColorMap>\
+            </RasterSymbolizer>'
         # date = ee.Date(date)
         date = date
         depth_ic = ee.ImageCollection("projects/servir-mekong/HydrafloodsDepth")
@@ -1150,6 +1159,7 @@ class MainGEEApi():
         else:
             depthMap = filterHD
 
-        fldDepthMap = self.getTileLayerUrl(depthMap.visualize(
-            palette=['ECF0FC', '8DA5ED', '4169E1'], min=0.0, max=5.0)) #'FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'
+        # fldDepthMap = self.getTileLayerUrl(depthMap.visualize(
+        #     palette=['ECF0FC', '8DA5ED', '4169E1'], min=0.0, max=5.0)) #'FFFFFF', 'ECF0FC', 'B3C3F3', '8DA5ED', '6787E7', '4169E1'
+        fldDepthMap = self.getTileLayerUrl(depthMap.sldStyle(visParams))
         return fldDepthMap
