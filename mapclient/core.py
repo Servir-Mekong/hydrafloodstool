@@ -93,11 +93,7 @@ class MainGEEApi():
     def getSurfaceWaterMap(self, date, sensor):
         sdate = ee.Date(date)
         sensor = sensor
-<<<<<<< HEAD
-        mekong_region = ee.FeatureCollection('projects/servir-mekong/Boundary/mekong_region')
-=======
         mekong_region = ee.FeatureCollection('projects/servir-mekong/boundary/mekong_region')
->>>>>>> a203e3b06e321fe25d175aa6a12aa26d73afa7ff
         aoi = mekong_region.geometry()
 
         # calculate slope as surface water does usually not occur on slopes
@@ -568,11 +564,7 @@ class MainGEEApi():
     def getDOYMap(self, start_date, end_date):
         start_date = start_date  # datetime.now()#"2022-01-01"
         end_date = end_date
-<<<<<<< HEAD
-        mekong_region = ee.FeatureCollection('projects/servir-mekong/Boundary/mekong_region')
-=======
         mekong_region = ee.FeatureCollection('projects/servir-mekong/boundary/mekong_region')
->>>>>>> a203e3b06e321fe25d175aa6a12aa26d73afa7ff
         aoi = mekong_region.geometry()
 
         #import image
@@ -1131,11 +1123,7 @@ class MainGEEApi():
         return case1FloodMap
 
     def getJRCPermanentWaterMap(self):
-<<<<<<< HEAD
-        mekong_region = ee.FeatureCollection('projects/servir-mekong/Boundary/mekong_region')
-=======
         mekong_region = ee.FeatureCollection('projects/servir-mekong/boundary/mekong_region')
->>>>>>> a203e3b06e321fe25d175aa6a12aa26d73afa7ff
         shape = mekong_region.geometry()
         waterOcc = ee.Image(
             'JRC/GSW1_3/GlobalSurfaceWater').select('occurrence').clip(shape)
